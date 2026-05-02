@@ -1,13 +1,13 @@
-﻿class Program
+﻿namespace Casino;
+
+internal class Program
 {
-    static double balance = 0;
-    static bool isGameFinished = false;
-
-
-    static void Main()
+    static double _balance = 0;
+    static bool _isGameFinished = false;
+    static void Main( string[] args )
     {
         PrintHeader();
-        while ( !isGameFinished )
+        while ( !_isGameFinished )
         {
             PrintMenu();
             string options = Console.ReadLine() ?? "";
@@ -63,19 +63,20 @@
             return OptionHandleResult.InvalidDeposit;
         }
 
-        if ( double.MaxValue - deposit < balance )
+        if ( double.MaxValue - deposit < _balance )
         {
             return OptionHandleResult.InvalidDeposit;
         }
 
-        balance += deposit;
-        Console.WriteLine( $"Текущий баланс: {balance}" );
+        _balance += deposit;
+        Console.WriteLine( $"Текущий баланс: {_balance}" );
+
         return OptionHandleResult.Success;
     }
 
     static OptionHandleResult Exit()
     {
-        isGameFinished = true;
+        _isGameFinished = true;
         return OptionHandleResult.Success;
     }
 
@@ -89,7 +90,7 @@
             return OptionHandleResult.InvalidBet;
         }
 
-        if ( bet >= balance )
+        if ( bet > _balance )
         {
             return OptionHandleResult.InvalidBet;
         }
@@ -98,14 +99,15 @@
         if ( seed >= 18 && seed <= 20 )
         {
             double winAmount = CalculateWinAmount( bet, seed );
-            balance += winAmount;
-            Console.WriteLine( $"Вы выиграли. Выпало {seed}. Выигрыш: {winAmount}. Новый баланс: {balance}" );
+            _balance += winAmount;
+            Console.WriteLine( $"Вы выиграли. Выпало {seed}. Выигрыш: {winAmount}. Новый баланс: {_balance}" );
         }
         else
         {
-            balance -= bet;
-            Console.WriteLine( $"Вы проиграли. Выпало {seed}. Проигрыш: {bet}. Новый баланс: {balance}" );
+            _balance -= bet;
+            Console.WriteLine( $"Вы проиграли. Выпало {seed}. Проигрыш: {bet}. Новый баланс: {_balance}" );
         }
+
         return OptionHandleResult.Success;
     }
 
@@ -114,12 +116,13 @@
         const int multiplicator = 20;
         int winPercent = ( multiplicator * seed ) % 17;
         double result = bet * ( 1 + winPercent );
+
         return result;
     }
 
     static OptionHandleResult ShowBalance()
     {
-        Console.WriteLine( $"Ваш текущий баланс: {balance}" );
+        Console.WriteLine( $"Ваш текущий баланс: {_balance}" );
         return OptionHandleResult.Success;
     }
 
@@ -139,7 +142,7 @@
             "4. Выйти"
         };
 
-        foreach ( var item in menu )
+        foreach ( string item in menu )
         {
             Console.WriteLine( item );
         }

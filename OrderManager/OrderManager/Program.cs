@@ -1,104 +1,128 @@
-﻿using System;
+﻿namespace OrderManager;
 
-class Program
+internal class Program
 {
-    static void Main()
+    private const int DeliveryDays = 3;
+    static void Main( string[] args )
     {
-        while ( true )
+        bool isOrderProcessing = true;
+
+        while ( isOrderProcessing )
         {
             string product = ReadNonEmptyInput( "Введите товар: " );
             int count = GetProductCount();
-            string name = ReadNonEmptyInput( "Введите имя пользователя: " );
-            string adress = ReadNonEmptyInput( "Введите адрес: " );
+            string customerName = ReadNonEmptyInput( "Введите имя пользователя: " );
+            string address = ReadNonEmptyInput( "Введите адрес: " );
 
-            bool isConfirmed = ConfirmOrder( name, count, product, adress );
+            bool isConfirmed = ConfirmOrder(
+                customerName,
+                count,
+                product,
+                address );
 
             if ( isConfirmed )
             {
-                PrintResult( name, product, count, adress );
+                PrintResult(
+                    customerName,
+                    product,
+                    count,
+                    address );
             }
             else
             {
                 Console.WriteLine( "Отмена заказа, что то пошло не так" );
             }
 
-            if ( !AskToContinue() )
-            {
-                break;
-            }
+            isOrderProcessing = ReadYesNo( "Хотите оформить еще один заказ?" );
         }
         Console.WriteLine( "Спасибо за заказ! Досвидания." );
     }
 
-    static bool AskToContinue()
-    {
-        while ( true )
-        {
-            Console.Write( "Хотите оформить еще один заказ? да/нет: " );
-            string userChoice = Console.ReadLine()?.Trim().ToLower() ?? "";
-
-            if ( userChoice == "да" )
-                return true;
-
-            if ( userChoice == "нет" )
-                return false;
-
-            Console.WriteLine( "Введите да или нет!" );
-        }
-    }
-
     static string ReadNonEmptyInput( string message )
     {
-        while ( true )
+        string input = "";
+        bool isValid = false;
+
+        while ( !isValid )
         {
             Console.Write( message );
-            string input = Console.ReadLine() ?? "";
+            input = ( Console.ReadLine() ?? "" ).Trim();
 
             if ( !string.IsNullOrWhiteSpace( input ) )
-                return input.Trim();
-
-            Console.WriteLine( "Поле не может быть пустым. Попробуйте снова." );
+            {
+                isValid = true;
+            }
+            else
+            {
+                Console.WriteLine( "Поле не может быть пустым. Попробуйте снова." );
+            }
         }
+        return input;
     }
 
     static int GetProductCount()
     {
-        Console.Write( "Введите количество товара: " );
-        string input = Console.ReadLine() ?? "";
+        int count = 0;
+        bool isValid = false;
 
-        int count;
-        while ( !int.TryParse( input, out count ) || count <= 0 )
+        while ( !isValid )
         {
-            Console.Write( "Введите корректное количество товара: " );
-            input = Console.ReadLine() ?? "";
+            Console.Write( "Введите количество товара: " );
+            string input = Console.ReadLine() ?? "";
+
+            if ( int.TryParse( input, out count ) && count > 0 )
+            {
+                isValid = true;
+            }
+            else
+            {
+                Console.WriteLine( "Введите корректное положительное число!" );
+            }
         }
         return count;
     }
 
-    static bool ConfirmOrder( string name, int count, string product, string adress )
+    static bool ConfirmOrder(
+        string customerName,
+        int count,
+        string product,
+        string address )
     {
-        while ( true )
-        {
-            Console.WriteLine( $"Здравствуйте, {name}, вы заказали {count} {product} на адрес {adress}, все верно?" );
-            Console.Write( "Введите да или нет: " );
-
-            string userChoice = Console.ReadLine()?.Trim().ToLower() ?? "";
-
-            if ( userChoice == "да" )
-                return true;
-
-            if ( userChoice == "нет" )
-                return false;
-
-            Console.WriteLine( "Введите да или нет!" );
-        }
+        string message = $"Здравствуйте, {customerName}, вы заказали {count} {product} на адрес {address}, все верно?";
+        return ReadYesNo( message );
     }
 
-    static void PrintResult( string name, string product, int count, string adress )
+    static bool ReadYesNo( string inputStr )
     {
-        DateTime dateDelivery = DateTime.Today.AddDays( 3 );
+        string userChoice = "";
+        bool isValid = false;
+
+        while ( !isValid )
+        {
+            Console.Write( $"{inputStr} ( да/нет ): " );
+            userChoice = Console.ReadLine()?.Trim().ToLower() ?? "";
+
+            if ( userChoice == "да" || userChoice == "нет" )
+            {
+                isValid = true;
+            }
+            else
+            {
+                Console.WriteLine( "Ошибка: Введите да или нет!" );
+            }
+        }
+        return userChoice == "да";
+    }
+
+    static void PrintResult(
+        string customerName,
+        string product,
+        int count,
+        string address )
+    {
+        DateTime dateDelivery = DateTime.Today.AddDays( DeliveryDays );
         string date = dateDelivery.ToString( "dd.MM.yyyy" );
 
-        Console.WriteLine( $"{name}! Ваш заказ {product} в количестве {count} оформлен! Ожидайте доставку по адресу {adress} к {date}" );
+        Console.WriteLine( $"{customerName}! Ваш заказ {product} в количестве {count} оформлен! Ожидайте доставку по адресу {address} к {date}" );
     }
 }
