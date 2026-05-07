@@ -15,6 +15,8 @@
         public string GetWeaponName();
         public string GetArmorName();
 
+        public string GetInfo();
+
         public void TakeDamage( int damage );
 
         public bool IsAlive();

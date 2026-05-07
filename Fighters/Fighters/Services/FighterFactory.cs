@@ -3,60 +3,42 @@ using Fighters.Models.Class;
 using Fighters.Models.Fighters;
 using Fighters.Models.Races;
 using Fighters.Models.Weapons;
+using Fighters.Utils;
 
 namespace Fighters.Services
 {
-    public class FighterFactory
+    public class FighterFactory : IFighterFactory
     {
-        private List<IRace> _races = new()
-        {
-            new Human(),
-            new Dwarf(),
-            new Golem(),
-            new Ghost(),
-        };
+        private readonly List<IRace> _races;
+        private readonly List<IWeapon> _weapons;
+        private readonly List<IArmor> _armors;
+        private readonly List<IClass> _classes;
 
-        private List<IWeapon> _weapons = new()
+        public FighterFactory( List<IRace> races, List<IWeapon> weapons, List<IArmor> armors, List<IClass> classes )
         {
-            new NoWeapon(),
-            new SilverSword(),
-            new Spear(),
-            new Hammer()
-        };
-
-        private List<IArmor> _armors = new()
-        {
-            new NoArmor(),
-            new ClothRobe(),
-            new LeatherArmor(),
-            new ChainMailArmor(),
-            new PlateArmor(),
-        };
-
-        private List<IClass> _classes = new()
-        {
-            new Wizard(),
-            new Assassin(),
-            new Knight()
-        };
+            _races = races;
+            _weapons = weapons;
+            _armors = armors;
+            _classes = classes;
+        }
 
         public IFighter CreateFighter( string name )
         {
             Console.WriteLine( "Выберите расу:" );
-            DisplayOptions( _races.Select( r => r.Name ).ToList() );
-            int raceIndex = ReadChoice( _races.Count );
+            InputHelper.DisplayOptions( _races.ConvertAll( r => r.Name ) );
+            int raceIndex = InputHelper.ReadChoice( _races.Count );
 
             Console.WriteLine( "Выберите оружие:" );
-            DisplayOptions( _weapons.Select( w => w.Name ).ToList() );
-            int weaponIndex = ReadChoice( _weapons.Count );
+            InputHelper.DisplayOptions( _weapons.ConvertAll( w => w.Name ) );
+            int weaponIndex = InputHelper.ReadChoice( _weapons.Count );
 
             Console.WriteLine( "Выберите броню:" );
-            DisplayOptions( _armors.Select( a => a.Name ).ToList() );
-            int armorIndex = ReadChoice( _armors.Count );
+            InputHelper.DisplayOptions( _armors.ConvertAll( a => a.Name ) );
+            int armorIndex = InputHelper.ReadChoice( _armors.Count );
 
             Console.WriteLine( "Выберите класс:" );
-            DisplayOptions( _classes.Select( c => c.Name ).ToList() );
-            int classIndex = ReadChoice( _classes.Count );
+            InputHelper.DisplayOptions( _classes.ConvertAll( c => c.Name ) );
+            int classIndex = InputHelper.ReadChoice( _classes.Count );
 
             return new Fighter(
                 name,
@@ -65,27 +47,6 @@ namespace Fighters.Services
                 _weapons[ weaponIndex ],
                 _classes[ classIndex ]
             );
-        }
-
-        private void DisplayOptions( List<string> options )
-        {
-            for ( int i = 0; i < options.Count; i++ )
-            {
-                Console.WriteLine( $"{i} - {options[ i ]}" );
-            }
-        }
-
-        private int ReadChoice( int maxOption )
-        {
-            while ( true )
-            {
-                string input = Console.ReadLine() ?? "";
-                if ( int.TryParse( input, out int choice ) && choice >= 0 && choice < maxOption )
-                {
-                    return choice;
-                }
-                Console.WriteLine( $"Введите число от 0 до {maxOption - 1}" );
-            }
         }
     }
 }

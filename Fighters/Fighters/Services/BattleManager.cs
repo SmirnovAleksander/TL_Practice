@@ -2,9 +2,14 @@ using Fighters.Models.Fighters;
 
 namespace Fighters.Services
 {
-    public class BattleManager
+    public class BattleManager : IBattleManager
     {
-        private DamageCalculator _damageCalculator = new();
+        private readonly IDamageCalculator _damageCalculator;
+
+        public BattleManager( IDamageCalculator damageCalculator )
+        {
+            _damageCalculator = damageCalculator;
+        }
 
         public void StartBattle( List<IFighter> fighters )
         {
@@ -26,10 +31,7 @@ namespace Fighters.Services
                 round++;
             }
 
-            if ( orderedFighters.Count == 1 )
-            {
-                Console.WriteLine( $"{orderedFighters[ 0 ].Name} выигрывает битву!" );
-            }
+            Console.WriteLine( $"{orderedFighters[ 0 ].Name} выигрывает битву!" );
         }
 
         private void RoundFight( List<IFighter> fighters )
@@ -37,16 +39,18 @@ namespace Fighters.Services
             for ( int i = 0; i < fighters.Count; i++ )
             {
                 IFighter attacker = fighters[ i ];
-                if ( !attacker.IsAlive() ) continue;
-
-                int nextIndex = i + 1;
-                if ( nextIndex >= fighters.Count )
+                if ( !attacker.IsAlive() )
                 {
-                    nextIndex = 0;
+                    continue;
                 }
 
+                int nextIndex = ( i + 1 ) % fighters.Count;
+
                 IFighter defender = fighters[ nextIndex ];
-                if ( !defender.IsAlive() ) continue;
+                if ( !defender.IsAlive() )
+                {
+                    continue;
+                }
 
                 int damage = _damageCalculator.CalculateDamage( attacker, defender );
                 defender.TakeDamage( damage );

@@ -2,13 +2,14 @@ using Fighters.Models.Fighters;
 
 namespace Fighters.Services
 {
-    public class DamageCalculator
+    public class DamageCalculator : IDamageCalculator
     {
-        Random _random = new();
-        const int MinRandomModifier = -20;
-        const int MaxRandomModifier = 10;
-        const double CriticalChance = 0.15;
-        const int CriticalMultiplier = 2;
+        private const int MinRandomModifier = -20;
+        private const int MaxRandomModifier = 10;
+        private const double CriticalChance = 0.15;
+        private const int CriticalMultiplier = 2;
+
+        private readonly Random _random = new();
 
         public int CalculateDamage( IFighter attacker, IFighter defender )
         {

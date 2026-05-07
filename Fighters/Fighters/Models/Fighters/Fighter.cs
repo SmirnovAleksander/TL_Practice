@@ -44,6 +44,12 @@ namespace Fighters.Models.Fighters
 
         public string GetArmorName() => _armor.Name;
 
+        public string GetInfo()
+        {
+            return "Класс: " + _fighterClass.Name + ", Раса: " + _race.Name + ", Броня: " + _armor.Name + ", Оружие: " + _weapon.Name + "\n"
+                 + "HP: " + GetMaxHealth() + ", Урон: " + CalculateDamage() + ", Броня: " + CalculateArmor() + ", Инициатива: " + Initiative;
+        }
+
         public void TakeDamage( int damage )
         {
             int newHealth = _currentHealth - damage;
