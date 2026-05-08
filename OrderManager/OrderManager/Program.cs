@@ -3,7 +3,8 @@
 internal class Program
 {
     private const int DeliveryDays = 3;
-    static void Main( string[] args )
+
+    private static void Main()
     {
         bool isOrderProcessing = true;
 
@@ -33,12 +34,13 @@ internal class Program
                 Console.WriteLine( "Отмена заказа, что то пошло не так" );
             }
 
-            isOrderProcessing = ReadYesNo( "Хотите оформить еще один заказ?" );
+            isOrderProcessing = ReadUserChoice( "Хотите оформить еще один заказ?" );
         }
+
         Console.WriteLine( "Спасибо за заказ! Досвидания." );
     }
 
-    static string ReadNonEmptyInput( string message )
+    private static string ReadNonEmptyInput( string message )
     {
         string input = "";
         bool isValid = false;
@@ -57,10 +59,11 @@ internal class Program
                 Console.WriteLine( "Поле не может быть пустым. Попробуйте снова." );
             }
         }
+
         return input;
     }
 
-    static int GetProductCount()
+    private static int GetProductCount()
     {
         int count = 0;
         bool isValid = false;
@@ -79,20 +82,22 @@ internal class Program
                 Console.WriteLine( "Введите корректное положительное число!" );
             }
         }
+
         return count;
     }
 
-    static bool ConfirmOrder(
+    private static bool ConfirmOrder(
         string customerName,
         int count,
         string product,
         string address )
     {
         string message = $"Здравствуйте, {customerName}, вы заказали {count} {product} на адрес {address}, все верно?";
-        return ReadYesNo( message );
+
+        return ReadUserChoice( message );
     }
 
-    static bool ReadYesNo( string inputStr )
+    private static bool ReadUserChoice( string inputStr )
     {
         string userChoice = "";
         bool isValid = false;
@@ -111,10 +116,11 @@ internal class Program
                 Console.WriteLine( "Ошибка: Введите да или нет!" );
             }
         }
+
         return userChoice == "да";
     }
 
-    static void PrintResult(
+    private static void PrintResult(
         string customerName,
         string product,
         int count,
