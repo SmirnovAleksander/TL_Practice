@@ -4,14 +4,15 @@ using CarFactory.Models.Colors;
 using CarFactory.Models.Engines;
 using CarFactory.Models.GearBoxes;
 using CarFactory.Models.SteeringWheelPositions;
-using CarFactory.Services;
+using CarFactory.Services.Interfaces;
+using CarFactory.Services.Implementations;
 using CarFactory.Utils;
 
 namespace CarFactory
 {
     internal class Program
     {
-        static void Main( string[] args )
+        static void Main()
         {
             List<IColor> colors = new List<IColor>
             {
@@ -26,7 +27,7 @@ namespace CarFactory
                 new Sedan(),
                 new Hatchback(),
                 new Pickup(),
-                new Truck()
+                new Coupe()
             };
 
             List<IEngine> engines = new List<IEngine>
@@ -35,17 +36,16 @@ namespace CarFactory
                 new Benzine30(),
                 new Diesel20(),
                 new Diesel40(),
-                new Diesel80(),
                 new Electric()
             };
 
             List<IGearBox> gearBoxes = new List<IGearBox>
             {
                 new Manual(),
-                new TruckManual(),
                 new Automatic(),
                 new Robot(),
-                new CVT()
+                new CVT(),
+                new SingleSpeed()
             };
 
             List<ISteeringWheelPosition> steeringWheelPositions = new List<ISteeringWheelPosition>
@@ -54,7 +54,9 @@ namespace CarFactory
                 new LeftWheel()
             };
 
-            ICarFactory carFactory = new CarCreator( colors, bodyForms, engines, gearBoxes, steeringWheelPositions );
+            ICarOptionFilter optionFilter = new CarOptionFilter();
+
+            ICarFactory carFactory = new CarCreator( colors, bodyForms, engines, gearBoxes, steeringWheelPositions, optionFilter );
             IGameManager gameManager = new GameManager( carFactory );
 
             List<ICar> cars = new List<ICar>();

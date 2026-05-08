@@ -1,6 +1,6 @@
 using CarFactory.Models.Cars;
 
-namespace CarFactory.Services
+namespace CarFactory.Services.Interfaces
 {
     public interface ICarFactory
     {

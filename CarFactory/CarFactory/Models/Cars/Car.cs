@@ -8,18 +8,13 @@ namespace CarFactory.Models.Cars
 {
     public class Car : ICar
     {
-        private readonly IColor _color;
-        private readonly IBodyForm _bodyForm;
-        private readonly IEngine _engine;
-        private readonly IGearBox _gearBox;
-        private readonly ISteeringWheelPosition _steeringWheelPosition;
+        private IColor _color;
+        private IBodyForm _bodyForm;
+        private IEngine _engine;
+        private IGearBox _gearBox;
+        private ISteeringWheelPosition _steeringWheelPosition;
 
         public string Name { get; }
-        public IColor Color => _color;
-        public IBodyForm BodyForm => _bodyForm;
-        public IEngine Engine => _engine;
-        public IGearBox GearBox => _gearBox;
-        public ISteeringWheelPosition SteeringWheelPosition => _steeringWheelPosition;
 
         public Car(
             string name,
@@ -39,9 +34,24 @@ namespace CarFactory.Models.Cars
 
         public int CalculateMaxSpeed()
         {
-            double resistancePenalty = _bodyForm.AirResistanceCoeff * 20;
-            int gearBonus = _gearBox.GearCount ?? 0 * 3;
-            return ( int )( _engine.MaxSpeed + gearBonus - resistancePenalty );
+            double power = _engine.Power;
+            double weight = _bodyForm.Weight;
+            double air = _bodyForm.AirResistanceCoeff;
+            double gearCoeff = _gearBox.Coefficient;
+
+            double gearFactor;
+            if ( _gearBox.TransmissionType == "single" )
+            {
+                gearFactor = 1.0;
+            }
+            else
+            {
+                gearFactor = ( _gearBox.GearCount ?? 6 ) / 6.0;
+            }
+
+            double speed = ( power * gearCoeff * gearFactor * 8 ) / ( Math.Sqrt( weight ) * air );
+
+            return ( int )Math.Round( speed );
         }
 
         public string GetInfo()

@@ -4,7 +4,6 @@ namespace CarFactory.Models.Engines
     {
         public string Name { get; }
         public int Power { get; }
-        public int MaxSpeed { get; }
         public string FuelType { get; }
     }
 }

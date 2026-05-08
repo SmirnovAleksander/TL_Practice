@@ -1,7 +1,8 @@
 using CarFactory.Models.Cars;
+using CarFactory.Services.Interfaces;
 using CarFactory.Utils;
 
-namespace CarFactory.Services
+namespace CarFactory.Services.Implementations
 {
     public class GameManager : IGameManager
     {
@@ -32,6 +33,7 @@ namespace CarFactory.Services
             if ( string.IsNullOrEmpty( name ) )
             {
                 Console.WriteLine( "Название не может быть пустым!" );
+
                 return;
             }
 
@@ -47,6 +49,7 @@ namespace CarFactory.Services
             if ( cars.Count == 0 )
             {
                 Console.WriteLine( "Нет машин!" );
+
                 return;
             }
 
@@ -66,6 +69,7 @@ namespace CarFactory.Services
             if ( cars.Count < 2 )
             {
                 Console.WriteLine( "Нужно минимум 2 машины для сравнения!" );
+
                 return;
             }
 
@@ -104,10 +108,11 @@ namespace CarFactory.Services
             if ( cars.Count < 2 )
             {
                 Console.WriteLine( "Нужно минимум 2 машины для гонки!" );
+
                 return;
             }
 
-            var sortedCars = cars.OrderByDescending( c => c.CalculateMaxSpeed() ).ToList();
+            List<ICar> sortedCars = cars.OrderByDescending( c => c.CalculateMaxSpeed() ).ToList();
 
             Console.WriteLine();
             Console.WriteLine( "=== Гонка всех ===" );

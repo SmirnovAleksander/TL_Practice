@@ -4,7 +4,7 @@ namespace CarFactory.Models.BodyForms
     {
         public string Name { get; } = "Седан";
         public int DoorCount { get; } = 4;
-        public double AirResistanceCoeff { get; } = 0.28;
+        public double AirResistanceCoeff { get; } = 0.3;
         public int Weight { get; } = 1500;
     }
 }
