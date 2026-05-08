@@ -1,6 +1,6 @@
 using Fighters.Models.Fighters;
 
-namespace Fighters.Services
+namespace Fighters.Services.Interfaces
 {
     public interface IFighterFactory
     {

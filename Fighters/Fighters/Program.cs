@@ -3,7 +3,8 @@ using Fighters.Models.Class;
 using Fighters.Models.Fighters;
 using Fighters.Models.Races;
 using Fighters.Models.Weapons;
-using Fighters.Services;
+using Fighters.Services.Interfaces;
+using Fighters.Services.Implementations;
 using Fighters.Utils;
 
 namespace Fighters

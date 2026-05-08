@@ -1,6 +1,7 @@
 using Fighters.Models.Fighters;
+using Fighters.Services.Interfaces;
 
-namespace Fighters.Services
+namespace Fighters.Services.Implementations
 {
     public class DamageCalculator : IDamageCalculator
     {

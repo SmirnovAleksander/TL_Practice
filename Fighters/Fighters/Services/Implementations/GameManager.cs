@@ -1,6 +1,7 @@
 using Fighters.Models.Fighters;
+using Fighters.Services.Interfaces;
 
-namespace Fighters.Services
+namespace Fighters.Services.Implementations
 {
     public class GameManager : IGameManager
     {
@@ -32,6 +33,7 @@ namespace Fighters.Services
             if ( string.IsNullOrEmpty( name ) )
             {
                 Console.WriteLine( "Имя не может быть пустым!" );
+
                 return;
             }
 
@@ -47,6 +49,7 @@ namespace Fighters.Services
             if ( fighters.Count == 0 )
             {
                 Console.WriteLine( "Нет бойцов!" );
+
                 return;
             }
 
@@ -66,6 +69,7 @@ namespace Fighters.Services
             if ( fighters.Count < 2 )
             {
                 Console.WriteLine( "Для битвы нужно минимум 2 бойца!" );
+
                 return;
             }
 

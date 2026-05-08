@@ -10,11 +10,6 @@
         public int CalculateDamage();
         public int CalculateArmor();
 
-        public string GetRaceName();
-        public string GetClassName();
-        public string GetWeaponName();
-        public string GetArmorName();
-
         public string GetInfo();
 
         public void TakeDamage( int damage );

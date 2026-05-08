@@ -36,14 +36,6 @@ namespace Fighters.Models.Fighters
 
         public int CalculateArmor() => _armor.Armor + _race.Armor;
 
-        public string GetRaceName() => _race.Name;
-
-        public string GetClassName() => _fighterClass.Name;
-
-        public string GetWeaponName() => _weapon.Name;
-
-        public string GetArmorName() => _armor.Name;
-
         public string GetInfo()
         {
             return "Класс: " + _fighterClass.Name + ", Раса: " + _race.Name + ", Броня: " + _armor.Name + ", Оружие: " + _weapon.Name + "\n"

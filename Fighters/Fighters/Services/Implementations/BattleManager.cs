@@ -1,6 +1,7 @@
 using Fighters.Models.Fighters;
+using Fighters.Services.Interfaces;
 
-namespace Fighters.Services
+namespace Fighters.Services.Implementations
 {
     public class BattleManager : IBattleManager
     {
@@ -16,6 +17,7 @@ namespace Fighters.Services
             if ( fighters.Count < 2 )
             {
                 Console.WriteLine( "Для битвы нужно минимум 2 бойца!" );
+
                 return;
             }
 
