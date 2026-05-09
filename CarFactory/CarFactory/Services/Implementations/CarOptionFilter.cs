@@ -1,5 +1,6 @@
 using CarFactory.Models.BodyForms;
 using CarFactory.Models.Engines;
+using CarFactory.Models.Enums;
 using CarFactory.Models.GearBoxes;
 using CarFactory.Services.Interfaces;
 
@@ -13,7 +14,7 @@ public class CarOptionFilter : ICarOptionFilter
 
         foreach ( IEngine engine in engines )
         {
-            if ( engine.FuelType == "electric" && bodyForm is Pickup )
+            if ( engine.FuelType == FuelType.Electric && bodyForm is Pickup )
             {
                 continue;
             }
@@ -35,15 +36,15 @@ public class CarOptionFilter : ICarOptionFilter
 
         foreach ( IGearBox gearBox in gearBoxes )
         {
-            if ( engine.FuelType == "electric" )
+            if ( engine.FuelType == FuelType.Electric )
             {
-                if ( gearBox.TransmissionType != "single" )
+                if ( gearBox.TransmissionType != TransmissionType.Single )
                 {
                     continue;
                 }
             }
 
-            if ( gearBox.TransmissionType == "cvt" )
+            if ( gearBox.TransmissionType == TransmissionType.Cvt )
             {
                 if ( bodyForm is Coupe || bodyForm is Pickup )
                 {

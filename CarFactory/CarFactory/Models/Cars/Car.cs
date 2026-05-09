@@ -1,6 +1,7 @@
 using CarFactory.Models.BodyForms;
 using CarFactory.Models.Colors;
 using CarFactory.Models.Engines;
+using CarFactory.Models.Enums;
 using CarFactory.Models.GearBoxes;
 using CarFactory.Models.SteeringWheelPositions;
 
@@ -40,7 +41,7 @@ public class Car : ICar
         double gearCoeff = _gearBox.Coefficient;
 
         double gearFactor;
-        if ( _gearBox.TransmissionType == "single" )
+        if ( _gearBox.TransmissionType == TransmissionType.Single )
         {
             gearFactor = 1.0;
         }
