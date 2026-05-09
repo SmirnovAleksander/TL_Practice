@@ -1,7 +1,6 @@
-namespace CarFactory.Models.Colors
+namespace CarFactory.Models.Colors;
+
+public interface IColor
 {
-    public interface IColor
-    {
-        public string Name { get; }
-    }
+    public string Name { get; }
 }

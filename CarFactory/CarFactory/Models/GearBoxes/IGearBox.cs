@@ -1,10 +1,9 @@
-namespace CarFactory.Models.GearBoxes
+namespace CarFactory.Models.GearBoxes;
+
+public interface IGearBox
 {
-    public interface IGearBox
-    {
-        public string Name { get; }
-        public int? GearCount { get; }
-        public string TransmissionType { get; }
-        public double Coefficient { get; }
-    }
+    public string Name { get; }
+    public int? GearCount { get; }
+    public string TransmissionType { get; }
+    public double Coefficient { get; }
 }

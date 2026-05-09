@@ -1,10 +1,9 @@
-namespace CarFactory.Models.BodyForms
+namespace CarFactory.Models.BodyForms;
+
+public interface IBodyForm
 {
-    public interface IBodyForm
-    {
-        public string Name { get; }
-        public int DoorCount { get; }
-        public double AirResistanceCoeff { get; }
-        public int Weight { get; }
-    }
+    public string Name { get; }
+    public int DoorCount { get; }
+    public double AirResistanceCoeff { get; }
+    public int Weight { get; }
 }

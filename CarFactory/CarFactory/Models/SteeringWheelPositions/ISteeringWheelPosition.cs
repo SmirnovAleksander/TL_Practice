@@ -1,7 +1,6 @@
-namespace CarFactory.Models.SteeringWheelPositions
+namespace CarFactory.Models.SteeringWheelPositions;
+
+public interface ISteeringWheelPosition
 {
-    public interface ISteeringWheelPosition
-    {
-        public string Name { get; }
-    }
+    public string Name { get; }
 }

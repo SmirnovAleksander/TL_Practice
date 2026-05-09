@@ -1,7 +1,6 @@
-namespace CarFactory.Models.SteeringWheelPositions
+namespace CarFactory.Models.SteeringWheelPositions;
+
+public class LeftWheel : ISteeringWheelPosition
 {
-    public class LeftWheel : ISteeringWheelPosition
-    {
-        public string Name { get; } = "Левый руль";
-    }
+    public string Name { get; } = "Левый руль";
 }

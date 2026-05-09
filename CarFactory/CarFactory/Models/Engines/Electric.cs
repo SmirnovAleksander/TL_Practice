@@ -1,9 +1,8 @@
-namespace CarFactory.Models.Engines
+namespace CarFactory.Models.Engines;
+
+public class Electric : IEngine
 {
-    public class Electric : IEngine
-    {
-        public string Name { get; } = "Электро";
-        public int Power { get; } = 220;
-        public string FuelType { get; } = "electric";
-    }
+    public string Name { get; } = "Электро";
+    public int Power { get; } = 220;
+    public string FuelType { get; } = "electric";
 }

@@ -1,10 +1,9 @@
-namespace CarFactory.Models.BodyForms
+namespace CarFactory.Models.BodyForms;
+
+public class Pickup : IBodyForm
 {
-    public class Pickup : IBodyForm
-    {
-        public string Name { get; } = "Пикап";
-        public int DoorCount { get; } = 4;
-        public double AirResistanceCoeff { get; } = 0.5;
-        public int Weight { get; } = 2500;
-    }
+    public string Name { get; } = "Пикап";
+    public int DoorCount { get; } = 4;
+    public double AirResistanceCoeff { get; } = 0.5;
+    public int Weight { get; } = 2500;
 }

@@ -1,7 +1,6 @@
-namespace CarFactory.Models.Colors
+namespace CarFactory.Models.Colors;
+
+public class Black : IColor
 {
-    public class Black : IColor
-    {
-        public string Name { get; } = "Чёрный";
-    }
+    public string Name { get; } = "Чёрный";
 }

@@ -1,9 +1,8 @@
-namespace CarFactory.Models.Cars
+namespace CarFactory.Models.Cars;
+
+public interface ICar
 {
-    public interface ICar
-    {
-        string Name { get; }
-        int CalculateMaxSpeed();
-        string GetInfo();
-    }
+    string Name { get; }
+    int CalculateMaxSpeed();
+    string GetInfo();
 }
