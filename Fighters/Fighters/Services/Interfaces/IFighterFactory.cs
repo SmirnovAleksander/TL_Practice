@@ -1,9 +1,8 @@
 using Fighters.Models.Fighters;
 
-namespace Fighters.Services.Interfaces
+namespace Fighters.Services.Interfaces;
+
+public interface IFighterFactory
 {
-    public interface IFighterFactory
-    {
-        IFighter CreateFighter( string name );
-    }
+    IFighter CreateFighter( string name );
 }

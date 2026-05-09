@@ -3,54 +3,53 @@ using Fighters.Models.Class;
 using Fighters.Models.Races;
 using Fighters.Models.Weapons;
 
-namespace Fighters.Models.Fighters
+namespace Fighters.Models.Fighters;
+
+public class Fighter : IFighter
 {
-    public class Fighter : IFighter
+    private IRace _race;
+    private IClass _fighterClass;
+    private IArmor _armor;
+    private IWeapon _weapon;
+
+    private int _currentHealth;
+
+    public string Name { get; }
+    public int Initiative => _race.Initiative + _fighterClass.Initiative;
+
+    public Fighter( string name, IRace race, IArmor armor, IWeapon weapon, IClass fighterClass )
     {
-        private IRace _race;
-        private IClass _fighterClass;
-        private IArmor _armor;
-        private IWeapon _weapon;
+        Name = name;
+        _race = race;
+        _armor = armor;
+        _weapon = weapon;
+        _fighterClass = fighterClass;
 
-        private int _currentHealth;
+        _currentHealth = GetMaxHealth();
+    }
 
-        public string Name { get; }
-        public int Initiative => _race.Initiative + _fighterClass.Initiative;
+    public int GetCurrentHealth() => _currentHealth;
 
-        public Fighter( string name, IRace race, IArmor armor, IWeapon weapon, IClass fighterClass )
-        {
-            Name = name;
-            _race = race;
-            _armor = armor;
-            _weapon = weapon;
-            _fighterClass = fighterClass;
+    public int GetMaxHealth() => _race.Health + _fighterClass.Health;
 
-            _currentHealth = GetMaxHealth();
-        }
+    public int CalculateDamage() => _weapon.Damage + _fighterClass.Damage + _race.Damage;
 
-        public int GetCurrentHealth() => _currentHealth;
+    public int CalculateArmor() => _armor.Armor + _race.Armor;
 
-        public int GetMaxHealth() => _race.Health + _fighterClass.Health;
+    public string GetInfo()
+    {
+        return "Класс: " + _fighterClass.Name + ", Раса: " + _race.Name + ", Броня: " + _armor.Name + ", Оружие: " + _weapon.Name + "\n"
+                + "HP: " + GetMaxHealth() + ", Урон: " + CalculateDamage() + ", Броня: " + CalculateArmor() + ", Инициатива: " + Initiative;
+    }
 
-        public int CalculateDamage() => _weapon.Damage + _fighterClass.Damage + _race.Damage;
+    public void TakeDamage( int damage )
+    {
+        int newHealth = _currentHealth - damage;
+        _currentHealth = newHealth < 0 ? 0 : newHealth;
+    }
 
-        public int CalculateArmor() => _armor.Armor + _race.Armor;
-
-        public string GetInfo()
-        {
-            return "Класс: " + _fighterClass.Name + ", Раса: " + _race.Name + ", Броня: " + _armor.Name + ", Оружие: " + _weapon.Name + "\n"
-                 + "HP: " + GetMaxHealth() + ", Урон: " + CalculateDamage() + ", Броня: " + CalculateArmor() + ", Инициатива: " + Initiative;
-        }
-
-        public void TakeDamage( int damage )
-        {
-            int newHealth = _currentHealth - damage;
-            _currentHealth = newHealth < 0 ? 0 : newHealth;
-        }
-
-        public bool IsAlive()
-        {
-            return _currentHealth > 0;
-        }
+    public bool IsAlive()
+    {
+        return _currentHealth > 0;
     }
 }

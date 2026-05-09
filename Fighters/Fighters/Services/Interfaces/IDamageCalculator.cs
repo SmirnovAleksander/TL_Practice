@@ -1,9 +1,8 @@
 using Fighters.Models.Fighters;
 
-namespace Fighters.Services.Interfaces
+namespace Fighters.Services.Interfaces;
+
+public interface IDamageCalculator
 {
-    public interface IDamageCalculator
-    {
-        int CalculateDamage( IFighter attacker, IFighter defender );
-    }
+    int CalculateDamage( IFighter attacker, IFighter defender );
 }

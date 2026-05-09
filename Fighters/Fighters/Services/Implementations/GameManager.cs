@@ -1,80 +1,79 @@
 using Fighters.Models.Fighters;
 using Fighters.Services.Interfaces;
 
-namespace Fighters.Services.Implementations
+namespace Fighters.Services.Implementations;
+
+public class GameManager : IGameManager
 {
-    public class GameManager : IGameManager
+    private readonly IFighterFactory _factory;
+    private readonly IBattleManager _battleManager;
+
+    public GameManager( IFighterFactory factory, IBattleManager battleManager )
     {
-        private readonly IFighterFactory _factory;
-        private readonly IBattleManager _battleManager;
+        _factory = factory;
+        _battleManager = battleManager;
+    }
 
-        public GameManager( IFighterFactory factory, IBattleManager battleManager )
+    public void ShowMenu()
+    {
+        Console.WriteLine();
+        Console.WriteLine( "Fighters Game - Меню" );
+        Console.WriteLine( "1 - Добавить бойца" );
+        Console.WriteLine( "2 - Показать бойцов" );
+        Console.WriteLine( "3 - Играть" );
+        Console.WriteLine( "4 - Выйти" );
+    }
+
+    public void AddFighter( List<IFighter> fighters )
+    {
+        Console.WriteLine();
+        Console.WriteLine( "Введите имя бойца:" );
+        string name = Console.ReadLine() ?? "";
+
+        if ( string.IsNullOrEmpty( name ) )
         {
-            _factory = factory;
-            _battleManager = battleManager;
+            Console.WriteLine( "Имя не может быть пустым!" );
+
+            return;
         }
 
-        public void ShowMenu()
+        IFighter fighter = _factory.CreateFighter( name );
+        fighters.Add( fighter );
+        Console.WriteLine( "Боец добавлен!" );
+    }
+
+    public void ShowFighters( List<IFighter> fighters )
+    {
+        Console.WriteLine();
+
+        if ( fighters.Count == 0 )
         {
-            Console.WriteLine();
-            Console.WriteLine( "Fighters Game - Меню" );
-            Console.WriteLine( "1 - Добавить бойца" );
-            Console.WriteLine( "2 - Показать бойцов" );
-            Console.WriteLine( "3 - Играть" );
-            Console.WriteLine( "4 - Выйти" );
+            Console.WriteLine( "Нет бойцов!" );
+
+            return;
         }
 
-        public void AddFighter( List<IFighter> fighters )
+        Console.WriteLine( "Список бойцов:" );
+        for ( int i = 0; i < fighters.Count; i++ )
         {
-            Console.WriteLine();
-            Console.WriteLine( "Введите имя бойца:" );
-            string name = Console.ReadLine() ?? "";
+            IFighter f = fighters[ i ];
+            Console.WriteLine( ( i + 1 ) + ". " + f.Name );
+            Console.WriteLine( "   " + f.GetInfo() );
+        }
+    }
 
-            if ( string.IsNullOrEmpty( name ) )
-            {
-                Console.WriteLine( "Имя не может быть пустым!" );
+    public void Play( List<IFighter> fighters )
+    {
+        Console.WriteLine();
 
-                return;
-            }
+        if ( fighters.Count < 2 )
+        {
+            Console.WriteLine( "Для битвы нужно минимум 2 бойца!" );
 
-            IFighter fighter = _factory.CreateFighter( name );
-            fighters.Add( fighter );
-            Console.WriteLine( "Боец добавлен!" );
+            return;
         }
 
-        public void ShowFighters( List<IFighter> fighters )
-        {
-            Console.WriteLine();
-
-            if ( fighters.Count == 0 )
-            {
-                Console.WriteLine( "Нет бойцов!" );
-
-                return;
-            }
-
-            Console.WriteLine( "Список бойцов:" );
-            for ( int i = 0; i < fighters.Count; i++ )
-            {
-                IFighter f = fighters[ i ];
-                Console.WriteLine( ( i + 1 ) + ". " + f.Name );
-                Console.WriteLine( "   " + f.GetInfo() );
-            }
-        }
-
-        public void Play( List<IFighter> fighters )
-        {
-            Console.WriteLine();
-
-            if ( fighters.Count < 2 )
-            {
-                Console.WriteLine( "Для битвы нужно минимум 2 бойца!" );
-
-                return;
-            }
-
-            _battleManager.StartBattle( fighters );
-            fighters.Clear();
-        }
+        _battleManager.StartBattle( fighters );
+        fighters.Clear();
     }
 }

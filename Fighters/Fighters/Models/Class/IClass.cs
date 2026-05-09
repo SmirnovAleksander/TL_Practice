@@ -1,10 +1,9 @@
-namespace Fighters.Models.Class
+namespace Fighters.Models.Class;
+
+public interface IClass
 {
-    public interface IClass
-    {
-        public string Name { get; }
-        public int Damage { get; }
-        public int Health { get; }
-        public int Initiative { get; }
-    }
+    public string Name { get; }
+    public int Damage { get; }
+    public int Health { get; }
+    public int Initiative { get; }
 }

@@ -1,8 +1,7 @@
-namespace Fighters.Models.Armors
+namespace Fighters.Models.Armors;
+
+public class ChainMailArmor : IArmor
 {
-    public class ChainMailArmor : IArmor
-    {
-        public string Name { get; } = "Кольчужная броня";
-        public int Armor { get; } = 4;
-    }
+    public string Name { get; } = "Кольчужная броня";
+    public int Armor { get; } = 4;
 }

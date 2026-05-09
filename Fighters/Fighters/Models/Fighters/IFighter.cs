@@ -1,19 +1,18 @@
-﻿namespace Fighters.Models.Fighters
+﻿namespace Fighters.Models.Fighters;
+
+public interface IFighter
 {
-    public interface IFighter
-    {
-        string Name { get; }
-        int Initiative { get; }
+    string Name { get; }
+    int Initiative { get; }
 
-        public int GetCurrentHealth();
-        public int GetMaxHealth();
-        public int CalculateDamage();
-        public int CalculateArmor();
+    public int GetCurrentHealth();
+    public int GetMaxHealth();
+    public int CalculateDamage();
+    public int CalculateArmor();
 
-        public string GetInfo();
+    public string GetInfo();
 
-        public void TakeDamage( int damage );
+    public void TakeDamage( int damage );
 
-        public bool IsAlive();
-    }
+    public bool IsAlive();
 }

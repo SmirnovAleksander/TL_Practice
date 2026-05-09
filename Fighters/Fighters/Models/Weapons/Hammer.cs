@@ -1,8 +1,7 @@
-namespace Fighters.Models.Weapons
+namespace Fighters.Models.Weapons;
+
+public class Hammer : IWeapon
 {
-    public class Hammer : IWeapon
-    {
-        public int Damage { get; } = 6;
-        public string Name { get; } = "Молот";
-    }
+    public int Damage { get; } = 6;
+    public string Name { get; } = "Молот";
 }

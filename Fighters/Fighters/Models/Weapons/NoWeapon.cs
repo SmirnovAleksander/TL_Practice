@@ -1,8 +1,7 @@
-namespace Fighters.Models.Weapons
+namespace Fighters.Models.Weapons;
+
+public class NoWeapon : IWeapon
 {
-    public class NoWeapon : IWeapon
-    {
-        public int Damage { get; } = 0;
-        public string Name { get; } = "Без оружия";
-    }
+    public int Damage { get; } = 0;
+    public string Name { get; } = "Без оружия";
 }

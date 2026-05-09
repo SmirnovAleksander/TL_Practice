@@ -1,9 +1,8 @@
 using Fighters.Models.Fighters;
 
-namespace Fighters.Services.Interfaces
+namespace Fighters.Services.Interfaces;
+
+public interface IBattleManager
 {
-    public interface IBattleManager
-    {
-        void StartBattle( List<IFighter> fighters );
-    }
+    void StartBattle( List<IFighter> fighters );
 }
