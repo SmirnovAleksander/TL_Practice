@@ -1,10 +1,9 @@
-namespace Casino
+namespace Casino;
+
+public enum OptionHandleResult
 {
-    public enum OptionHandleResult
-    {
-        Success = 0,
-        InvalidOption = 1,
-        InvalidInput = 2,
-        Exit = 3
-    }
+    Success = 0,
+    InvalidOption = 1,
+    InvalidInput = 2,
+    Exit = 3
 }

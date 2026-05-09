@@ -2,7 +2,7 @@
 
 internal class Program
 {
-    private const int DeliveryDays = 3;
+    private const int deliveryDays = 3;
 
     private static void Main()
     {
@@ -126,7 +126,7 @@ internal class Program
         int count,
         string address )
     {
-        DateTime dateDelivery = DateTime.Today.AddDays( DeliveryDays );
+        DateTime dateDelivery = DateTime.Today.AddDays( deliveryDays );
         string date = dateDelivery.ToString( "dd.MM.yyyy" );
 
         Console.WriteLine( $"{customerName}! Ваш заказ {product} в количестве {count} оформлен! Ожидайте доставку по адресу {address} к {date}" );
