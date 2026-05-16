@@ -1,5 +1,6 @@
 using Fighters.Models.Fighters;
 using Fighters.Services.Interfaces;
+using Fighters.Utils;
 
 namespace Fighters.Services.Implementations;
 
@@ -7,6 +8,7 @@ public class GameManager : IGameManager
 {
     private readonly IFighterFactory _factory;
     private readonly IBattleManager _battleManager;
+    private readonly List<IFighter> _fighters = [];
 
     public GameManager( IFighterFactory factory, IBattleManager battleManager )
     {
@@ -14,17 +16,54 @@ public class GameManager : IGameManager
         _battleManager = battleManager;
     }
 
-    public void ShowMenu()
+    public void PlayGame()
     {
-        Console.WriteLine();
-        Console.WriteLine( "Fighters Game - Меню" );
-        Console.WriteLine( "1 - Добавить бойца" );
-        Console.WriteLine( "2 - Показать бойцов" );
-        Console.WriteLine( "3 - Играть" );
-        Console.WriteLine( "4 - Выйти" );
+        const int maxOptionIndex = 4;
+
+        while ( true )
+        {
+            ShowMenu();
+            int choice = InputHelper.ReadChoice( maxOptionIndex );
+
+            switch ( choice )
+            {
+                case 1:
+                    AddFighter();
+                    break;
+
+                case 2:
+                    ShowFighters();
+                    break;
+
+                case 3:
+                    Play();
+                    break;
+
+                case 4:
+                    return;
+            }
+        }
     }
 
-    public void AddFighter( List<IFighter> fighters )
+    private void ShowMenu()
+    {
+        List<string> menuItems =
+        [
+            "Добавить бойца",
+            "Показать бойцов",
+            "Играть",
+            "Выйти"
+        ];
+
+        Console.WriteLine();
+        Console.WriteLine( "Fighters Game - Меню" );
+        for ( int i = 0; i < menuItems.Count; i++ )
+        {
+            Console.WriteLine( $"{i + 1} - {menuItems[ i ]}" );
+        }
+    }
+
+    private void AddFighter()
     {
         Console.WriteLine();
         Console.WriteLine( "Введите имя бойца:" );
@@ -38,15 +77,15 @@ public class GameManager : IGameManager
         }
 
         IFighter fighter = _factory.CreateFighter( name );
-        fighters.Add( fighter );
+        _fighters.Add( fighter );
         Console.WriteLine( "Боец добавлен!" );
     }
 
-    public void ShowFighters( List<IFighter> fighters )
+    private void ShowFighters()
     {
         Console.WriteLine();
 
-        if ( fighters.Count == 0 )
+        if ( _fighters.Count == 0 )
         {
             Console.WriteLine( "Нет бойцов!" );
 
@@ -54,26 +93,26 @@ public class GameManager : IGameManager
         }
 
         Console.WriteLine( "Список бойцов:" );
-        for ( int i = 0; i < fighters.Count; i++ )
+        for ( int i = 0; i < _fighters.Count; i++ )
         {
-            IFighter f = fighters[ i ];
+            IFighter f = _fighters[ i ];
             Console.WriteLine( ( i + 1 ) + ". " + f.Name );
-            Console.WriteLine( "   " + f.GetInfo() );
+            Console.WriteLine( f );
         }
     }
 
-    public void Play( List<IFighter> fighters )
+    private void Play()
     {
         Console.WriteLine();
 
-        if ( fighters.Count < 2 )
+        if ( _fighters.Count < 2 )
         {
             Console.WriteLine( "Для битвы нужно минимум 2 бойца!" );
 
             return;
         }
 
-        _battleManager.StartBattle( fighters );
-        fighters.Clear();
+        _battleManager.StartBattle( _fighters );
+        _fighters.Clear();
     }
 }

@@ -7,17 +7,22 @@ namespace Fighters.Models.Fighters;
 
 public class Fighter : IFighter
 {
-    private IRace _race;
-    private IClass _fighterClass;
-    private IArmor _armor;
-    private IWeapon _weapon;
+    private readonly IRace _race;
+    private readonly IClass _fighterClass;
+    private readonly IArmor _armor;
+    private readonly IWeapon _weapon;
 
     private int _currentHealth;
 
     public string Name { get; }
     public int Initiative => _race.Initiative + _fighterClass.Initiative;
 
-    public Fighter( string name, IRace race, IArmor armor, IWeapon weapon, IClass fighterClass )
+    public Fighter(
+        string name,
+        IRace race,
+        IArmor armor,
+        IWeapon weapon,
+        IClass fighterClass )
     {
         Name = name;
         _race = race;
@@ -36,10 +41,10 @@ public class Fighter : IFighter
 
     public int CalculateArmor() => _armor.Armor + _race.Armor;
 
-    public string GetInfo()
+    public override string ToString()
     {
-        return "Класс: " + _fighterClass.Name + ", Раса: " + _race.Name + ", Броня: " + _armor.Name + ", Оружие: " + _weapon.Name + "\n"
-                + "HP: " + GetMaxHealth() + ", Урон: " + CalculateDamage() + ", Броня: " + CalculateArmor() + ", Инициатива: " + Initiative;
+        return $@"   Класс: {_fighterClass.Name}, Раса: {_race.Name}, Броня на герое: {_armor.Name}, Оружие: {_weapon.Name}
+   HP: {GetMaxHealth()}, Урон: {CalculateDamage()}, Броня: {CalculateArmor()}, Инициатива: {Initiative}";
     }
 
     public void TakeDamage( int damage )

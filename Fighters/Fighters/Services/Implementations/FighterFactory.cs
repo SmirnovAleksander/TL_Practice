@@ -1,8 +1,8 @@
-using Fighters.Models.Armors;
-using Fighters.Models.Class;
 using Fighters.Models.Fighters;
 using Fighters.Models.Races;
+using Fighters.Models.Class;
 using Fighters.Models.Weapons;
+using Fighters.Models.Armors;
 using Fighters.Services.Interfaces;
 using Fighters.Utils;
 
@@ -15,7 +15,11 @@ public class FighterFactory : IFighterFactory
     private readonly List<IArmor> _armors;
     private readonly List<IClass> _classes;
 
-    public FighterFactory( List<IRace> races, List<IWeapon> weapons, List<IArmor> armors, List<IClass> classes )
+    public FighterFactory( 
+        List<IRace> races, 
+        List<IWeapon> weapons, 
+        List<IArmor> armors, 
+        List<IClass> classes )
     {
         _races = races;
         _weapons = weapons;
@@ -25,28 +29,11 @@ public class FighterFactory : IFighterFactory
 
     public IFighter CreateFighter( string name )
     {
-        Console.WriteLine( "Выберите расу:" );
-        InputHelper.DisplayOptions( _races.ConvertAll( r => r.Name ) );
-        int raceIndex = InputHelper.ReadChoice( _races.Count );
+        IRace race = InputHelper.SelectItem( _races, r => r.Name, "Выберите расу:" );
+        IWeapon weapon = InputHelper.SelectItem( _weapons, w => w.Name, "Выберите оружие:" );
+        IArmor armor = InputHelper.SelectItem( _armors, a => a.Name, "Выберите броню:" );
+        IClass fighterClass = InputHelper.SelectItem( _classes, c => c.Name, "Выберите класс:" );
 
-        Console.WriteLine( "Выберите оружие:" );
-        InputHelper.DisplayOptions( _weapons.ConvertAll( w => w.Name ) );
-        int weaponIndex = InputHelper.ReadChoice( _weapons.Count );
-
-        Console.WriteLine( "Выберите броню:" );
-        InputHelper.DisplayOptions( _armors.ConvertAll( a => a.Name ) );
-        int armorIndex = InputHelper.ReadChoice( _armors.Count );
-
-        Console.WriteLine( "Выберите класс:" );
-        InputHelper.DisplayOptions( _classes.ConvertAll( c => c.Name ) );
-        int classIndex = InputHelper.ReadChoice( _classes.Count );
-
-        return new Fighter(
-            name,
-            _races[ raceIndex ],
-            _armors[ armorIndex ],
-            _weapons[ weaponIndex ],
-            _classes[ classIndex ]
-        );
+        return new Fighter( name, race, armor, weapon, fighterClass );
     }
 }

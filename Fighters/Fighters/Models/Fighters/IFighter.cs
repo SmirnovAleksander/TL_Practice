@@ -10,8 +10,6 @@ public interface IFighter
     public int CalculateDamage();
     public int CalculateArmor();
 
-    public string GetInfo();
-
     public void TakeDamage( int damage );
 
     public bool IsAlive();

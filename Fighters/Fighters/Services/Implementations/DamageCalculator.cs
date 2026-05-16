@@ -10,18 +10,23 @@ public class DamageCalculator : IDamageCalculator
     private const double CriticalChance = 0.15;
     private const int CriticalMultiplier = 2;
 
-    private readonly Random _random = new();
+    private readonly IRandomProvider _randomProvider;
+
+    public DamageCalculator( IRandomProvider randomProvider )
+    {
+        _randomProvider = randomProvider;
+    }
 
     public int CalculateDamage( IFighter attacker, IFighter defender )
     {
         int baseDamage = attacker.CalculateDamage();
         int defenderArmor = defender.CalculateArmor();
 
-        int randomModifier = _random.Next( MinRandomModifier, MaxRandomModifier + 1 );
+        int randomModifier = _randomProvider.Next( MinRandomModifier, MaxRandomModifier + 1 );
         double modifier = 1.0 + ( randomModifier / 100.0 );
         int newDamage = ( int )( baseDamage * modifier );
 
-        bool isCritical = _random.NextDouble() < CriticalChance;
+        bool isCritical = _randomProvider.NextDouble() < CriticalChance;
         if ( isCritical )
         {
             newDamage *= CriticalMultiplier;
