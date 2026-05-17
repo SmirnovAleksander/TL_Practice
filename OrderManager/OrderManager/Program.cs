@@ -2,9 +2,9 @@
 
 internal class Program
 {
-    private const int deliveryDays = 3;
+    private const int DeliveryDays = 3;
 
-    private static void Main()
+    public static void Main()
     {
         bool isOrderProcessing = true;
 
@@ -50,11 +50,9 @@ internal class Program
             Console.Write( message );
             input = ( Console.ReadLine() ?? "" ).Trim();
 
-            if ( !string.IsNullOrWhiteSpace( input ) )
-            {
-                isValid = true;
-            }
-            else
+            isValid = !string.IsNullOrWhiteSpace( input );
+
+            if ( !isValid )
             {
                 Console.WriteLine( "Поле не может быть пустым. Попробуйте снова." );
             }
@@ -73,11 +71,9 @@ internal class Program
             Console.Write( "Введите количество товара: " );
             string input = Console.ReadLine() ?? "";
 
-            if ( int.TryParse( input, out count ) && count > 0 )
-            {
-                isValid = true;
-            }
-            else
+            isValid = int.TryParse( input, out count ) && count > 0;
+
+            if ( !isValid )
             {
                 Console.WriteLine( "Введите корректное положительное число!" );
             }
@@ -107,11 +103,9 @@ internal class Program
             Console.Write( $"{inputStr} ( да/нет ): " );
             userChoice = Console.ReadLine()?.Trim().ToLower() ?? "";
 
-            if ( userChoice == "да" || userChoice == "нет" )
-            {
-                isValid = true;
-            }
-            else
+            isValid = userChoice == "да" || userChoice == "нет";
+
+            if ( !isValid )
             {
                 Console.WriteLine( "Ошибка: Введите да или нет!" );
             }
@@ -126,7 +120,7 @@ internal class Program
         int count,
         string address )
     {
-        DateTime dateDelivery = DateTime.Today.AddDays( deliveryDays );
+        DateTime dateDelivery = DateTime.Today.AddDays( DeliveryDays );
         string date = dateDelivery.ToString( "dd.MM.yyyy" );
 
         Console.WriteLine( $"{customerName}! Ваш заказ {product} в количестве {count} оформлен! Ожидайте доставку по адресу {address} к {date}" );
