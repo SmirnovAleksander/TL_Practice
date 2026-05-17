@@ -2,7 +2,6 @@ namespace CarFactory.Utils;
 
 public interface IConsole
 {
-    void WriteLine();
-    void WriteLine( string message );
+    void WriteLine( object? message );
     string ReadLine();
 }

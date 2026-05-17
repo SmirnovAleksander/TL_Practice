@@ -1,10 +1,10 @@
 using CarFactory.Models.Enums;
+using CarFactory.Models.Interfaces;
 
 namespace CarFactory.Models.Engines;
 
-public interface IEngine
+public interface IEngine : INamed
 {
-    public string Name { get; }
     public int Power { get; }
     public FuelType FuelType { get; }
 }

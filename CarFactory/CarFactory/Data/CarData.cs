@@ -6,7 +6,7 @@ using CarFactory.Models.SteeringWheelPositions;
 
 namespace CarFactory.Data;
 
-public class GameData : IDataProvider
+public class CarData : IDataProvider
 {
     public List<IColor> Colors { get; } =
     [

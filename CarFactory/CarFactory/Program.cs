@@ -7,9 +7,9 @@ namespace CarFactory;
 
 internal class Program
 {
-    private static void Main()
+    public static void Main()
     {
-        IDataProvider dataProvider = new GameData();
+        IDataProvider dataProvider = new CarData();
         IConsole console = new SystemConsole();
         IInputHelper inputHelper = new InputHelper( console );
 
@@ -17,6 +17,6 @@ internal class Program
 
         ICarManager carManager = new CarManager( carFactory, inputHelper, console );
 
-        carManager.PlayGame();
+        carManager.Run();
     }
 }

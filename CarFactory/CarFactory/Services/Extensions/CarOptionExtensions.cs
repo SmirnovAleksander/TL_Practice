@@ -9,15 +9,15 @@ public static class CarOptionExtensions
 {
     public static List<IEngine> FilterByBodyForm( this List<IEngine> engines, IBodyForm bodyForm )
     {
-        return engines.Where( e =>
+        return engines.FindAll( e =>
             !( e.FuelType == FuelType.Electric && bodyForm is Pickup ) &&
             !( bodyForm.WeightKg > 2000 && e.Power < 180 )
-        ).ToList();
+        );
     }
 
     public static List<IGearBox> FilterByEngineAndBody( this List<IGearBox> gearBoxes, IEngine engine, IBodyForm bodyForm )
     {
-        return gearBoxes.Where( g =>
+        return gearBoxes.FindAll( g =>
         {
             if ( engine.FuelType == FuelType.Electric && g.TransmissionType != TransmissionType.ReductionGear )
                 return false;
@@ -32,6 +32,6 @@ public static class CarOptionExtensions
             }
 
             return true;
-        } ).ToList();
+        } );
     }
 }

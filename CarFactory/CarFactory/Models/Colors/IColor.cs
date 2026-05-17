@@ -1,6 +1,7 @@
+using CarFactory.Models.Interfaces;
+
 namespace CarFactory.Models.Colors;
 
-public interface IColor
+public interface IColor : INamed
 {
-    public string Name { get; }
 }

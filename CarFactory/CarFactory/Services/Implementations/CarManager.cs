@@ -21,7 +21,7 @@ public class CarManager : ICarManager
         _console = console;
     }
 
-    public void PlayGame()
+    public void Run()
     {
         const int maxMenuOption = 3;
         bool isRunning = true;
@@ -57,7 +57,7 @@ public class CarManager : ICarManager
             "Выйти"
         ];
 
-        _console.WriteLine();
+        _console.WriteLine( "" );
         _console.WriteLine( "Car Factory - Меню" );
         for ( int i = 0; i < menuItems.Count; i++ )
         {
@@ -67,7 +67,7 @@ public class CarManager : ICarManager
 
     private void CreateCar()
     {
-        _console.WriteLine();
+        _console.WriteLine( "" );
         _console.WriteLine( "Введите название машины:" );
         string name = _console.ReadLine();
 
@@ -85,7 +85,7 @@ public class CarManager : ICarManager
 
     private void ShowCars()
     {
-        _console.WriteLine();
+        _console.WriteLine( "" );
 
         if ( _cars.Count == 0 )
         {
@@ -99,8 +99,7 @@ public class CarManager : ICarManager
         {
             ICar car = _cars[ i ];
             _console.WriteLine( $"{i + 1}. Имя: {car.Name}" );
-            _console.WriteLine( car.ToString() );
+            _console.WriteLine( car );
         }
     }
-
 }

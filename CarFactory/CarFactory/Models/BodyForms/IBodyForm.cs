@@ -1,8 +1,9 @@
+using CarFactory.Models.Interfaces;
+
 namespace CarFactory.Models.BodyForms;
 
-public interface IBodyForm
+public interface IBodyForm : INamed
 {
-    public string Name { get; }
     public int DoorCount { get; }
     public double AirResistanceCoeff { get; }
     public int WeightKg { get; }
