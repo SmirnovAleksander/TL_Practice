@@ -1,8 +1,9 @@
+using Fighters.Data;
+using Fighters.Models.Armors;
+using Fighters.Models.Class;
 using Fighters.Models.Fighters;
 using Fighters.Models.Races;
-using Fighters.Models.Class;
 using Fighters.Models.Weapons;
-using Fighters.Models.Armors;
 using Fighters.Services.Interfaces;
 using Fighters.Utils;
 
@@ -10,30 +11,27 @@ namespace Fighters.Services.Implementations;
 
 public class FighterFactory : IFighterFactory
 {
-    private readonly List<IRace> _races;
-    private readonly List<IWeapon> _weapons;
-    private readonly List<IArmor> _armors;
-    private readonly List<IClass> _classes;
+    private readonly IDataProvider _dataProvider;
+    private readonly IInputHelper _inputHelper;
 
-    public FighterFactory( 
-        List<IRace> races, 
-        List<IWeapon> weapons, 
-        List<IArmor> armors, 
-        List<IClass> classes )
+    public FighterFactory( IDataProvider dataProvider, IInputHelper inputHelper )
     {
-        _races = races;
-        _weapons = weapons;
-        _armors = armors;
-        _classes = classes;
+        _dataProvider = dataProvider;
+        _inputHelper = inputHelper;
     }
 
     public IFighter CreateFighter( string name )
     {
-        IRace race = InputHelper.SelectItem( _races, r => r.Name, "Выберите расу:" );
-        IWeapon weapon = InputHelper.SelectItem( _weapons, w => w.Name, "Выберите оружие:" );
-        IArmor armor = InputHelper.SelectItem( _armors, a => a.Name, "Выберите броню:" );
-        IClass fighterClass = InputHelper.SelectItem( _classes, c => c.Name, "Выберите класс:" );
+        IRace race = _inputHelper.SelectItem( _dataProvider.Races, r => r.Name, "Выберите расу:" );
+        IWeapon weapon = _inputHelper.SelectItem( _dataProvider.Weapons, w => w.Name, "Выберите оружие:" );
+        IArmor armor = _inputHelper.SelectItem( _dataProvider.Armors, a => a.Name, "Выберите броню:" );
+        IClass fighterClass = _inputHelper.SelectItem( _dataProvider.Classes, c => c.Name, "Выберите класс:" );
 
-        return new Fighter( name, race, armor, weapon, fighterClass );
+        return new Fighter(
+            name,
+            race,
+            armor,
+            weapon,
+            fighterClass );
     }
 }

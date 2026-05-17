@@ -1,21 +1,29 @@
 namespace Fighters.Utils;
 
-public class InputHelper
+public class InputHelper : IInputHelper
 {
-    public static int ReadChoice( int maxOption )
+    public int ReadChoice( int maxOption )
     {
-        while ( true )
+        bool isValid = false;
+        int choice = 0;
+
+        while ( !isValid )
         {
             string input = Console.ReadLine() ?? "";
-            if ( int.TryParse( input, out int choice ) && choice >= 1 && choice <= maxOption )
+            if ( int.TryParse( input, out choice ) && choice >= 1 && choice <= maxOption )
             {
-                return choice;
+                isValid = true;
             }
-            Console.WriteLine( $"Введите число от 1 до {maxOption}" );
+            else
+            {
+                Console.WriteLine( $"Введите число от 1 до {maxOption}" );
+            }
         }
+
+        return choice;
     }
 
-    public static T SelectItem<T>( List<T> items, Func<T, string> nameSelector, string textMessage )
+    public T SelectItem<T>( List<T> items, Func<T, string> nameSelector, string textMessage )
     {
         Console.WriteLine( textMessage );
         for ( int i = 0; i < items.Count; i++ )

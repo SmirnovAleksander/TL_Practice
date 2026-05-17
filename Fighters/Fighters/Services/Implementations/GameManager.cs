@@ -8,22 +8,25 @@ public class GameManager : IGameManager
 {
     private readonly IFighterFactory _factory;
     private readonly IBattleManager _battleManager;
+    private readonly IInputHelper _inputHelper;
     private readonly List<IFighter> _fighters = [];
 
-    public GameManager( IFighterFactory factory, IBattleManager battleManager )
+    public GameManager( IFighterFactory factory, IBattleManager battleManager, IInputHelper inputHelper )
     {
         _factory = factory;
         _battleManager = battleManager;
+        _inputHelper = inputHelper;
     }
 
     public void PlayGame()
     {
         const int maxOptionIndex = 4;
+        bool isRunning = true;
 
-        while ( true )
+        while ( isRunning )
         {
             ShowMenu();
-            int choice = InputHelper.ReadChoice( maxOptionIndex );
+            int choice = _inputHelper.ReadChoice( maxOptionIndex );
 
             switch ( choice )
             {
@@ -40,7 +43,8 @@ public class GameManager : IGameManager
                     break;
 
                 case 4:
-                    return;
+                    isRunning = false;
+                    break;
             }
         }
     }
@@ -96,7 +100,7 @@ public class GameManager : IGameManager
         for ( int i = 0; i < _fighters.Count; i++ )
         {
             IFighter f = _fighters[ i ];
-            Console.WriteLine( ( i + 1 ) + ". " + f.Name );
+            Console.WriteLine( $"{i + 1}. Имя: {f.Name}" );
             Console.WriteLine( f );
         }
     }

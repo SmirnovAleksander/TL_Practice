@@ -5,9 +5,9 @@ using Fighters.Models.Weapons;
 
 namespace Fighters.Data;
 
-public static class GameData
+public class GameData : IDataProvider
 {
-    public static List<IRace> Races { get; } =
+    public List<IRace> Races { get; } =
     [
         new Human(),
         new Dwarf(),
@@ -15,7 +15,7 @@ public static class GameData
         new Ghost()
     ];
 
-    public static List<IWeapon> Weapons { get; } =
+    public List<IWeapon> Weapons { get; } =
     [
         new NoWeapon(),
         new SilverSword(),
@@ -23,7 +23,7 @@ public static class GameData
         new Hammer()
     ];
 
-    public static List<IArmor> Armors { get; } =
+    public List<IArmor> Armors { get; } =
     [
         new NoArmor(),
         new ClothRobe(),
@@ -32,7 +32,7 @@ public static class GameData
         new PlateArmor()
     ];
 
-    public static List<IClass> Classes { get; } =
+    public List<IClass> Classes { get; } =
     [
         new Knight(),
         new Wizard(),
