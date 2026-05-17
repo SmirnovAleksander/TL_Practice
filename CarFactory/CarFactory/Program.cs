@@ -11,9 +11,8 @@ internal class Program
     {
         IDataProvider dataProvider = new GameData();
         IInputHelper inputHelper = new InputHelper();
-        ICarOptionFilter optionFilter = new CarOptionFilter();
 
-        ICarCreator carFactory = new CarCreator( dataProvider, optionFilter, inputHelper );
+        ICarCreator carFactory = new CarCreator( dataProvider, inputHelper );
 
         ICarManager carManager = new CarManager( carFactory, inputHelper );
 
