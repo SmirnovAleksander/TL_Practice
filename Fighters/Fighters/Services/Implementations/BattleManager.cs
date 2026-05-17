@@ -41,11 +41,6 @@ public class BattleManager : IBattleManager
         for ( int i = 0; i < fighters.Count; i++ )
         {
             IFighter attacker = fighters[ i ];
-            if ( !attacker.IsAlive() )
-            {
-                continue;
-            }
-
             int nextIndex = ( i + 1 ) % fighters.Count;
 
             IFighter defender = fighters[ nextIndex ];

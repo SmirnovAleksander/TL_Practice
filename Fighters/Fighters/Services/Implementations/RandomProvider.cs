@@ -4,8 +4,6 @@ namespace Fighters.Services.Implementations;
 
 public class RandomProvider : IRandomProvider
 {
-    private readonly Random _random = new();
-
-    public int Next( int minValue, int maxValue ) => _random.Next( minValue, maxValue );
-    public double NextDouble() => _random.NextDouble();
+    public int Next( int minValue, int maxValue ) => Random.Shared.Next( minValue, maxValue );
+    public double NextDouble() => Random.Shared.NextDouble();
 }

@@ -1,8 +1,9 @@
+using Fighters.Models.Interfaces;
+
 namespace Fighters.Models.Class;
 
-public interface IClass
+public interface IClass : INamed
 {
-    public string Name { get; }
     public int Damage { get; }
     public int Health { get; }
     public int Initiative { get; }

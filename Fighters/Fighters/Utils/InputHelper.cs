@@ -10,27 +10,14 @@ public class InputHelper : IInputHelper
         while ( !isValid )
         {
             string input = Console.ReadLine() ?? "";
-            if ( int.TryParse( input, out choice ) && choice >= 1 && choice <= maxOption )
-            {
-                isValid = true;
-            }
-            else
+            isValid = int.TryParse( input, out choice ) && choice >= 1 && choice <= maxOption;
+
+            if ( !isValid )
             {
                 Console.WriteLine( $"Введите число от 1 до {maxOption}" );
             }
         }
 
         return choice;
-    }
-
-    public T SelectItem<T>( List<T> items, Func<T, string> nameSelector, string textMessage )
-    {
-        Console.WriteLine( textMessage );
-        for ( int i = 0; i < items.Count; i++ )
-        {
-            Console.WriteLine( $"{i + 1} - {nameSelector( items[ i ] )}" );
-        }
-        int choice = ReadChoice( items.Count );
-        return items[ choice - 1 ];
     }
 }

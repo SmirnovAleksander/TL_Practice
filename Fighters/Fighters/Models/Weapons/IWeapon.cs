@@ -1,7 +1,8 @@
-﻿namespace Fighters.Models.Weapons;
+﻿using Fighters.Models.Interfaces;
 
-public interface IWeapon
+namespace Fighters.Models.Weapons;
+
+public interface IWeapon : INamed
 {
     public int Damage { get; }
-    public string Name { get; }
 }
