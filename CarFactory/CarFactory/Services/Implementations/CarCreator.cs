@@ -36,31 +36,17 @@ public class CarCreator : ICarCreator
 
     public ICar CreateCar( string name )
     {
-        Console.WriteLine( "Выберите цвет:" );
-        InputHelper.DisplayOptions( _colors.ConvertAll( c => c.Name ) );
-        IColor color = _colors[ InputHelper.ReadChoice( _colors.Count ) ];
-
-        Console.WriteLine( "Выберите кузов:" );
-        InputHelper.DisplayOptions( _bodyForms.ConvertAll( b => b.Name ) );
-        IBodyForm bodyForm = _bodyForms[ InputHelper.ReadChoice( _bodyForms.Count ) ];
+        IColor color = InputHelper.SelectItem( _colors, c => c.Name, "Выберите цвет:" );
+        IBodyForm bodyForm = InputHelper.SelectItem( _bodyForms, b => b.Name, "Выберите кузов:" );
 
         List<IEngine> availableEngines = _optionFilter.FilterEngines( bodyForm, _engines );
-
-        Console.WriteLine( "Выберите двигатель:" );
-        InputHelper.DisplayOptions( availableEngines.ConvertAll( e => e.Name ) );
-        IEngine engine = availableEngines[ InputHelper.ReadChoice( availableEngines.Count ) ];
+        IEngine engine = InputHelper.SelectItem( availableEngines, e => e.Name, "Выберите двигатель:" );
 
         List<IGearBox> availableGearBoxes = _optionFilter.FilterGearBoxes( engine, bodyForm, _gearBoxes );
+        IGearBox gearBox = InputHelper.SelectItem( availableGearBoxes, g => g.Name, "Выберите коробку передач:" );
 
-        Console.WriteLine( "Выберите коробку передач:" );
-        InputHelper.DisplayOptions( availableGearBoxes.ConvertAll( g => g.Name ) );
-        IGearBox gearBox = availableGearBoxes[ InputHelper.ReadChoice( availableGearBoxes.Count ) ];
-
-        Console.WriteLine( "Выберите положение руля:" );
-        InputHelper.DisplayOptions( _steeringWheelPositions.ConvertAll( s => s.Name ) );
-        ISteeringWheelPosition steeringWheelPosition = _steeringWheelPositions[ InputHelper.ReadChoice( _steeringWheelPositions.Count ) ];
+        ISteeringWheelPosition steeringWheelPosition = InputHelper.SelectItem( _steeringWheelPositions, s => s.Name, "Выберите положение руля:" );
 
         return new Car( name, color, bodyForm, engine, gearBox, steeringWheelPosition );
-
     }
 }

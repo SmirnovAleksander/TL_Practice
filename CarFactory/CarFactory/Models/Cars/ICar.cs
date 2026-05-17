@@ -4,5 +4,4 @@ public interface ICar
 {
     string Name { get; }
     int CalculateMaxSpeed();
-    string GetInfo();
 }

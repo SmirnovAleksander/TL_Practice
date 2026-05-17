@@ -9,11 +9,11 @@ namespace CarFactory.Models.Cars;
 
 public class Car : ICar
 {
-    private IColor _color;
-    private IBodyForm _bodyForm;
-    private IEngine _engine;
-    private IGearBox _gearBox;
-    private ISteeringWheelPosition _steeringWheelPosition;
+    private readonly IColor _color;
+    private readonly IBodyForm _bodyForm;
+    private readonly IEngine _engine;
+    private readonly IGearBox _gearBox;
+    private readonly ISteeringWheelPosition _steeringWheelPosition;
 
     public string Name { get; }
 
@@ -55,11 +55,9 @@ public class Car : ICar
         return ( int )Math.Round( speed );
     }
 
-    public string GetInfo()
+    public override string ToString()
     {
-        return "Цвет: " + _color.Name + ", Кузов: " + _bodyForm.Name
-            + ", Двигатель: " + _engine.Name + ", КПП: " + _gearBox.Name
-            + ", Руль: " + _steeringWheelPosition.Name + "\n"
-            + "Макс. скорость: " + CalculateMaxSpeed() + " км/ч, Мощность: " + _engine.Power + " л.с.";
+        return $@"   Цвет: {_color.Name}, Кузов: {_bodyForm.Name}, Двигатель: {_engine.Name}, КПП: {_gearBox.Name}, Руль: {_steeringWheelPosition.Name}
+   Макс. скорость: {CalculateMaxSpeed()} км/ч, Мощность: {_engine.Power} л.с.";
     }
 }
