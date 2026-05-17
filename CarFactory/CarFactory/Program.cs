@@ -13,7 +13,7 @@ internal class Program
         IConsole console = new SystemConsole();
         IInputHelper inputHelper = new InputHelper( console );
 
-        ICarCreator carFactory = new CarCreator( dataProvider, inputHelper );
+        var carFactory = new Services.Implementations.CarFactory( dataProvider, inputHelper );
 
         ICarManager carManager = new CarManager( carFactory, inputHelper, console );
 

@@ -5,7 +5,7 @@ namespace CarFactory.Models.GearBoxes;
 public class CVT : IGearBox
 {
     public string Name { get; } = "Вариатор";
-    public int? GearCount { get; } = null;
+    public int GearCount { get; } = 0;
     public TransmissionType TransmissionType { get; } = TransmissionType.Cvt;
-    public double CalculateGearFactor() => 0.9;
+    public double GearCoefficient { get; } = 0.9;
 }

@@ -11,12 +11,12 @@ using CarFactory.Utils;
 
 namespace CarFactory.Services.Implementations;
 
-public class CarCreator : ICarCreator
+public class CarFactory : ICarFactory
 {
     private readonly IDataProvider _dataProvider;
     private readonly IInputHelper _inputHelper;
 
-    public CarCreator(
+    public CarFactory(
         IDataProvider dataProvider,
         IInputHelper inputHelper )
     {

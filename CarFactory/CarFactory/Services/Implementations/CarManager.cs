@@ -6,14 +6,14 @@ namespace CarFactory.Services.Implementations;
 
 public class CarManager : ICarManager
 {
-    private readonly ICarCreator _carFactory;
+    private readonly ICarFactory _carFactory;
     private readonly IInputHelper _inputHelper;
     private readonly IConsole _console;
     private readonly List<ICar> _cars = [];
 
-    public CarManager( 
-        ICarCreator carFactory, 
-        IInputHelper inputHelper, 
+    public CarManager(
+        ICarFactory carFactory,
+        IInputHelper inputHelper,
         IConsole console )
     {
         _carFactory = carFactory;

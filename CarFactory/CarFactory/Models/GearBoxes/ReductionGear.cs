@@ -5,7 +5,7 @@ namespace CarFactory.Models.GearBoxes;
 public class ReductionGear : IGearBox
 {
     public string Name { get; } = "Редуктор";
-    public int? GearCount { get; } = 1;
+    public int GearCount { get; } = 1;
     public TransmissionType TransmissionType { get; } = TransmissionType.ReductionGear;
-    public double CalculateGearFactor() => 1.0;
+    public double GearCoefficient { get; } = 1.0;
 }

@@ -5,7 +5,7 @@ namespace CarFactory.Models.GearBoxes;
 public class Automatic : IGearBox
 {
     public string Name { get; } = "Автомат";
-    public int? GearCount { get; } = 6;
+    public int GearCount { get; } = 6;
     public TransmissionType TransmissionType { get; } = TransmissionType.Automatic;
-    public double CalculateGearFactor() => 1.0 * GearCount!.Value / 6.0;
+    public double GearCoefficient { get; } = 1.0;
 }

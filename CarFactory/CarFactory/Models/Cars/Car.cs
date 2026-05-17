@@ -37,7 +37,7 @@ public class Car : ICar
         double power = _engine.Power;
         double weight = _bodyForm.WeightKg;
         double air = _bodyForm.AirResistanceCoeff;
-        double gearFactor = _gearBox.CalculateGearFactor();
+        double gearFactor = _gearBox.GearCoefficient;
 
         double speed = ( power * gearFactor * 8 ) / ( Math.Sqrt( weight ) * air );
 
@@ -47,6 +47,6 @@ public class Car : ICar
     public override string ToString()
     {
         return $@"   Цвет: {_color.Name}, Кузов: {_bodyForm.Name}, Двигатель: {_engine.Name}, КПП: {_gearBox.Name}, Руль: {_steeringWheelPosition.Name}
-   Макс. скорость: {CalculateMaxSpeed()} км/ч, Мощность: {_engine.Power} л.с.";
+   Макс. скорость: {CalculateMaxSpeed()} км/ч, Мощность: {_engine.Power} л.с., Количество передач: {_gearBox.GearCount}";
     }
 }
