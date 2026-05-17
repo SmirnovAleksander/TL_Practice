@@ -37,6 +37,12 @@ public class CarCreator : ICarCreator
 
         ISteeringWheelPosition steeringWheelPosition = _inputHelper.SelectItem( _dataProvider.SteeringWheelPositions, s => s.Name, "Выберите положение руля:" );
 
-        return new Car( name, color, bodyForm, engine, gearBox, steeringWheelPosition );
+        return new Car( 
+            name, 
+            color,
+            bodyForm, 
+            engine, 
+            gearBox, 
+            steeringWheelPosition );
     }
 }

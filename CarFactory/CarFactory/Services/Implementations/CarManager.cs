@@ -8,12 +8,17 @@ public class CarManager : ICarManager
 {
     private readonly ICarCreator _carFactory;
     private readonly IInputHelper _inputHelper;
+    private readonly IConsole _console;
     private readonly List<ICar> _cars = [];
 
-    public CarManager( ICarCreator carFactory, IInputHelper inputHelper )
+    public CarManager( 
+        ICarCreator carFactory, 
+        IInputHelper inputHelper, 
+        IConsole console )
     {
         _carFactory = carFactory;
         _inputHelper = inputHelper;
+        _console = console;
     }
 
     public void PlayGame()
@@ -52,49 +57,49 @@ public class CarManager : ICarManager
             "Выйти"
         ];
 
-        Console.WriteLine();
-        Console.WriteLine( "Car Factory - Меню" );
+        _console.WriteLine();
+        _console.WriteLine( "Car Factory - Меню" );
         for ( int i = 0; i < menuItems.Count; i++ )
         {
-            Console.WriteLine( $"{i + 1} - {menuItems[ i ]}" );
+            _console.WriteLine( $"{i + 1} - {menuItems[ i ]}" );
         }
     }
 
     private void CreateCar()
     {
-        Console.WriteLine();
-        Console.WriteLine( "Введите название машины:" );
-        string name = Console.ReadLine() ?? "";
+        _console.WriteLine();
+        _console.WriteLine( "Введите название машины:" );
+        string name = _console.ReadLine();
 
         if ( string.IsNullOrEmpty( name ) )
         {
-            Console.WriteLine( "Название не может быть пустым!" );
+            _console.WriteLine( "Название не может быть пустым!" );
 
             return;
         }
 
         ICar car = _carFactory.CreateCar( name );
         _cars.Add( car );
-        Console.WriteLine( "Машина создана!" );
+        _console.WriteLine( "Машина создана!" );
     }
 
     private void ShowCars()
     {
-        Console.WriteLine();
+        _console.WriteLine();
 
         if ( _cars.Count == 0 )
         {
-            Console.WriteLine( "Нет машин!" );
+            _console.WriteLine( "Нет машин!" );
 
             return;
         }
 
-        Console.WriteLine( "Список машин:" );
+        _console.WriteLine( "Список машин:" );
         for ( int i = 0; i < _cars.Count; i++ )
         {
             ICar car = _cars[ i ];
-            Console.WriteLine( $"{i + 1}. Имя: {car.Name}" );
-            Console.WriteLine( car );
+            _console.WriteLine( $"{i + 1}. Имя: {car.Name}" );
+            _console.WriteLine( car.ToString() );
         }
     }
 

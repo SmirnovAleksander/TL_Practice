@@ -10,11 +10,12 @@ internal class Program
     private static void Main()
     {
         IDataProvider dataProvider = new GameData();
-        IInputHelper inputHelper = new InputHelper();
+        IConsole console = new SystemConsole();
+        IInputHelper inputHelper = new InputHelper( console );
 
         ICarCreator carFactory = new CarCreator( dataProvider, inputHelper );
 
-        ICarManager carManager = new CarManager( carFactory, inputHelper );
+        ICarManager carManager = new CarManager( carFactory, inputHelper, console );
 
         carManager.PlayGame();
     }
