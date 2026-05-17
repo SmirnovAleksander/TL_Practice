@@ -26,10 +26,10 @@ public static class GameData
 
     public static List<IEngine> Engines { get; } =
     [
-        new Benzine16(),
-        new Benzine30(),
-        new Diesel20(),
-        new Diesel40(),
+        new GasolineSmall(),
+        new GasolineLarge(),
+        new DieselMedium(),
+        new DieselLarge(),
         new Electric()
     ];
 

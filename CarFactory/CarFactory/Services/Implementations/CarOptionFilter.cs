@@ -19,7 +19,7 @@ public class CarOptionFilter : ICarOptionFilter
                 continue;
             }
 
-            if ( bodyForm.Weight > 2000 && engine.Power < 180 )
+            if ( bodyForm.WeightKg > 2000 && engine.Power < 180 )
             {
                 continue;
             }

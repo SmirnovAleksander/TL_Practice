@@ -1,6 +1,6 @@
 namespace CarFactory.Services.Interfaces;
 
-public interface IGameManager
+public interface ICarManager
 {
     void PlayGame();
 }

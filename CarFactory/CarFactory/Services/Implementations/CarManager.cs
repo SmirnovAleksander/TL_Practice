@@ -4,21 +4,22 @@ using CarFactory.Utils;
 
 namespace CarFactory.Services.Implementations;
 
-public class GameManager : IGameManager
+public class CarManager : ICarManager
 {
     private readonly ICarCreator _carFactory;
     private readonly List<ICar> _cars = [];
 
-    public GameManager( ICarCreator carFactory )
+    public CarManager( ICarCreator carFactory )
     {
         _carFactory = carFactory;
     }
 
     public void PlayGame()
     {
-        const int maxMenuOption = 4;
+        const int maxMenuOption = 3;
+        bool isRunning = true;
 
-        while ( true )
+        while ( isRunning )
         {
             ShowMenu();
             int choice = InputHelper.ReadChoice( maxMenuOption );
@@ -34,11 +35,8 @@ public class GameManager : IGameManager
                     break;
 
                 case 3:
-                    CompareCars();
+                    isRunning = false;
                     break;
-
-                case 4:
-                    return;
             }
         }
     }
@@ -49,7 +47,6 @@ public class GameManager : IGameManager
         [
             "Создать машину",
             "Показать машины",
-            "Сравнить машины",
             "Выйти"
         ];
 
@@ -99,42 +96,4 @@ public class GameManager : IGameManager
         }
     }
 
-    private void CompareCars()
-    {
-        Console.WriteLine();
-
-        if ( _cars.Count < 2 )
-        {
-            Console.WriteLine( "Нужно минимум 2 машины для сравнения!" );
-
-            return;
-        }
-
-        Console.WriteLine( $"Выберите первую машину (1-{_cars.Count}):" );
-        int index1 = InputHelper.ReadChoice( _cars.Count ) - 1;
-
-        Console.WriteLine( $"Выберите вторую машину (1-{_cars.Count}):" );
-        int index2 = InputHelper.ReadChoice( _cars.Count ) - 1;
-
-        ICar car1 = _cars[ index1 ];
-        ICar car2 = _cars[ index2 ];
-
-        Console.WriteLine();
-        Console.WriteLine( "=== Сравнение ===" );
-        Console.WriteLine( $"{car1.Name}: макс. {car1.CalculateMaxSpeed()} км/ч" );
-        Console.WriteLine( $"{car2.Name}: макс. {car2.CalculateMaxSpeed()} км/ч" );
-
-        if ( car1.CalculateMaxSpeed() > car2.CalculateMaxSpeed() )
-        {
-            Console.WriteLine( $"Победитель: {car1.Name}" );
-        }
-        else if ( car2.CalculateMaxSpeed() > car1.CalculateMaxSpeed() )
-        {
-            Console.WriteLine( $"Победитель: {car2.Name}" );
-        }
-        else
-        {
-            Console.WriteLine( "Ничья!" );
-        }
-    }
 }

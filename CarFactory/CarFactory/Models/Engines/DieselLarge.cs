@@ -2,9 +2,9 @@ using CarFactory.Models.Enums;
 
 namespace CarFactory.Models.Engines;
 
-public class Diesel20 : IEngine
+public class DieselLarge : IEngine
 {
-    public string Name { get; } = "Дизель 2.0";
-    public int Power { get; } = 150;
+    public string Name { get; } = "Дизель 4.0";
+    public int Power { get; } = 320;
     public FuelType FuelType { get; } = FuelType.Diesel;
 }

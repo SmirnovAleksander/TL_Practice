@@ -4,15 +4,23 @@ public class InputHelper
 {
     public static int ReadChoice( int maxOption )
     {
-        while ( true )
+        bool isValid = false;
+        int choice = 0;
+
+        while ( !isValid )
         {
             string input = Console.ReadLine() ?? "";
-            if ( int.TryParse( input, out int choice ) && choice >= 1 && choice <= maxOption )
+            if ( int.TryParse( input, out choice ) && choice >= 1 && choice <= maxOption )
             {
-                return choice;
+                isValid = true;
             }
-            Console.WriteLine( $"Введите число от 1 до {maxOption}" );
+            else
+            {
+                Console.WriteLine( $"Введите число от 1 до {maxOption}" );
+            }
         }
+
+        return choice;
     }
 
     public static T SelectItem<T>( List<T> items, Func<T, string> nameSelector, string textMessage )

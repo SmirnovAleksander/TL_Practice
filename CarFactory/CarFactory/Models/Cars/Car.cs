@@ -36,7 +36,7 @@ public class Car : ICar
     public int CalculateMaxSpeed()
     {
         double power = _engine.Power;
-        double weight = _bodyForm.Weight;
+        double weight = _bodyForm.WeightKg;
         double air = _bodyForm.AirResistanceCoeff;
         double gearCoeff = _gearBox.Coefficient;
 

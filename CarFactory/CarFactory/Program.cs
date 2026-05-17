@@ -18,8 +18,8 @@ internal class Program
             GameData.SteeringWheelPositions,
             optionFilter );
 
-        IGameManager gameManager = new GameManager( carFactory );
+        ICarManager carManager = new CarManager( carFactory );
 
-        gameManager.PlayGame();
+        carManager.PlayGame();
     }
 }
