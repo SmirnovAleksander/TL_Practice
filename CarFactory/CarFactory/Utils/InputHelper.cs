@@ -1,8 +1,8 @@
 namespace CarFactory.Utils;
 
-public class InputHelper
+public class InputHelper : IInputHelper
 {
-    public static int ReadChoice( int maxOption )
+    public int ReadChoice( int maxOption )
     {
         bool isValid = false;
         int choice = 0;
@@ -23,7 +23,7 @@ public class InputHelper
         return choice;
     }
 
-    public static T SelectItem<T>( List<T> items, Func<T, string> nameSelector, string textMessage )
+    public T SelectItem<T>( List<T> items, Func<T, string> nameSelector, string textMessage )
     {
         Console.WriteLine( textMessage );
         for ( int i = 0; i < items.Count; i++ )

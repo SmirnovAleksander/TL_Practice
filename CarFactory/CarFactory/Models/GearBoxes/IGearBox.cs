@@ -7,5 +7,5 @@ public interface IGearBox
     public string Name { get; }
     public int? GearCount { get; }
     public TransmissionType TransmissionType { get; }
-    public double Coefficient { get; }
+    public double CalculateGearFactor();
 }

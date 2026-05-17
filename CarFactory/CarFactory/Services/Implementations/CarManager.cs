@@ -7,11 +7,13 @@ namespace CarFactory.Services.Implementations;
 public class CarManager : ICarManager
 {
     private readonly ICarCreator _carFactory;
+    private readonly IInputHelper _inputHelper;
     private readonly List<ICar> _cars = [];
 
-    public CarManager( ICarCreator carFactory )
+    public CarManager( ICarCreator carFactory, IInputHelper inputHelper )
     {
         _carFactory = carFactory;
+        _inputHelper = inputHelper;
     }
 
     public void PlayGame()
@@ -22,7 +24,7 @@ public class CarManager : ICarManager
         while ( isRunning )
         {
             ShowMenu();
-            int choice = InputHelper.ReadChoice( maxMenuOption );
+            int choice = _inputHelper.ReadChoice( maxMenuOption );
 
             switch ( choice )
             {

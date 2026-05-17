@@ -6,9 +6,9 @@ using CarFactory.Models.SteeringWheelPositions;
 
 namespace CarFactory.Data;
 
-public static class GameData
+public class GameData : IDataProvider
 {
-    public static List<IColor> Colors { get; } =
+    public List<IColor> Colors { get; } =
     [
         new Red(),
         new Blue(),
@@ -16,7 +16,7 @@ public static class GameData
         new White()
     ];
 
-    public static List<IBodyForm> BodyForms { get; } =
+    public List<IBodyForm> BodyForms { get; } =
     [
         new Sedan(),
         new Hatchback(),
@@ -24,7 +24,7 @@ public static class GameData
         new Coupe()
     ];
 
-    public static List<IEngine> Engines { get; } =
+    public List<IEngine> Engines { get; } =
     [
         new GasolineSmall(),
         new GasolineLarge(),
@@ -33,16 +33,16 @@ public static class GameData
         new Electric()
     ];
 
-    public static List<IGearBox> GearBoxes { get; } =
+    public List<IGearBox> GearBoxes { get; } =
     [
         new Manual(),
         new Automatic(),
         new Robot(),
         new CVT(),
-        new SingleSpeed()
+        new ReductionGear()
     ];
 
-    public static List<ISteeringWheelPosition> SteeringWheelPositions { get; } =
+    public List<ISteeringWheelPosition> SteeringWheelPositions { get; } =
     [
         new RightWheel(),
         new LeftWheel()

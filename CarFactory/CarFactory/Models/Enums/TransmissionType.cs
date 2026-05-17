@@ -6,5 +6,5 @@ public enum TransmissionType
     Automatic = 1,
     Cvt = 2,
     Robot = 3,
-    Single = 4
+    ReductionGear = 4
 }

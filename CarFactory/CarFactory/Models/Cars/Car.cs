@@ -1,7 +1,6 @@
 using CarFactory.Models.BodyForms;
 using CarFactory.Models.Colors;
 using CarFactory.Models.Engines;
-using CarFactory.Models.Enums;
 using CarFactory.Models.GearBoxes;
 using CarFactory.Models.SteeringWheelPositions;
 
@@ -38,19 +37,9 @@ public class Car : ICar
         double power = _engine.Power;
         double weight = _bodyForm.WeightKg;
         double air = _bodyForm.AirResistanceCoeff;
-        double gearCoeff = _gearBox.Coefficient;
+        double gearFactor = _gearBox.CalculateGearFactor();
 
-        double gearFactor;
-        if ( _gearBox.TransmissionType == TransmissionType.Single )
-        {
-            gearFactor = 1.0;
-        }
-        else
-        {
-            gearFactor = ( _gearBox.GearCount ?? 6 ) / 6.0;
-        }
-
-        double speed = ( power * gearCoeff * gearFactor * 8 ) / ( Math.Sqrt( weight ) * air );
+        double speed = ( power * gearFactor * 8 ) / ( Math.Sqrt( weight ) * air );
 
         return ( int )Math.Round( speed );
     }

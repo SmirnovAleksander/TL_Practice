@@ -7,5 +7,5 @@ public class Robot : IGearBox
     public string Name { get; } = "Робот";
     public int? GearCount { get; } = 7;
     public TransmissionType TransmissionType { get; } = TransmissionType.Robot;
-    public double Coefficient { get; } = 1.2;
+    public double CalculateGearFactor() => 1.2 * GearCount!.Value / 6.0;
 }

@@ -7,5 +7,5 @@ public class CVT : IGearBox
     public string Name { get; } = "Вариатор";
     public int? GearCount { get; } = null;
     public TransmissionType TransmissionType { get; } = TransmissionType.Cvt;
-    public double Coefficient { get; } = 0.9;
+    public double CalculateGearFactor() => 0.9;
 }

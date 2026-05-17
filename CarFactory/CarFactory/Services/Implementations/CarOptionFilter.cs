@@ -38,7 +38,7 @@ public class CarOptionFilter : ICarOptionFilter
         {
             if ( engine.FuelType == FuelType.Electric )
             {
-                if ( gearBox.TransmissionType != TransmissionType.Single )
+                if ( gearBox.TransmissionType != TransmissionType.ReductionGear )
                 {
                     continue;
                 }
