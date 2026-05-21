@@ -1,8 +1,11 @@
-import './App.module.scss'
+import styles from './App.module.scss';
+import ConverterCard from './components/ConverterCard/ConverterCard'
 
 function App() {
   return (
-    <div>App</div>
+    <div className={styles.page}>
+      <ConverterCard />
+    </div>
   )
 }
 
