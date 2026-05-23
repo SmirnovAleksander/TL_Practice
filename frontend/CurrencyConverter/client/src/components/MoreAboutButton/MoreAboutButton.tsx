@@ -1,9 +1,9 @@
 import arrow from '../../assets/arrow.svg';
-import styles from './CurrencyInfoToggle.module.scss';
+import styles from './MoreAboutButton.module.scss';
 
 const label = 'PLN/JPY: about';
 
-const CurrencyInfoToggle = () => {
+const MoreAboutButton = () => {
     return (
         <div className={styles.wrapper}>
             <hr className={styles.line} />
@@ -14,4 +14,4 @@ const CurrencyInfoToggle = () => {
     );
 };
 
-export default CurrencyInfoToggle;
+export default MoreAboutButton;

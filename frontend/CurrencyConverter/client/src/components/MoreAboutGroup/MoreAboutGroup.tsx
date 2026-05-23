@@ -1,6 +1,6 @@
 import CurrencyDescription from "../CurrencyDescription/CurrencyDescription";
-import CurrencyInfoToggle from "../CurrencyInfoToggle/CurrencyInfoToggle";
-import styles from './CurrencyInfo.module.scss';
+import MoreAboutButton from "../MoreAboutButton/MoreAboutButton";
+import styles from './MoreAboutGroup.module.scss';
 
 const pln = {
   title: 'Polish zloty - PLN - zł',
@@ -9,15 +9,15 @@ const pln = {
 };
 
 const jpy = {
-  title: 'Japanese yen - JPY - ¥',
+  title: 'Japanese yen - JPY - ¥',
   description:
     'The yen is the official currency of Japan. It is the third-most traded currency in the foreign exchange market, after the United States dollar and the euro. It is also widely used as a third reserve currency after the US dollar and the euro.'
 };
 
-const CurrencyInfo = () => {
+const MoreAboutGroup = () => {
     return (
         <div className={styles.info}>
-            <CurrencyInfoToggle/>
+            <MoreAboutButton/>
             <div className={styles.blocks}>
                 <CurrencyDescription title={pln.title} description={pln.description} />
                 <CurrencyDescription title={jpy.title} description={jpy.description} />
@@ -26,4 +26,4 @@ const CurrencyInfo = () => {
     );
 };
 
-export default CurrencyInfo;
+export default MoreAboutGroup;

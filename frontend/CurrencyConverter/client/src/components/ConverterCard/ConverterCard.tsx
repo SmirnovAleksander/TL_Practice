@@ -1,5 +1,5 @@
 import ConverterHeader from "../ConverterHeader/ConverterHeader";
-import CurrencyInfo from "../CurrencyInfo/CurrencyInfo";
+import MoreAboutGroup from "../MoreAboutGroup/MoreAboutGroup";
 import CurrencyInputGroup from "../CurrencyInputGroup/CurrencyInputGroup";
 import styles from './ConverterCard.module.scss';
 
@@ -8,7 +8,7 @@ const ConverterCard = () => {
         <div className={styles.card}>
             <ConverterHeader/>
             <CurrencyInputGroup/>
-            <CurrencyInfo/>
+            <MoreAboutGroup/>
         </div>
     );
 };
