@@ -1,42 +1,50 @@
 .row {
+  display: flex;
+
+  overflow: hidden;
+
   background: #fff;
   border: 1px solid #d5dbe6;
   border-radius: 6px;
-  display: flex;
-  overflow: hidden;
 }
 
 .amount {
+  max-inline-size: 90px;
+  min-block-size: 44px;
+  padding: 10px 36px 10px 12px;
+
   background: transparent;
   border: none;
-  max-width: 90px;
-  font-size: 16px;
-  min-height: 44px;
   outline: none;
-  padding: 10px 36px 10px 12px;
+
+  font-size: 16px;
 }
 
 .divider {
-  border: none;
-  border-left: 1px solid #d5dbe6;
   margin: 4px;
+  border: none;
+
+  border-inline-start: 1px solid #d5dbe6;
 }
 
 .select {
-  border: none;
-  color: #1a1a1a;
-  cursor: pointer;
   flex: 1;
-  font-size: 16px;
-  font-weight: 500;
-  min-height: 44px;
-  outline: none;
+
+  min-block-size: 44px;
   padding: 10px 36px 10px 12px;
 
   appearance: none;
   background-color: transparent;
   background-image: url('../../assets/triangle.svg');
   background-position: right 12px center;
-  background-repeat: no-repeat;
   background-size: 12px;
+  background-repeat: no-repeat;
+  border: none;
+  outline: none;
+
+  color: #1a1a1a;
+  font-size: 16px;
+  font-weight: 500;
+
+  cursor: pointer;
 }

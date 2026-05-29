@@ -1,5 +1,5 @@
-import CurrencyDescription from "../CurrencyDescription/CurrencyDescription";
-import MoreAboutButton from "../MoreAboutButton/MoreAboutButton";
+import { CurrencyDescription } from "../CurrencyDescription/CurrencyDescription";
+import { MoreAboutButton } from "../MoreAboutButton/MoreAboutButton";
 import styles from './MoreAboutGroup.module.scss';
 
 const pln = {
@@ -14,7 +14,7 @@ const jpy = {
     'The yen is the official currency of Japan. It is the third-most traded currency in the foreign exchange market, after the United States dollar and the euro. It is also widely used as a third reserve currency after the US dollar and the euro.'
 };
 
-const MoreAboutGroup = () => {
+export const MoreAboutGroup = () => {
     return (
         <div className={styles.info}>
             <MoreAboutButton/>
@@ -25,5 +25,3 @@ const MoreAboutGroup = () => {
         </div>
     );
 };
-
-export default MoreAboutGroup;

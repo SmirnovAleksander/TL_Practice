@@ -3,7 +3,7 @@ import styles from './MoreAboutButton.module.scss';
 
 const label = 'PLN/JPY: about';
 
-const MoreAboutButton = () => {
+export const MoreAboutButton = () => {
     return (
         <div className={styles.wrapper}>
             <hr className={styles.line} />
@@ -13,5 +13,3 @@ const MoreAboutButton = () => {
         </div>
     );
 };
-
-export default MoreAboutButton;

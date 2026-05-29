@@ -6,7 +6,7 @@ interface CurrencyInputProps {
   currencies: string[];
 }
 
-const CurrencyInput = ({ amount, currencyCode, currencies }: CurrencyInputProps) => {
+export const CurrencyInput = ({ amount, currencyCode, currencies }: CurrencyInputProps) => {
   return (
     <div className={styles.row}>
         <input className={styles.amount} type="text" value={amount} />
@@ -21,5 +21,3 @@ const CurrencyInput = ({ amount, currencyCode, currencies }: CurrencyInputProps)
     </div>
   );
 };
-
-export default CurrencyInput;

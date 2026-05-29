@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import MoreAboutGroup from './MoreAboutGroup';
+import { MoreAboutGroup } from './MoreAboutGroup';
 
 describe('MoreAboutGroup', () => {
   it('render button with correct label', () => {

@@ -1,35 +1,41 @@
 .wrapper {
+  position: relative;
   display: flex;
   justify-content: center;
   padding: 20px 0;
-  position: relative;
 }
 
 .line {
-  border: 0;
-  border-top: 1px solid #e2e6ee;
-  left: 0;
-  margin: 0;
   position: absolute;
-  right: 0;
-  top: 50%;
+  inset-block-start: 50%;
+  inset-inline: 0;
+
+  margin: 0;
+
+  border: 0;
+
+  border-block-start: 1px solid #e2e6ee;
 }
 
 .button {
+  z-index: 1;
+
+  padding: 6px 14px;
+
   background: #f3f5f8;
   border: 1px solid #e2e6ee;
   border-radius: 100px;
-  color: #000000;
-  cursor: pointer;
+
+  color: #000;
   font-size: 13px;
   line-height: 18px;
-  padding: 6px 14px;
   text-wrap: nowrap;
-  z-index: 1;
+
+  cursor: pointer;
 }
 
 .arrow {
-  margin-left: 2px;
-  height: 10px;
-  width: 10px;
+  inline-size: 10px;
+  block-size: 10px;
+  margin-inline-start: 2px;
 }

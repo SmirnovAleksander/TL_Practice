@@ -5,7 +5,7 @@ interface CurrencyDescriptionProps {
   description: string;
 };
 
-const CurrencyDescription = ({title, description}: CurrencyDescriptionProps) => {
+export const CurrencyDescription = ({title, description}: CurrencyDescriptionProps) => {
     return (
         <div>
             <h3 className={styles.title}>{title}</h3>
@@ -13,5 +13,3 @@ const CurrencyDescription = ({title, description}: CurrencyDescriptionProps) => 
         </div>
     );
 };
-
-export default CurrencyDescription;
