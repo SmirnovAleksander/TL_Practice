@@ -4,7 +4,7 @@ import styles from './ConverterHeader.module.scss';
 type ConverterHeaderProps = {
     fromCurrency: Currency;
     toCurrency: Currency;
-    exchangeRate: Number;
+    exchangeRate: number;
     rateDate: string;
 }
 
@@ -14,9 +14,14 @@ export const ConverterHeader = ({
     exchangeRate,
     rateDate
 }: ConverterHeaderProps) => {
+    const formatDate = (newDate: string) => {
+        const date = new Date(newDate);
+        return date.toUTCString().replace(/:\d{2} GMT$/, ' UTC');
+    }
+
     const prefix = `1 ${fromCurrency?.name ?? ''} is`;
     const rate = `${exchangeRate} ${toCurrency?.name ?? ''}`
-    const updatedAt = rateDate;
+    const updatedAt = rateDate ? formatDate(rateDate) : '';
 
     return (
         <div className={styles.summary}>

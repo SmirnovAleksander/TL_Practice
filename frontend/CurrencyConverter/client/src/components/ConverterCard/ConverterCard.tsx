@@ -19,7 +19,8 @@ export const ConverterCard = () => {
         handleFromChange,
         handleToChange,
         handleAmountChange,
-        handleToggleMoreAbout
+        handleToggleMoreAbout,
+        handleSwap
     } = useConverter();
     return (
         <div className={styles.card}>
@@ -30,7 +31,15 @@ export const ConverterCard = () => {
                 rateDate={rateDate}
             />
             <CurrencyInputGroup
-
+                from={from}
+                to={to}
+                amount={amount}
+                result={result}
+                currenciesCodes={currenciesCodes}
+                handleAmountChange={handleAmountChange}
+                handleFromChange={handleFromChange}
+                handleToChange={handleToChange}
+                handleSwap={handleSwap}
             />
             <MoreAboutGroup
                 fromCurrency={fromCurrency}

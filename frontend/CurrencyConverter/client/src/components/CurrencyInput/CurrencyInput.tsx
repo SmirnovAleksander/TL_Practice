@@ -1,20 +1,37 @@
 import styles from './CurrencyInput.module.scss';
 
 type CurrencyInputProps = {
-  amount: string;
-  currencyCode: string;
-  currencies: string[];
+    amount: string;
+    currencyCode: string;
+    currenciesCodes: string[];
+    handleAmountChange?: (newAmount: string) => void;
+    handelCurrencyChange: (newCode: string) => void;
 }
 
-export const CurrencyInput = ({ amount, currencyCode, currencies }: CurrencyInputProps) => {
+export const CurrencyInput = ({
+    amount,
+    currencyCode,
+    currenciesCodes,
+    handleAmountChange,
+    handelCurrencyChange
+}: CurrencyInputProps) => {
   return (
     <div className={styles.row}>
-        <input className={styles.amount} type="text" value={amount} />
+        <input
+            className={styles.amount}
+            type="text"
+            value={amount}
+            onChange={(e) => handleAmountChange(e.target.value)}
+        />
         <hr className={styles.divider} />
-        <select className={styles.select} value={currencyCode}>
-            {currencies.map((currency, id) => (
-                <option key={id} value={currency}>
-                    {currency}
+        <select
+            className={styles.select}
+            value={currencyCode}
+            onChange={(e) => handelCurrencyChange(e.target.value)}
+        >
+            {currenciesCodes.map((code, id) => (
+                <option key={id} value={code}>
+                    {code}
                 </option>
             ))}
         </select>

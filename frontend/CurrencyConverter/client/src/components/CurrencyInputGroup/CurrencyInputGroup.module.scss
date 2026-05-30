@@ -1,5 +1,30 @@
+.row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
 .group {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  flex: 1;
+}
+
+.swap-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 40px;
+  block-size: 40px;
+  background: #f3f5f8;
+  border: 1px solid #e2e6ee;
+  border-radius: 50%;
+  cursor: pointer;
+
+  img {
+    block-size: 16px;
+    inline-size: 16px;
+    rotate: 90deg;
+  }
 }

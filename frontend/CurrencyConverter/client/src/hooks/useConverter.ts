@@ -7,7 +7,7 @@ export const useConverter = () => {
     const [to, setTo] = useState<string>('JPY');
     const [amount, setAmount] = useState<string>('1');
     const [result, setResult] = useState<string>('0.99');
-    const [isMoreAboutOpen, setIsMoreAboutOpen] = useState<boolean>(false);
+    const [isMoreAboutOpen, setIsMoreAboutOpen] = useState<boolean>(true);
 
     const exchangeRate = priceChanges[from]?.[to]?.price;
     const rateDate = priceChanges[from]?.[to]?.dateTime;
@@ -18,18 +18,21 @@ export const useConverter = () => {
     const recalculateResult = (newFrom: string, newTo: string, newAmount: string) => {
         const currentRate = priceChanges[newFrom]?.[newTo]?.price;
 
-        if (currentRate && newAmount) {
-            setResult((Number(newAmount) * currentRate).toString())
+        if (currentRate && newAmount && !isNaN(Number(newAmount))) {
+            setResult((Number(newAmount) * currentRate).toFixed(2))
         } else {
             setResult('0');
         }
     };
 
+    const findAlternativeCode = (newCode: string) =>
+        currencies.find((c) => c.code !== newCode)?.code ?? newCode;
+
     const handleFromChange = (newCode: string) => {
         setFrom(newCode);
 
         if (newCode === to) {
-            const next = currencies.find((c) => c.code !== newCode)?.code;
+            const next = findAlternativeCode(newCode);
             if (next) setTo(next);
             recalculateResult(newCode, next, amount);
         } else {
@@ -41,7 +44,7 @@ export const useConverter = () => {
         setTo(newCode);
 
         if (newCode === from) {
-            const next = currencies.find((c) => c.code !== newCode)?.code;
+            const next = findAlternativeCode(newCode);
             if (next) setFrom(next);
             recalculateResult(next, newCode, amount);
         } else {
@@ -58,6 +61,13 @@ export const useConverter = () => {
         setIsMoreAboutOpen(prev => !prev);
     };
 
+    const handleSwap = () => {
+        setFrom(to);
+        setTo(from);
+        setAmount(result);
+        setResult(amount);
+    }
+
     return {
         from,
         to,
@@ -72,6 +82,7 @@ export const useConverter = () => {
         handleFromChange,
         handleToChange,
         handleAmountChange,
-        handleToggleMoreAbout
+        handleToggleMoreAbout,
+        handleSwap
     };
 }

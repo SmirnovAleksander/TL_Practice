@@ -20,7 +20,11 @@ export const MoreAboutGroup = ({
     
     return (
         <div className={styles.info}>
-            <MoreAboutButton label={label} isOpen={isOpen} handleToggleMoreAbout={handleToggleMoreAbout}/>
+            <MoreAboutButton
+                label={label}
+                isOpen={isOpen}
+                handleToggleMoreAbout={handleToggleMoreAbout}
+            />
             {isOpen && (
                 <div className={styles.blocks}>
                     {fromCurrency && (
