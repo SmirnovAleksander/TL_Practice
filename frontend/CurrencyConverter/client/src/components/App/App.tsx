@@ -1,10 +1,7 @@
-import { ConverterCard } from "../ConverterCard";
-import styles from './App.module.scss';
+import { ConverterPage } from '../../pages/ConverterPage';
 
 export const App = () => {
     return (
-        <div className={styles.page}>
-            <ConverterCard />
-        </div>
+        <ConverterPage />
     );
 };
