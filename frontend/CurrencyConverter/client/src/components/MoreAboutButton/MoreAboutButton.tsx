@@ -1,14 +1,18 @@
 import arrow from '../../assets/arrow.svg';
 import styles from './MoreAboutButton.module.scss';
 
-const label = 'PLN/JPY: about';
+type MoreAboutButtonProps = {
+    label: string;
+    isOpen: boolean;
+    handleToggleMoreAbout: () => void;
+}
 
-export const MoreAboutButton = () => {
+export const MoreAboutButton = ({label, isOpen, handleToggleMoreAbout}: MoreAboutButtonProps) => {
     return (
         <div className={styles.wrapper}>
             <hr className={styles.line} />
-            <button type="button" data-testid="more-about-button" className={styles.button}>
-                {label} <img src={arrow} alt="" className={styles.arrow} />
+            <button onClick={handleToggleMoreAbout} type="button" data-testid="more-about-button" className={styles.button}>
+                {label} <img src={arrow} alt="" className={isOpen ? styles.arrowOpen : styles.arrow} />
             </button>
         </div>
     );

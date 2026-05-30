@@ -1,10 +1,23 @@
+import type { Currency } from '../../models';
 import styles from './ConverterHeader.module.scss';
 
-const prefix = '1 Polish zloty is';
-const rate = '0.99 Japanese yen';
-const updatedAt = 'Fri, 05 Apr 2026 10:35 UTC';
+type ConverterHeaderProps = {
+    fromCurrency: Currency;
+    toCurrency: Currency;
+    exchangeRate: Number;
+    rateDate: string;
+}
 
-export const ConverterHeader = () => {
+export const ConverterHeader = ({
+    fromCurrency,
+    toCurrency,
+    exchangeRate,
+    rateDate
+}: ConverterHeaderProps) => {
+    const prefix = `1 ${fromCurrency?.name ?? ''} is`;
+    const rate = `${exchangeRate} ${toCurrency?.name ?? ''}`
+    const updatedAt = rateDate;
+
     return (
         <div className={styles.summary}>
             <p className={styles.prefix}>{prefix}</p>
