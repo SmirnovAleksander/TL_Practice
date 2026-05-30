@@ -1,6 +1,6 @@
 import styles from './CurrencyInput.module.scss';
 
-interface CurrencyInputProps {
+type CurrencyInputProps = {
   amount: string;
   currencyCode: string;
   currencies: string[];
@@ -10,7 +10,7 @@ export const CurrencyInput = ({ amount, currencyCode, currencies }: CurrencyInpu
   return (
     <div className={styles.row}>
         <input className={styles.amount} type="text" value={amount} />
-        <hr className={styles.divider}/>
+        <hr className={styles.divider} />
         <select className={styles.select} value={currencyCode}>
             {currencies.map((currency, id) => (
                 <option key={id} value={currency}>

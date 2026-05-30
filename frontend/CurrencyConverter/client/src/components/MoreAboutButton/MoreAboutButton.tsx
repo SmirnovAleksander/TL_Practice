@@ -7,8 +7,8 @@ export const MoreAboutButton = () => {
     return (
         <div className={styles.wrapper}>
             <hr className={styles.line} />
-            <button type="button" className={styles.button}>
-                {label} <img src={arrow} alt="" className={styles.arrow}/>
+            <button type="button" data-testid="more-about-button" className={styles.button}>
+                {label} <img src={arrow} alt="" className={styles.arrow} />
             </button>
         </div>
     );

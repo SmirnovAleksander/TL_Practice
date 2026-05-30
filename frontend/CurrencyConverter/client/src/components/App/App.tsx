@@ -1,4 +1,4 @@
-import { ConverterCard } from "./components/ConverterCard/ConverterCard";
+import { ConverterCard } from "../ConverterCard";
 import styles from './App.module.scss';
 
 export const App = () => {
