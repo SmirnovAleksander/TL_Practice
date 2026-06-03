@@ -10,13 +10,14 @@ internal class Program
     private static void Main()
     {
         IDataProvider dataProvider = new GameData();
-        IInputHelper inputHelper = new InputHelper();
+        IConsole console = new SystemConsole();
+        IInputHelper inputHelper = new InputHelper( console );
         IRandomProvider randomProvider = new RandomProvider();
 
-        IFighterFactory factory = new FighterFactory( dataProvider, inputHelper );
+        IFighterFactory factory = new FighterFactory( dataProvider, inputHelper, console );
         IDamageCalculator damageCalculator = new DamageCalculator( randomProvider );
-        IBattleManager battleManager = new BattleManager( damageCalculator );
-        IGameManager gameManager = new GameManager( factory, battleManager, inputHelper );
+        IBattleManager battleManager = new BattleManager( damageCalculator, console );
+        IGameManager gameManager = new GameManager( factory, battleManager, inputHelper, console );
 
         gameManager.PlayGame();
     }

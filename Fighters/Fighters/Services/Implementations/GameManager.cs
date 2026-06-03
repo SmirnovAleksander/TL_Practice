@@ -9,13 +9,15 @@ public class GameManager : IGameManager
     private readonly IFighterFactory _factory;
     private readonly IBattleManager _battleManager;
     private readonly IInputHelper _inputHelper;
+    private readonly IConsole _console;
     private readonly List<IFighter> _fighters = [];
 
-    public GameManager( IFighterFactory factory, IBattleManager battleManager, IInputHelper inputHelper )
+    public GameManager( IFighterFactory factory, IBattleManager battleManager, IInputHelper inputHelper, IConsole console )
     {
         _factory = factory;
         _battleManager = battleManager;
         _inputHelper = inputHelper;
+        _console = console;
     }
 
     public void PlayGame()
@@ -59,59 +61,59 @@ public class GameManager : IGameManager
             "Выйти"
         ];
 
-        Console.WriteLine();
-        Console.WriteLine( "Fighters Game - Меню" );
+        _console.WriteLine( "" );
+        _console.WriteLine( "Fighters Game - Меню" );
         for ( int i = 0; i < menuItems.Count; i++ )
         {
-            Console.WriteLine( $"{i + 1} - {menuItems[ i ]}" );
+            _console.WriteLine( $"{i + 1} - {menuItems[ i ]}" );
         }
     }
 
     private void AddFighter()
     {
-        Console.WriteLine();
-        Console.WriteLine( "Введите имя бойца:" );
-        string name = Console.ReadLine() ?? "";
+        _console.WriteLine( "" );
+        _console.WriteLine( "Введите имя бойца:" );
+        string name = _console.ReadLine();
 
         if ( string.IsNullOrEmpty( name ) )
         {
-            Console.WriteLine( "Имя не может быть пустым!" );
+            _console.WriteLine( "Имя не может быть пустым!" );
 
             return;
         }
 
         IFighter fighter = _factory.CreateFighter( name );
         _fighters.Add( fighter );
-        Console.WriteLine( "Боец добавлен!" );
+        _console.WriteLine( "Боец добавлен!" );
     }
 
     private void ShowFighters()
     {
-        Console.WriteLine();
+        _console.WriteLine( "" );
 
         if ( _fighters.Count == 0 )
         {
-            Console.WriteLine( "Нет бойцов!" );
+            _console.WriteLine( "Нет бойцов!" );
 
             return;
         }
 
-        Console.WriteLine( "Список бойцов:" );
+        _console.WriteLine( "Список бойцов:" );
         for ( int i = 0; i < _fighters.Count; i++ )
         {
             IFighter f = _fighters[ i ];
-            Console.WriteLine( $"{i + 1}. Имя: {f.Name}" );
-            Console.WriteLine( f );
+            _console.WriteLine( $"{i + 1}. Имя: {f.Name}" );
+            _console.WriteLine( f );
         }
     }
 
     private void Play()
     {
-        Console.WriteLine();
+        _console.WriteLine( "" );
 
         if ( _fighters.Count < 2 )
         {
-            Console.WriteLine( "Для битвы нужно минимум 2 бойца!" );
+            _console.WriteLine( "Для битвы нужно минимум 2 бойца!" );
 
             return;
         }

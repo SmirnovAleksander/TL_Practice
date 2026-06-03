@@ -2,6 +2,13 @@ namespace Fighters.Utils;
 
 public class InputHelper : IInputHelper
 {
+    private readonly IConsole _console;
+
+    public InputHelper( IConsole console )
+    {
+        _console = console;
+    }
+
     public int ReadChoice( int maxOption )
     {
         bool isValid = false;
@@ -9,12 +16,12 @@ public class InputHelper : IInputHelper
 
         while ( !isValid )
         {
-            string input = Console.ReadLine() ?? "";
+            string input = _console.ReadLine();
             isValid = int.TryParse( input, out choice ) && choice >= 1 && choice <= maxOption;
 
             if ( !isValid )
             {
-                Console.WriteLine( $"Введите число от 1 до {maxOption}" );
+                _console.WriteLine( $"Введите число от 1 до {maxOption}" );
             }
         }
 
