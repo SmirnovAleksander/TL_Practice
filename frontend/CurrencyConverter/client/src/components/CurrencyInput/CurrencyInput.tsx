@@ -18,6 +18,7 @@ export const CurrencyInput = ({
   return (
     <div className={styles.row}>
         <input
+            data-testid="currency-amount-input"
             className={styles.amount}
             type="text"
             value={amount}
@@ -25,6 +26,7 @@ export const CurrencyInput = ({
         />
         <hr className={styles.divider} />
         <select
+            data-testid="currency-select"
             className={styles.select}
             value={currencyCode}
             onChange={(e) => handelCurrencyChange(e.target.value)}

@@ -20,7 +20,7 @@ export const ConverterHeader = ({
     }
 
     const prefix = `1 ${fromCurrency?.name ?? ''} is`;
-    const rate = `${exchangeRate} ${toCurrency?.name ?? ''}`
+    const rate = `${exchangeRate ?? ''} ${toCurrency?.code ?? ''}`
     const updatedAt = rateDate ? formatDate(rateDate) : '';
 
     return (
