@@ -1,0 +1,148 @@
+using Fighters.Models.Armors;
+using Fighters.Models.Class;
+using Fighters.Models.Fighters;
+using Fighters.Models.Races;
+using Fighters.Models.Weapons;
+using Moq;
+
+namespace Fighters.UnitTests.Models;
+
+public class FighterTests
+{
+    private readonly Mock<IRace> _raceMock;
+    private readonly Mock<IClass> _classMock;
+    private readonly Mock<IWeapon> _weaponMock;
+    private readonly Mock<IArmor> _armorMock;
+
+    public FighterTests()
+    {
+        _raceMock = new Mock<IRace>();
+        _classMock = new Mock<IClass>();
+        _weaponMock = new Mock<IWeapon>();
+        _armorMock = new Mock<IArmor>();
+    }
+
+    private IFighter CreateFighter( string name )
+    {
+        return new Fighter(
+            name,
+            _raceMock.Object,
+            _armorMock.Object,
+            _weaponMock.Object,
+            _classMock.Object );
+    }
+
+    [Fact]
+    public void Constructor_SetName()
+    {
+        IFighter fighter = CreateFighter( "Fighter" );
+
+        Assert.Equal( "Fighter", fighter.Name );
+    }
+
+    [Fact]
+    public void GetMaxHealth_RaceHealthPlusClassHealth()
+    {
+        _raceMock.Setup( r => r.Health ).Returns( 80 );
+        _classMock.Setup( c => c.Health ).Returns( 20 );
+
+        IFighter fighter = CreateFighter( "MaxHealthTest" );
+
+        Assert.Equal( 100, fighter.GetMaxHealth() );
+    }
+
+    [Fact]
+    public void CalculateDamage_WeaponPlusFighterClassPlusRaceDamage()
+    {
+        _weaponMock.Setup( w => w.Damage ).Returns( 5 );
+        _classMock.Setup( c => c.Damage ).Returns( 3 );
+        _raceMock.Setup( r => r.Damage ).Returns( 10 );
+
+        IFighter fighter = CreateFighter( "DamageTest" );
+
+        Assert.Equal( 18, fighter.CalculateDamage() );
+    }
+
+    [Fact]
+    public void CalculateArmor_ReturnsArmorPlusRaceArmor()
+    {
+        _armorMock.Setup( a => a.Armor ).Returns( 8 );
+        _raceMock.Setup( r => r.Armor ).Returns( 4 );
+
+        IFighter fighter = CreateFighter( "ArmorTest" );
+
+        Assert.Equal( 12, fighter.CalculateArmor() );
+    }
+
+    [Fact]
+    public void Initiative_ReturnsRaceInitiativePlusClassInitiative()
+    {
+        _raceMock.Setup( r => r.Initiative ).Returns( 3 );
+        _classMock.Setup( c => c.Initiative ).Returns( 2 );
+
+        IFighter fighter = CreateFighter( "InitiativeTest" );
+
+        Assert.Equal( 5, fighter.Initiative );
+    }
+
+    [Fact]
+    public void TakeDamage_CalculateCurrentHealth()
+    {
+        _raceMock.Setup( r => r.Health ).Returns( 100 );
+        _classMock.Setup( c => c.Health ).Returns( 0 );
+
+        IFighter fighter = CreateFighter( "DamageTest" );
+        int initialHealth = fighter.GetCurrentHealth();
+
+        fighter.TakeDamage( 30 );
+
+        Assert.Equal( initialHealth - 30, fighter.GetCurrentHealth() );
+    }
+
+    [Fact]
+    public void TakeDamage_DamageMoreHealth_SetHealthToZero()
+    {
+        _raceMock.Setup( r => r.Health ).Returns( 50 );
+        _classMock.Setup( c => c.Health ).Returns( 0 );
+
+        IFighter fighter = CreateFighter( "ZeroTest" );
+
+        fighter.TakeDamage( 100 );
+
+        Assert.Equal( 0, fighter.GetCurrentHealth() );
+    }
+
+    [Fact]
+    public void IsAlive_HealtLargerZero_ReturnsTrue()
+    {
+        _raceMock.Setup( r => r.Health ).Returns( 100 );
+        _classMock.Setup( c => c.Health ).Returns( 0 );
+
+        IFighter fighter = CreateFighter( "TrueTest" );
+
+        Assert.True( fighter.IsAlive() );
+    }
+
+    [Fact]
+    public void IsAlive_HealthZero_ReturnsFalse()
+    {
+        _raceMock.Setup( r => r.Health ).Returns( 50 );
+        _classMock.Setup( c => c.Health ).Returns( 0 );
+
+        IFighter fighter = CreateFighter( "FalseTest" );
+        fighter.TakeDamage( 100 );
+
+        Assert.False( fighter.IsAlive() );
+    }
+
+    [Fact]
+    public void GetCurrentHealth_EqualsMaxHealth()
+    {
+        _raceMock.Setup( r => r.Health ).Returns( 100 );
+        _classMock.Setup( c => c.Health ).Returns( 10 );
+
+        IFighter fighter = CreateFighter( "HealthTest" );
+
+        Assert.Equal( fighter.GetMaxHealth(), fighter.GetCurrentHealth() );
+    }
+}
