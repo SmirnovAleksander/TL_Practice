@@ -18,7 +18,7 @@ public class RoomTypesController : ControllerBase
         _propertyRepository = propertyRepository;
     }
 
-    [HttpGet( "properties/{propertyId}/roomtypes" )]
+    [HttpGet( "properties/{propertyId:guid}/roomtypes" )]
     public IActionResult GetByProperty( [FromRoute] Guid propertyId )
     {
         Property? property = _propertyRepository.GetById( propertyId );
@@ -33,7 +33,7 @@ public class RoomTypesController : ControllerBase
         return Ok( roomTypeDtos );
     }
 
-    [HttpGet( "roomtypes/{id}" )]
+    [HttpGet( "roomtypes/{id:guid}" )]
     public IActionResult GetById( [FromRoute] Guid id )
     {
         RoomType? roomType = _roomTypeRepository.GetById( id );
@@ -45,7 +45,7 @@ public class RoomTypesController : ControllerBase
         return Ok( roomType.ToRoomTypeDto() );
     }
 
-    [HttpPost( "properties/{propertyId}/roomtypes" )]
+    [HttpPost( "properties/{propertyId:guid}/roomtypes" )]
     public IActionResult Create( [FromRoute] Guid propertyId, [FromBody] CreateRoomTypeDto createDto )
     {
         Property? property = _propertyRepository.GetById( propertyId );
@@ -54,15 +54,13 @@ public class RoomTypesController : ControllerBase
             return NotFound();
         }
 
-        RoomType roomType = createDto.ToRoomTypeFromCreate();
-        roomType.PropertyId = propertyId;
-
-        RoomType created = _roomTypeRepository.Create( roomType );
+        RoomType roomTypeEntity = createDto.ToRoomTypeFromCreate(propertyId);
+        RoomType created = _roomTypeRepository.Create( roomTypeEntity );
 
         return CreatedAtAction( nameof( GetById ), new { id = created.Id }, created.ToRoomTypeDto() );
     }
 
-    [HttpPut( "roomtypes/{id}" )]
+    [HttpPut( "roomtypes/{id:guid}" )]
     public IActionResult Update( [FromRoute] Guid id, [FromBody] UpdateRoomTypeDto updateDto )
     {
         RoomType? existing = _roomTypeRepository.GetById( id );
@@ -71,16 +69,13 @@ public class RoomTypesController : ControllerBase
             return NotFound();
         }
 
-        RoomType updatedEntity = updateDto.ToRoomTypeFromUpdate();
-        updatedEntity.Id = existing.Id;
-        updatedEntity.PropertyId = existing.PropertyId;
-
-        RoomType updated = _roomTypeRepository.Update( updatedEntity );
+        RoomType roomTypeEntity = updateDto.ToRoomTypeFromUpdate( id, existing.PropertyId );
+        RoomType updated = _roomTypeRepository.Update( roomTypeEntity );
 
         return Ok( updated.ToRoomTypeDto() );
     }
 
-    [HttpDelete( "roomtypes/{id}" )]
+    [HttpDelete( "roomtypes/{id:guid}" )]
     public IActionResult Delete( [FromRoute] Guid id )
     {
         RoomType? roomType = _roomTypeRepository.GetById( id );

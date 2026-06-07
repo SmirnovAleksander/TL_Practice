@@ -21,10 +21,11 @@ public static class RoomTypeMappers
         };
     }
 
-    public static RoomType ToRoomTypeFromCreate( this CreateRoomTypeDto dto )
+    public static RoomType ToRoomTypeFromCreate( this CreateRoomTypeDto dto, Guid propertyId )
     {
         return new RoomType
         {
+            PropertyId = propertyId,
             Name = dto.Name,
             DailyPrice = dto.DailyPrice,
             Currency = dto.Currency,
@@ -35,10 +36,12 @@ public static class RoomTypeMappers
         };
     }
 
-    public static RoomType ToRoomTypeFromUpdate( this UpdateRoomTypeDto dto )
+    public static RoomType ToRoomTypeFromUpdate( this UpdateRoomTypeDto dto, Guid id, Guid propertyId )
     {
         return new RoomType
         {
+            Id = id,
+            PropertyId = propertyId,
             Name = dto.Name,
             DailyPrice = dto.DailyPrice,
             Currency = dto.Currency,

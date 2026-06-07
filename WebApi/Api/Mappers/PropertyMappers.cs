@@ -32,10 +32,11 @@ public static class PropertyMappers
         };
     }
 
-    public static Property ToPropertyFromUpdate( this UpdatePropertyDto dto )
+    public static Property ToPropertyFromUpdate( this UpdatePropertyDto dto, Guid id )
     {
         return new Property
         {
+            Id = id,
             Name = dto.Name,
             Country = dto.Country,
             City = dto.City,

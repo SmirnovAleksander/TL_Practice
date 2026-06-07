@@ -25,7 +25,7 @@ public class PropertiesController : ControllerBase
         return Ok( propertyDtos );
     }
 
-    [HttpGet( "{id}" )]
+    [HttpGet( "{id:guid}" )]
     public IActionResult GetById( [FromRoute] Guid id )
     {
         Property? property = _propertyRepository.GetById( id );
@@ -45,7 +45,7 @@ public class PropertiesController : ControllerBase
         return CreatedAtAction( nameof( GetById ), new { id = property.Id }, property.ToPropertyDto() );
     }
 
-    [HttpPut( "{id}" )]
+    [HttpPut( "{id:guid}" )]
     public IActionResult Update( [FromRoute] Guid id, [FromBody] UpdatePropertyDto updateDto )
     {
         Property? existing = _propertyRepository.GetById( id );
@@ -54,15 +54,13 @@ public class PropertiesController : ControllerBase
             return NotFound();
         }
 
-        Property updatedEntity = updateDto.ToPropertyFromUpdate();
-        updatedEntity.Id = existing.Id;
-
-        Property updated = _propertyRepository.Update( updatedEntity );
+        Property propertyEntity = updateDto.ToPropertyFromUpdate( id );
+        Property updated = _propertyRepository.Update( propertyEntity );
 
         return Ok( updated.ToPropertyDto() );
     }
 
-    [HttpDelete( "{id}" )]
+    [HttpDelete( "{id:guid}" )]
     public IActionResult Delete( [FromRoute] Guid id )
     {
         Property? property = _propertyRepository.GetById( id );
