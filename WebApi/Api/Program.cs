@@ -1,37 +1,39 @@
+using Domain.Interfaces.Repositories;
 using Infrastructure.Foundation.Data;
+using Infrastructure.Foundation.Repositories;
 using Microsoft.EntityFrameworkCore;
 
-namespace Api
+namespace Api;
+
+public class Program
 {
-    public class Program
+    public static void Main(string[] args)
     {
-        public static void Main(string[] args)
+        var builder = WebApplication.CreateBuilder(args);
+
+        builder.Services.AddControllers();
+        builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddSwaggerGen();
+
+        builder.Services.AddDbContext<HotelManagementDbContext>(options =>
         {
-            var builder = WebApplication.CreateBuilder(args);
+            options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+        });
 
-            builder.Services.AddControllers();
-            builder.Services.AddOpenApi();
+        builder.Services.AddScoped<IPropertyRepository, PropertyRepository>();
+        builder.Services.AddScoped<IRoomTypeRepository, RoomTypeRepository>();
 
-            builder.Services.AddDbContext<HotelManagementDbContext>(options =>
-            {
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-            });
+        var app = builder.Build();
 
-            var app = builder.Build();
-
-            if (app.Environment.IsDevelopment())
-            {
-                app.MapOpenApi();
-            }
-
-            app.UseHttpsRedirection();
-
-            app.UseAuthorization();
-
-
-            app.MapControllers();
-
-            app.Run();
+        if (app.Environment.IsDevelopment())
+        {
+            app.UseSwagger();
+            app.UseSwaggerUI();
         }
+
+        app.UseHttpsRedirection();
+        app.UseAuthorization();
+        app.MapControllers();
+        app.Run();
     }
 }

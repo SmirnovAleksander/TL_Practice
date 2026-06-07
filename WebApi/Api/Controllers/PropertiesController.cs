@@ -1,5 +1,7 @@
+using Api.Dtos.Property;
+using Api.Mappers;
 using Domain.Entities;
-using Infrastructure.Foundation.Data;
+using Domain.Interfaces.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
@@ -8,74 +10,68 @@ namespace Api.Controllers;
 [ApiController]
 public class PropertiesController : ControllerBase
 {
-    private readonly HotelManagementDbContext _context;
-    public PropertiesController( HotelManagementDbContext context )
+    private readonly IPropertyRepository _propertyRepository;
+    public PropertiesController(IPropertyRepository propertyRepository)
     {
-        _context = context;
+        _propertyRepository = propertyRepository;
     }
 
     [HttpGet]
     public IActionResult GetAll()
     {
-        List<Property> properties = _context.Properties.ToList();
-
-        return Ok( properties );
+        List<Property> properties = _propertyRepository.GetAll();
+        List<PropertyDto> propertyDtos = properties.Select(p => p.ToPropertyDto()).ToList();
+        
+        return Ok(propertyDtos);
     }
 
     [HttpGet( "{id}" )]
     public IActionResult GetById( [FromRoute] Guid id )
     {
-        Property? property = _context.Properties.Find( id );
+        Property? property = _propertyRepository.GetById(id);
         if ( property == null )
         {
             return NotFound();
         }
 
-        return Ok( property );
+        return Ok(property.ToPropertyDto());
     }
 
     [HttpPost]
-    public IActionResult Create( [FromBody] Property property )
+    public IActionResult Create( [FromBody] CreatePropertyDto createDto )
     {
-        property.Id = Guid.NewGuid();
-        _context.Properties.Add( property );
-        _context.SaveChanges();
+        Property property = _propertyRepository.Create(createDto.ToPropertyFromCreate());
 
-        return CreatedAtAction( nameof( GetById ), new { id = property.Id }, property );
+        return CreatedAtAction(nameof(GetById), new { id = property.Id }, property.ToPropertyDto());
     }
 
     [HttpPut( "{id}" )]
-    public IActionResult Update( [FromRoute] Guid id, [FromBody] Property updated )
+    public IActionResult Update( [FromRoute] Guid id, [FromBody] UpdatePropertyDto updateDto )
     {
-        Property? property = _context.Properties.Find( id );
-        if ( property == null )
+        Property? existing = _propertyRepository.GetById(id);
+        if ( existing == null )
         {
             return NotFound();
         }
 
-        property.Name = updated.Name;
-        property.Country = updated.Country;
-        property.City = updated.City;
-        property.Address = updated.Address;
-        property.Latitude = updated.Latitude;
-        property.Longitude = updated.Longitude;
+        Property updatedEntity = updateDto.ToPropertyFromUpdate();
+        updatedEntity.Id = existing.Id;
 
-        _context.SaveChanges();
+        Property updated = _propertyRepository.Update(updatedEntity);
 
-        return Ok( property );
+        return Ok(updated.ToPropertyDto());
     }
 
     [HttpDelete( "{id}" )]
     public IActionResult Delete( [FromRoute] Guid id )
     {
-        Property? property = _context.Properties.Find( id );
+        Property? property = _propertyRepository.GetById(id);
         if ( property == null )
         {
             return NotFound();
         }
 
-        _context.Properties.Remove( property );
-        _context.SaveChanges();
+         _propertyRepository.Delete(id);
 
         return NoContent();
     }

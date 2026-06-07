@@ -1,5 +1,7 @@
+using Api.Dtos.RoomType;
+using Api.Mappers;
 using Domain.Entities;
-using Infrastructure.Foundation.Data;
+using Domain.Interfaces.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
@@ -8,90 +10,87 @@ namespace Api.Controllers;
 [ApiController]
 public class RoomTypesController : ControllerBase
 {
-    private readonly HotelManagementDbContext _context;
-    public RoomTypesController( HotelManagementDbContext context )
+    private readonly IRoomTypeRepository _roomTypeRepository;
+    private readonly IPropertyRepository _propertyRepository;
+    public RoomTypesController(IRoomTypeRepository roomTypeRepository, IPropertyRepository propertyRepository)
     {
-        _context = context;
+        _roomTypeRepository = roomTypeRepository;
+        _propertyRepository = propertyRepository;
     }
 
     [HttpGet("properties/{propertyId}/roomtypes")]
     public IActionResult GetByProperty([FromRoute] Guid propertyId)
     {
-        Property? property = _context.Properties.Find(propertyId);
+        Property? property = _propertyRepository.GetById(propertyId);
         if ( property == null )
         {
             return NotFound();
         }
 
-        List<RoomType> roomTypes = _context.RoomTypes.Where(r => r.PropertyId == propertyId).ToList();
-
-        return Ok(roomTypes);
+        List<RoomType> roomTypes = _roomTypeRepository.GetByProperty(propertyId);
+        List<RoomTypeDto> roomTypeDtos = roomTypes.Select(rt => rt.ToRoomTypeDto()).ToList();
+        
+        return Ok(roomTypeDtos);
     }
 
     [HttpGet("roomtypes/{id}")]
     public IActionResult GetById([FromRoute] Guid id)
     {
-        RoomType? roomType = _context.RoomTypes.Find(id);
+        RoomType? roomType = _roomTypeRepository.GetById(id);
         if ( roomType == null )
         {
             return NotFound();
         }
 
-        return Ok(roomType);
+        return Ok(roomType.ToRoomTypeDto());
     }
 
     [HttpPost("properties/{propertyId}/roomtypes")]
-    public IActionResult Create([FromRoute] Guid propertyId, [FromBody] RoomType roomType)
+    public IActionResult Create([FromRoute] Guid propertyId, [FromBody] CreateRoomTypeDto createDto)
     {
-        Property? property = _context.Properties.Find(propertyId);
+        Property? property = _propertyRepository.GetById(propertyId);
         if ( property == null )
         {
             return NotFound();
         }
 
-        roomType.Id = Guid.NewGuid();
+        RoomType roomType = createDto.ToRoomTypeFromCreate();
         roomType.PropertyId = propertyId;
 
-        _context.RoomTypes.Add(roomType);
-        _context.SaveChanges();
+        RoomType created = _roomTypeRepository.Create(roomType);
 
-        return CreatedAtAction(nameof(GetById), new { id = roomType.Id }, roomType);
+        return CreatedAtAction(nameof(GetById), new { id = created.Id }, created.ToRoomTypeDto());
     }
 
     [HttpPut("roomtypes/{id}")]
-    public IActionResult Update([FromRoute] Guid id, [FromBody] RoomType updated)
+    public IActionResult Update([FromRoute] Guid id, [FromBody] UpdateRoomTypeDto updateDto)
     {
-        RoomType? roomType = _context.RoomTypes.Find(id);
-        if ( roomType == null )
+        RoomType? existing = _roomTypeRepository.GetById(id);
+        if ( existing == null )
         {
             return NotFound();
         }
 
-        roomType.Name = updated.Name;
-        roomType.DailyPrice = updated.DailyPrice;
-        roomType.Currency = updated.Currency;
-        roomType.MinPersonCount = updated.MinPersonCount;
-        roomType.MaxPersonCount = updated.MaxPersonCount;
-        roomType.Services = updated.Services;
-        roomType.Amenities = updated.Amenities;
+        RoomType updatedEntity = updateDto.ToRoomTypeFromUpdate();
+        updatedEntity.Id = existing.Id;
+        updatedEntity.PropertyId = existing.PropertyId;
 
-        _context.SaveChanges();
+        RoomType updated = _roomTypeRepository.Update(updatedEntity);
 
-        return Ok(roomType);
+        return Ok(updated.ToRoomTypeDto());
     }
 
     [HttpDelete("roomtypes/{id}")]
     public IActionResult Delete([FromRoute] Guid id)
     {
-        RoomType? roomType = _context.RoomTypes.Find(id);
+        RoomType? roomType = _roomTypeRepository.GetById(id);
         if ( roomType == null )
         {
             return NotFound();
         }
 
-        _context.RoomTypes.Remove(roomType);
-        _context.SaveChanges();
-        
+        _roomTypeRepository.Delete(id);
+
         return NoContent();
     }
 }
