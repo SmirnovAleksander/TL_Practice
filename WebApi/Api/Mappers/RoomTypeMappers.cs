@@ -5,7 +5,7 @@ namespace Api.Mappers;
 
 public static class RoomTypeMappers
 {
-    public static RoomTypeDto ToRoomTypeDto(this RoomType roomType)
+    public static RoomTypeDto ToRoomTypeDto( this RoomType roomType )
     {
         return new RoomTypeDto
         {
@@ -21,7 +21,7 @@ public static class RoomTypeMappers
         };
     }
 
-    public static RoomType ToRoomTypeFromCreate(this CreateRoomTypeDto dto)
+    public static RoomType ToRoomTypeFromCreate( this CreateRoomTypeDto dto )
     {
         return new RoomType
         {
@@ -35,7 +35,7 @@ public static class RoomTypeMappers
         };
     }
 
-    public static RoomType ToRoomTypeFromUpdate(this UpdateRoomTypeDto dto)
+    public static RoomType ToRoomTypeFromUpdate( this UpdateRoomTypeDto dto )
     {
         return new RoomType
         {

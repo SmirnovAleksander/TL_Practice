@@ -5,7 +5,7 @@ namespace Api.Mappers;
 
 public static class PropertyMappers
 {
-    public static PropertyDto ToPropertyDto(this Property property)
+    public static PropertyDto ToPropertyDto( this Property property )
     {
         return new PropertyDto
         {
@@ -19,7 +19,7 @@ public static class PropertyMappers
         };
     }
 
-    public static Property ToPropertyFromCreate(this CreatePropertyDto dto)
+    public static Property ToPropertyFromCreate( this CreatePropertyDto dto )
     {
         return new Property
         {
@@ -32,7 +32,7 @@ public static class PropertyMappers
         };
     }
 
-    public static Property ToPropertyFromUpdate(this UpdatePropertyDto dto)
+    public static Property ToPropertyFromUpdate( this UpdatePropertyDto dto )
     {
         return new Property
         {

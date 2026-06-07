@@ -17,23 +17,23 @@ public class PropertyRepository : IPropertyRepository
         return _dbContext.Properties.ToList();
     }
 
-    public Property? GetById(Guid id)
+    public Property? GetById( Guid id )
     {
-        return _dbContext.Properties.Find(id);
+        return _dbContext.Properties.Find( id );
     }
 
-    public Property Create(Property property)
+    public Property Create( Property property )
     {
         property.Id = Guid.NewGuid();
-        _dbContext.Properties.Add(property);
+        _dbContext.Properties.Add( property );
         _dbContext.SaveChanges();
 
         return property;
     }
 
-    public Property Update(Property property)
+    public Property Update( Property property )
     {
-        Property existing = _dbContext.Properties.Find(property.Id)!;
+        Property existing = _dbContext.Properties.Find( property.Id )!;
 
         existing.Name = property.Name;
         existing.Country = property.Country;
@@ -43,19 +43,19 @@ public class PropertyRepository : IPropertyRepository
         existing.Longitude = property.Longitude;
 
         _dbContext.SaveChanges();
-        
+
         return existing;
     }
 
-    public void Delete(Guid id)
+    public void Delete( Guid id )
     {
-        Property? property = _dbContext.Properties.Find(id);
-        if (property == null)
+        Property? property = _dbContext.Properties.Find( id );
+        if ( property == null )
         {
             return;
         }
-        
-        _dbContext.Properties.Remove(property);
+
+        _dbContext.Properties.Remove( property );
         _dbContext.SaveChanges();
     }
 }

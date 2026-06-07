@@ -15,12 +15,12 @@ public class HotelManagementDbContext : DbContext
     public DbSet<RoomType> RoomTypes { get; set; }
     public DbSet<Reservation> Reservations { get; set; }
 
-    protected override void OnModelCreating(ModelBuilder builder)
+    protected override void OnModelCreating( ModelBuilder builder )
     {
-        base.OnModelCreating(builder);
+        base.OnModelCreating( builder );
 
-        builder.ApplyConfiguration(new PropertyConfiguration());
-        builder.ApplyConfiguration(new RoomTypeConfiguration());
-        builder.ApplyConfiguration(new ReservationConfiguration());
+        builder.ApplyConfiguration( new PropertyConfiguration() );
+        builder.ApplyConfiguration( new RoomTypeConfiguration() );
+        builder.ApplyConfiguration( new ReservationConfiguration() );
     }
 }

@@ -11,7 +11,7 @@ namespace Api.Controllers;
 public class PropertiesController : ControllerBase
 {
     private readonly IPropertyRepository _propertyRepository;
-    public PropertiesController(IPropertyRepository propertyRepository)
+    public PropertiesController( IPropertyRepository propertyRepository )
     {
         _propertyRepository = propertyRepository;
     }
@@ -20,35 +20,35 @@ public class PropertiesController : ControllerBase
     public IActionResult GetAll()
     {
         List<Property> properties = _propertyRepository.GetAll();
-        List<PropertyDto> propertyDtos = properties.Select(p => p.ToPropertyDto()).ToList();
-        
-        return Ok(propertyDtos);
+        List<PropertyDto> propertyDtos = properties.Select( p => p.ToPropertyDto() ).ToList();
+
+        return Ok( propertyDtos );
     }
 
     [HttpGet( "{id}" )]
     public IActionResult GetById( [FromRoute] Guid id )
     {
-        Property? property = _propertyRepository.GetById(id);
+        Property? property = _propertyRepository.GetById( id );
         if ( property == null )
         {
             return NotFound();
         }
 
-        return Ok(property.ToPropertyDto());
+        return Ok( property.ToPropertyDto() );
     }
 
     [HttpPost]
     public IActionResult Create( [FromBody] CreatePropertyDto createDto )
     {
-        Property property = _propertyRepository.Create(createDto.ToPropertyFromCreate());
+        Property property = _propertyRepository.Create( createDto.ToPropertyFromCreate() );
 
-        return CreatedAtAction(nameof(GetById), new { id = property.Id }, property.ToPropertyDto());
+        return CreatedAtAction( nameof( GetById ), new { id = property.Id }, property.ToPropertyDto() );
     }
 
     [HttpPut( "{id}" )]
     public IActionResult Update( [FromRoute] Guid id, [FromBody] UpdatePropertyDto updateDto )
     {
-        Property? existing = _propertyRepository.GetById(id);
+        Property? existing = _propertyRepository.GetById( id );
         if ( existing == null )
         {
             return NotFound();
@@ -57,21 +57,21 @@ public class PropertiesController : ControllerBase
         Property updatedEntity = updateDto.ToPropertyFromUpdate();
         updatedEntity.Id = existing.Id;
 
-        Property updated = _propertyRepository.Update(updatedEntity);
+        Property updated = _propertyRepository.Update( updatedEntity );
 
-        return Ok(updated.ToPropertyDto());
+        return Ok( updated.ToPropertyDto() );
     }
 
     [HttpDelete( "{id}" )]
     public IActionResult Delete( [FromRoute] Guid id )
     {
-        Property? property = _propertyRepository.GetById(id);
+        Property? property = _propertyRepository.GetById( id );
         if ( property == null )
         {
             return NotFound();
         }
 
-         _propertyRepository.Delete(id);
+        _propertyRepository.Delete( id );
 
         return NoContent();
     }

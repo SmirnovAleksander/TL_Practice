@@ -12,28 +12,28 @@ public class RoomTypeRepository : IRoomTypeRepository
         _dbContext = dbContext;
     }
 
-    public List<RoomType> GetByProperty(Guid propertyId)
+    public List<RoomType> GetByProperty( Guid propertyId )
     {
-        return _dbContext.RoomTypes.Where(rt => rt.PropertyId == propertyId).ToList();
+        return _dbContext.RoomTypes.Where( rt => rt.PropertyId == propertyId ).ToList();
     }
 
-    public RoomType? GetById(Guid id)
+    public RoomType? GetById( Guid id )
     {
-        return _dbContext.RoomTypes.Find(id);
+        return _dbContext.RoomTypes.Find( id );
     }
 
-    public RoomType Create(RoomType roomType)
+    public RoomType Create( RoomType roomType )
     {
         roomType.Id = Guid.NewGuid();
-        _dbContext.RoomTypes.Add(roomType);
+        _dbContext.RoomTypes.Add( roomType );
         _dbContext.SaveChanges();
 
         return roomType;
     }
 
-    public RoomType Update(RoomType roomType)
+    public RoomType Update( RoomType roomType )
     {
-        RoomType existing = _dbContext.RoomTypes.Find(roomType.Id)!;
+        RoomType existing = _dbContext.RoomTypes.Find( roomType.Id )!;
 
         existing.Name = roomType.Name;
         existing.DailyPrice = roomType.DailyPrice;
@@ -48,15 +48,15 @@ public class RoomTypeRepository : IRoomTypeRepository
         return existing;
     }
 
-    public void Delete(Guid id)
+    public void Delete( Guid id )
     {
-        RoomType? roomType = _dbContext.RoomTypes.Find(id);
-        if (roomType == null)
+        RoomType? roomType = _dbContext.RoomTypes.Find( id );
+        if ( roomType == null )
         {
             return;
         }
-        
-        _dbContext.RoomTypes.Remove(roomType);
+
+        _dbContext.RoomTypes.Remove( roomType );
         _dbContext.SaveChanges();
     }
 }
