@@ -37,6 +37,7 @@ export const CurrencyInputGroup = ({
                     currenciesCodes={currenciesCodes}
                     handelCurrencyChange={handleFromChange}
                     handleAmountChange={handleAmountChange}
+                    isEditable={true}
                 />
                 <CurrencyInput
                     amount={result}
@@ -44,6 +45,7 @@ export const CurrencyInputGroup = ({
                     currenciesCodes={currenciesCodes}
                     handelCurrencyChange={handleToChange}
                     handleAmountChange={handleAmountChange}
+                    isEditable={false}
                 />
             </div>
         </div>

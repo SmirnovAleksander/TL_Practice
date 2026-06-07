@@ -6,6 +6,7 @@ type CurrencyInputProps = {
     currenciesCodes: string[];
     handleAmountChange?: (newAmount: string) => void;
     handelCurrencyChange: (newCode: string) => void;
+    isEditable: boolean;
 }
 
 export const CurrencyInput = ({
@@ -13,30 +14,33 @@ export const CurrencyInput = ({
     currencyCode,
     currenciesCodes,
     handleAmountChange,
-    handelCurrencyChange
+    handelCurrencyChange,
+    isEditable
 }: CurrencyInputProps) => {
-  return (
-    <div className={styles.row}>
-        <input
-            data-testid="currency-amount-input"
-            className={styles.amount}
-            type="text"
-            value={amount}
-            onChange={(e) => handleAmountChange(e.target.value)}
-        />
-        <hr className={styles.divider} />
-        <select
-            data-testid="currency-select"
-            className={styles.select}
-            value={currencyCode}
-            onChange={(e) => handelCurrencyChange(e.target.value)}
-        >
-            {currenciesCodes.map((code, id) => (
-                <option key={id} value={code}>
-                    {code}
-                </option>
-            ))}
-        </select>
-    </div>
-  );
+    
+    return (
+        <div className={styles.row}>
+            <input
+                data-testid="currency-amount-input"
+                className={styles.amount}
+                type="text"
+                value={amount}
+                onChange={(e) => handleAmountChange(e.target.value)}
+                disabled={!isEditable}
+            />
+            <hr className={styles.divider} />
+            <select
+                data-testid="currency-select"
+                className={styles.select}
+                value={currencyCode}
+                onChange={(e) => handelCurrencyChange(e.target.value)}
+            >
+                {currenciesCodes.map((code, id) => (
+                    <option key={id} value={code}>
+                        {code}
+                    </option>
+                ))}
+            </select>
+        </div>
+    );
 };
