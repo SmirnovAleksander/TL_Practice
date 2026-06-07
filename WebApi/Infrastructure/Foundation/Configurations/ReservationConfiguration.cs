@@ -38,11 +38,11 @@ internal class ReservationConfiguration : IEntityTypeConfiguration<Reservation>
         builder.HasOne<Property>()
             .WithMany()
             .HasForeignKey( r => r.PropertyId )
-            .OnDelete( DeleteBehavior.NoAction );
+            .OnDelete( DeleteBehavior.Restrict );
 
         builder.HasOne<RoomType>()
             .WithMany()
             .HasForeignKey( r => r.RoomTypeId )
-            .OnDelete( DeleteBehavior.NoAction );
+            .OnDelete( DeleteBehavior.Restrict );
     }
 }
