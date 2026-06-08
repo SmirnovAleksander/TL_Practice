@@ -70,6 +70,10 @@ public class ReservationsController : ControllerBase
         {
             return BadRequest( "ArrivalDate must be before DepartureDate" );
         }
+        if ( createDto.Guests < roomType.MinPersonCount || createDto.Guests > roomType.MaxPersonCount )
+        {
+            return BadRequest( $"Guest must be between {roomType.MinPersonCount} and {roomType.MaxPersonCount}" );
+        }
 
         bool hasOverlap = _reservationRepository
             .HasOverlap( createDto.RoomTypeId, createDto.ArrivalDate, createDto.DepartureDate );

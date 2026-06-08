@@ -65,13 +65,7 @@ public class SearchController : ControllerBase
                     if ( hasOverlap )
                         continue;
                 }
-                results.Add( new SearchResultDto
-                {
-                    Property = property.ToPropertyDto(),
-                    RoomType = roomType.ToRoomTypeDto(),
-                    DailyPrice = roomType.DailyPrice,
-                    Currency = roomType.Currency
-                } );
+                results.Add( roomType.ToSearchResultDto( property ) );
             }
         }
         return Ok( results );
