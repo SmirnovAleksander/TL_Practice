@@ -22,18 +22,8 @@ public class FighterTests
         _armorMock = new Mock<IArmor>();
     }
 
-    private IFighter CreateFighter( string name )
-    {
-        return new Fighter(
-            name,
-            _raceMock.Object,
-            _armorMock.Object,
-            _weaponMock.Object,
-            _classMock.Object );
-    }
-
     [Fact]
-    public void Constructor_SetName()
+    public void Constructor_ValidName_SetsName()
     {
         IFighter fighter = CreateFighter( "Fighter" );
 
@@ -41,7 +31,7 @@ public class FighterTests
     }
 
     [Fact]
-    public void GetMaxHealth_RaceHealthPlusClassHealth()
+    public void GetMaxHealth_RaceAndClassHealthSum_ReturnsTotalMaxHealth()
     {
         _raceMock.Setup( r => r.Health ).Returns( 80 );
         _classMock.Setup( c => c.Health ).Returns( 20 );
@@ -52,7 +42,7 @@ public class FighterTests
     }
 
     [Fact]
-    public void CalculateDamage_WeaponPlusFighterClassPlusRaceDamage()
+    public void CalculateDamage_AllComponentsSum_ReturnsTotalDamage()
     {
         _weaponMock.Setup( w => w.Damage ).Returns( 5 );
         _classMock.Setup( c => c.Damage ).Returns( 3 );
@@ -64,7 +54,7 @@ public class FighterTests
     }
 
     [Fact]
-    public void CalculateArmor_ReturnsArmorPlusRaceArmor()
+    public void CalculateArmor_ArmorAndRaceArmorSum_ReturnsTotalArmor()
     {
         _armorMock.Setup( a => a.Armor ).Returns( 8 );
         _raceMock.Setup( r => r.Armor ).Returns( 4 );
@@ -75,7 +65,7 @@ public class FighterTests
     }
 
     [Fact]
-    public void Initiative_ReturnsRaceInitiativePlusClassInitiative()
+    public void Initiative_RaceAndClassInitiativeSum_ReturnsTotalInitiative()
     {
         _raceMock.Setup( r => r.Initiative ).Returns( 3 );
         _classMock.Setup( c => c.Initiative ).Returns( 2 );
@@ -86,7 +76,7 @@ public class FighterTests
     }
 
     [Fact]
-    public void TakeDamage_CalculateCurrentHealth()
+    public void TakeDamage_DamageLessThanHealth_ReduceCurrentHealth()
     {
         _raceMock.Setup( r => r.Health ).Returns( 100 );
         _classMock.Setup( c => c.Health ).Returns( 0 );
@@ -113,7 +103,7 @@ public class FighterTests
     }
 
     [Fact]
-    public void IsAlive_HealtLargerZero_ReturnsTrue()
+    public void IsAlive_HealthGreaterThanZero_ReturnsTrue()
     {
         _raceMock.Setup( r => r.Health ).Returns( 100 );
         _classMock.Setup( c => c.Health ).Returns( 0 );
@@ -136,7 +126,7 @@ public class FighterTests
     }
 
     [Fact]
-    public void GetCurrentHealth_EqualsMaxHealth()
+    public void GetCurrentHealth_AfterDamage_ReturnsMaxHealthMinusDamage()
     {
         _raceMock.Setup( r => r.Health ).Returns( 100 );
         _classMock.Setup( c => c.Health ).Returns( 10 );
@@ -144,5 +134,19 @@ public class FighterTests
         IFighter fighter = CreateFighter( "HealthTest" );
 
         Assert.Equal( fighter.GetMaxHealth(), fighter.GetCurrentHealth() );
+
+        fighter.TakeDamage( 30 );
+
+        Assert.Equal( fighter.GetMaxHealth() - 30, fighter.GetCurrentHealth() );
+    }
+
+    private IFighter CreateFighter( string name )
+    {
+        return new Fighter(
+            name,
+            _raceMock.Object,
+            _armorMock.Object,
+            _weaponMock.Object,
+            _classMock.Object );
     }
 }

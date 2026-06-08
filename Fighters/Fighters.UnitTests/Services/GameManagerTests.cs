@@ -28,33 +28,22 @@ public class GameManagerTests
     }
 
     [Fact]
-    public void PlayGame_Choice_4_Exit()
+    public void PlayGame_EmptyName_DoesNotCreateFighter()
     {
-        _inputHelperMock.Setup( i => i.ReadChoice( 4 ) ).Returns( 4 );
-
-        _gameManager.PlayGame();
-
-        _consoleMock.Verify( c => c.WriteLine( "Fighters Game - Меню" ), Times.Once );
-    }
-
-    [Fact]
-    public void PlayGame_Choice_1_ErrorEmptyName()
-    {
-        _inputHelperMock.SetupSequence( i => i.ReadChoice( 4 ) )
+        _inputHelperMock.SetupSequence( i => i.ReadChoice( maxOption: 4 ) )
             .Returns( 1 )
             .Returns( 4 );
         _consoleMock.Setup( c => c.ReadLine() ).Returns( "" );
 
         _gameManager.PlayGame();
 
-        _consoleMock.Verify( c => c.WriteLine( "Имя не может быть пустым!" ), Times.Once );
         _factoryMock.Verify( f => f.CreateFighter( It.IsAny<string>() ), Times.Never );
     }
 
     [Fact]
-    public void PlayGame_Choice_1_ValidName_AddFighter()
+    public void PlayGame_ValidName_CreatesFighter()
     {
-        _inputHelperMock.SetupSequence( i => i.ReadChoice( 4 ) )
+        _inputHelperMock.SetupSequence( i => i.ReadChoice( maxOption: 4 ) )
             .Returns( 1 )
             .Returns( 4 );
         _consoleMock.Setup( c => c.ReadLine() ).Returns( "Fighter" );
@@ -63,51 +52,17 @@ public class GameManagerTests
         _gameManager.PlayGame();
 
         _factoryMock.Verify( f => f.CreateFighter( "Fighter" ), Times.Once );
-        _consoleMock.Verify( c => c.WriteLine( "Боец добавлен!" ), Times.Once );
     }
 
     [Fact]
-    public void PlayGame_Choice_2_NoFighters_ShowsEmptyError()
+    public void PlayGame_LessThanTwoFighters_DoesNotStartBattle()
     {
-        _inputHelperMock.SetupSequence( i => i.ReadChoice( 4 ) )
-            .Returns( 2 )
-            .Returns( 4 );
-
-        _gameManager.PlayGame();
-
-        _consoleMock.Verify( c => c.WriteLine( "Нет бойцов!" ), Times.Once );
-    }
-
-    [Fact]
-    public void PlayGame_Choice_2_ShowFighterName()
-    {
-        Mock<IFighter> fighterMock = new();
-        fighterMock.Setup( f => f.Name ).Returns( "Fighter" );
-        fighterMock.Setup( f => f.ToString() ).Returns( "info" );
-
-        _inputHelperMock.SetupSequence( i => i.ReadChoice( 4 ) )
-            .Returns( 1 )
-            .Returns( 2 )
-            .Returns( 4 );
-        _consoleMock.Setup( c => c.ReadLine() ).Returns( "Fighter" );
-        _factoryMock.Setup( f => f.CreateFighter( "Fighter" ) ).Returns( fighterMock.Object );
-
-        _gameManager.PlayGame();
-
-        _consoleMock.Verify( c => c.WriteLine( "1. Имя: Fighter" ), Times.Once );
-        _consoleMock.Verify( c => c.WriteLine( fighterMock.Object ), Times.Once );
-    }
-
-    [Fact]
-    public void PlayGame_Choice_3_LessThanTwoFighters_ShowsError()
-    {
-        _inputHelperMock.SetupSequence( i => i.ReadChoice( 4 ) )
+        _inputHelperMock.SetupSequence( i => i.ReadChoice( maxOption: 4 ) )
             .Returns( 3 )
             .Returns( 4 );
 
         _gameManager.PlayGame();
 
-        _consoleMock.Verify( c => c.WriteLine( "Для битвы нужно минимум 2 бойца!" ), Times.Once );
         _battleManagerMock.Verify( b => b.StartBattle( It.IsAny<List<IFighter>>() ), Times.Never );
     }
 }

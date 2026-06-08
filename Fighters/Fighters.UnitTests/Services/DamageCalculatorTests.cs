@@ -7,6 +7,9 @@ namespace Fighters.UnitTests.Services;
 
 public class DamageCalculatorTests
 {
+    private const int MinRandomModifier = -20;
+    private const int MaxRandomModifier = 10;
+
     private readonly Mock<IRandomProvider> _randomProviderMock;
     private readonly Mock<IFighter> _attackerMock;
     private readonly Mock<IFighter> _defenderMock;
@@ -21,63 +24,77 @@ public class DamageCalculatorTests
     }
 
     [Fact]
-    public void CalculateDamage_ReturnBaseDamageMinusArmor()
+    public void CalculateDamage_BaseDamageMinusArmor_ReturnsReducedDamage()
     {
-        _attackerMock.Setup( a => a.CalculateDamage() ).Returns( 100 );
-        _defenderMock.Setup( d => d.CalculateArmor() ).Returns( 20 );
-        _randomProviderMock.Setup( r => r.Next( -20, 11 ) ).Returns( 0 );
+        int baseDamage = 100;
+        int armor = 20;
+        _attackerMock.Setup( a => a.CalculateDamage() ).Returns( baseDamage );
+        _defenderMock.Setup( d => d.CalculateArmor() ).Returns( armor );
+        _randomProviderMock.Setup( r => r.Next( MinRandomModifier, MaxRandomModifier + 1 ) ).Returns( 0 );
         _randomProviderMock.Setup( r => r.NextDouble() ).Returns( 1.0 );
 
         int damage = _calculator.CalculateDamage( _attackerMock.Object, _defenderMock.Object );
 
-        Assert.Equal( 80, damage );
+        Assert.Equal( baseDamage - armor, damage );
     }
 
     [Fact]
-    public void CalculateDamage_NegativeRandomDamage()
+    public void CalculateDamage_NegativeModifier_ReduceDamage()
     {
-        _attackerMock.Setup( a => a.CalculateDamage() ).Returns( 100 );
+        int baseDamage = 100;
+        int randomModifier = -20;
+        _attackerMock.Setup( a => a.CalculateDamage() ).Returns( baseDamage );
         _defenderMock.Setup( d => d.CalculateArmor() ).Returns( 0 );
-        _randomProviderMock.Setup( r => r.Next( -20, 11 ) ).Returns( -20 );
+        _randomProviderMock.Setup( r => r.Next( MinRandomModifier, MaxRandomModifier + 1 ) ).Returns( randomModifier );
         _randomProviderMock.Setup( r => r.NextDouble() ).Returns( 1.0 );
 
         int damage = _calculator.CalculateDamage( _attackerMock.Object, _defenderMock.Object );
 
-        Assert.Equal( 80, damage );
+        int expectedDamage = ( int )( baseDamage * ( 1.0 + randomModifier / 100.0 ) );
+        Assert.Equal( expectedDamage, damage );
     }
 
     [Fact]
-    public void CalculateDamage_PositiveRandomDamage()
+    public void CalculateDamage_PositiveModifier_IncreasesDamage()
     {
-        _attackerMock.Setup( a => a.CalculateDamage() ).Returns( 100 );
+        int baseDamage = 100;
+        int randomModifier = 10;
+        _attackerMock.Setup( a => a.CalculateDamage() ).Returns( baseDamage );
         _defenderMock.Setup( d => d.CalculateArmor() ).Returns( 0 );
-        _randomProviderMock.Setup( r => r.Next( -20, 11 ) ).Returns( 10 );
+        _randomProviderMock.Setup( r => r.Next( MinRandomModifier, MaxRandomModifier + 1 ) ).Returns( randomModifier );
         _randomProviderMock.Setup( r => r.NextDouble() ).Returns( 1.0 );
 
         int damage = _calculator.CalculateDamage( _attackerMock.Object, _defenderMock.Object );
 
-        Assert.Equal( 110, damage );
+        int expectedDamage = ( int )( baseDamage * ( 1.0 + randomModifier / 100.0 ) );
+        Assert.Equal( expectedDamage, damage );
     }
 
     [Fact]
-    public void CalculateDamage_CriticalHitDamage()
+    public void CalculateDamage_CriticalHit_DoublesDamageBeforeArmor()
     {
-        _attackerMock.Setup( a => a.CalculateDamage() ).Returns( 100 );
-        _defenderMock.Setup( d => d.CalculateArmor() ).Returns( 20 );
-        _randomProviderMock.Setup( r => r.Next( -20, 11 ) ).Returns( 0 );
+        int baseDamage = 100;
+        int armor = 20;
+        int randomModifier = 0;
+        _attackerMock.Setup( a => a.CalculateDamage() ).Returns( baseDamage );
+        _defenderMock.Setup( d => d.CalculateArmor() ).Returns( armor );
+        _randomProviderMock.Setup( r => r.Next( MinRandomModifier, MaxRandomModifier + 1 ) ).Returns( randomModifier );
         _randomProviderMock.Setup( r => r.NextDouble() ).Returns( 0.0 );
 
         int damage = _calculator.CalculateDamage( _attackerMock.Object, _defenderMock.Object );
 
-        Assert.Equal( 180, damage );
+        int expectedDamage = baseDamage * 2 - armor;
+        Assert.Equal( expectedDamage, damage );
     }
 
     [Fact]
     public void CalculateDamage_DamageLessThanArmor_ReturnsZero()
     {
-        _attackerMock.Setup( a => a.CalculateDamage() ).Returns( 10 );
-        _defenderMock.Setup( d => d.CalculateArmor() ).Returns( 50 );
-        _randomProviderMock.Setup( r => r.Next( -20, 11 ) ).Returns( 0 );
+        int baseDamage = 10;
+        int armor = 50;
+        _attackerMock.Setup( a => a.CalculateDamage() ).Returns( baseDamage );
+        _defenderMock.Setup( d => d.CalculateArmor() ).Returns( armor );
+        _randomProviderMock.Setup( r => r.Next( MinRandomModifier, MaxRandomModifier + 1 ) ).Returns( 0 );
         _randomProviderMock.Setup( r => r.NextDouble() ).Returns( 1.0 );
 
         int damage = _calculator.CalculateDamage( _attackerMock.Object, _defenderMock.Object );
@@ -88,26 +105,31 @@ public class DamageCalculatorTests
     [Fact]
     public void CalculateDamage_ZeroArmor_ReturnsFullDamage()
     {
-        _attackerMock.Setup( a => a.CalculateDamage() ).Returns( 50 );
+        int baseDamage = 50;
+        _attackerMock.Setup( a => a.CalculateDamage() ).Returns( baseDamage );
         _defenderMock.Setup( d => d.CalculateArmor() ).Returns( 0 );
-        _randomProviderMock.Setup( r => r.Next( -20, 11 ) ).Returns( 0 );
+        _randomProviderMock.Setup( r => r.Next( MinRandomModifier, MaxRandomModifier + 1 ) ).Returns( 0 );
         _randomProviderMock.Setup( r => r.NextDouble() ).Returns( 1.0 );
 
         int damage = _calculator.CalculateDamage( _attackerMock.Object, _defenderMock.Object );
 
-        Assert.Equal( 50, damage );
+        Assert.Equal( baseDamage, damage );
     }
 
     [Fact]
-    public void CalculateDamage_CriticalWithNegativeModifier()
+    public void CalculateDamage_CriticalWithNegativeModifier_AppliesBothMultipliers()
     {
-        _attackerMock.Setup( a => a.CalculateDamage() ).Returns( 100 );
-        _defenderMock.Setup( d => d.CalculateArmor() ).Returns( 10 );
-        _randomProviderMock.Setup( r => r.Next( -20, 11 ) ).Returns( -10 );
+        int baseDamage = 100;
+        int armor = 10;
+        int randomModifier = -10;
+        _attackerMock.Setup( a => a.CalculateDamage() ).Returns( baseDamage );
+        _defenderMock.Setup( d => d.CalculateArmor() ).Returns( armor );
+        _randomProviderMock.Setup( r => r.Next( MinRandomModifier, MaxRandomModifier + 1 ) ).Returns( randomModifier );
         _randomProviderMock.Setup( r => r.NextDouble() ).Returns( 0.0 );
 
         int damage = _calculator.CalculateDamage( _attackerMock.Object, _defenderMock.Object );
 
-        Assert.Equal( 170, damage );
+        int expectedDamage = ( int )( baseDamage * ( 1.0 + randomModifier / 100.0 ) ) * 2 - armor;
+        Assert.Equal( expectedDamage, damage );
     }
 }

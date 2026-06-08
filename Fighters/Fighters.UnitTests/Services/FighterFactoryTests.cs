@@ -49,15 +49,17 @@ public class FighterFactoryTests
         classMock.Setup( c => c.Initiative ).Returns( 1 );
         classMock.Setup( c => c.Health ).Returns( 10 );
 
-        _dataProviderMock.Setup( d => d.Races ).Returns( [ raceMock.Object ] );
-        _dataProviderMock.Setup( d => d.Weapons ).Returns( [ weaponMock.Object ] );
-        _dataProviderMock.Setup( d => d.Armors ).Returns( [ armorMock.Object ] );
-        _dataProviderMock.Setup( d => d.Classes ).Returns( [ classMock.Object ] );
-        _inputHelperMock.Setup( i => i.ReadChoice( 1 ) ).Returns( 1 );
+        SetupDataProvider(
+            [ raceMock.Object ],
+            [ weaponMock.Object ],
+            [ armorMock.Object ],
+            [ classMock.Object ] );
+        _inputHelperMock.Setup( i => i.ReadChoice( maxOption: 1 ) ).Returns( 1 );
 
         IFighter fighter = _factory.CreateFighter( "Fighter" );
 
         Assert.Equal( "Fighter", fighter.Name );
+        Assert.Equal( 20, fighter.CalculateDamage() );
         Assert.Equal( 20, fighter.CalculateDamage() );
         Assert.Equal( 8, fighter.CalculateArmor() );
         Assert.Equal( 3, fighter.Initiative );
@@ -65,7 +67,7 @@ public class FighterFactoryTests
     }
 
     [Fact]
-    public void CreateFighter_ShowMenu()
+    public void CreateFighter_AllMenusDisplayed_ShowsAllFourChoices()
     {
         Mock<IRace> race = new();
         race.Setup( r => r.Name ).Returns( "Гном" );
@@ -76,22 +78,27 @@ public class FighterFactoryTests
         Mock<IClass> cls = new();
         cls.Setup( c => c.Name ).Returns( "Ассасин" );
 
-        _dataProviderMock.Setup( d => d.Races ).Returns( [ race.Object ] );
-        _dataProviderMock.Setup( d => d.Weapons ).Returns( [ weapon.Object ] );
-        _dataProviderMock.Setup( d => d.Armors ).Returns( [ armor.Object ] );
-        _dataProviderMock.Setup( d => d.Classes ).Returns( [ cls.Object ] );
-        _inputHelperMock.Setup( i => i.ReadChoice( 1 ) ).Returns( 1 );
+        SetupDataProvider(
+            [ race.Object ],
+            [ weapon.Object ],
+            [ armor.Object ],
+            [ cls.Object ] );
+        _inputHelperMock.Setup( i => i.ReadChoice( maxOption: 1 ) ).Returns( 1 );
 
         _factory.CreateFighter( "Fighter" );
 
         _consoleMock.Verify( c => c.WriteLine( "Выберите расу:" ), Times.Once );
+        _consoleMock.Verify( c => c.WriteLine( "1 - Гном" ), Times.Once );
         _consoleMock.Verify( c => c.WriteLine( "Выберите оружие:" ), Times.Once );
+        _consoleMock.Verify( c => c.WriteLine( "1 - Копьё" ), Times.Once );
         _consoleMock.Verify( c => c.WriteLine( "Выберите броню:" ), Times.Once );
+        _consoleMock.Verify( c => c.WriteLine( "1 - Тканевая одежда" ), Times.Once );
         _consoleMock.Verify( c => c.WriteLine( "Выберите класс:" ), Times.Once );
+        _consoleMock.Verify( c => c.WriteLine( "1 - Ассасин" ), Times.Once );
     }
 
     [Fact]
-    public void CreateFighter_SelectSecondItem_ReturnWeapon()
+    public void CreateFighter_SelectSecondItem_ReturnsWeaponWithCorrectDamage()
     {
         Mock<IWeapon> firstWeapon = new();
         firstWeapon.Setup( w => w.Name ).Returns( "Молот" );
@@ -101,16 +108,29 @@ public class FighterFactoryTests
         secondWeapon.Setup( w => w.Name ).Returns( "Железный меч" );
         secondWeapon.Setup( w => w.Damage ).Returns( 4 );
 
-        _dataProviderMock.Setup( d => d.Races ).Returns( [ EmptyRace() ] );
-        _dataProviderMock.Setup( d => d.Weapons ).Returns( [ firstWeapon.Object, secondWeapon.Object ] );
-        _dataProviderMock.Setup( d => d.Armors ).Returns( [ EmptyArmor() ] );
-        _dataProviderMock.Setup( d => d.Classes ).Returns( [ EmptyClass() ] );
-        _inputHelperMock.Setup( i => i.ReadChoice( 1 ) ).Returns( 1 );
-        _inputHelperMock.Setup( i => i.ReadChoice( 2 ) ).Returns( 2 );
+        SetupDataProvider(
+            [ EmptyRace() ],
+            [ firstWeapon.Object, secondWeapon.Object ],
+            [ EmptyArmor() ],
+            [ EmptyClass() ] );
+        _inputHelperMock.Setup( i => i.ReadChoice( maxOption: 1 ) ).Returns( 1 );
+        _inputHelperMock.Setup( i => i.ReadChoice( maxOption: 2 ) ).Returns( 2 );
 
         IFighter fighter = _factory.CreateFighter( "Fighter" );
 
         Assert.Equal( 4, fighter.CalculateDamage() );
+    }
+
+    private void SetupDataProvider(
+        List<IRace> races,
+        List<IWeapon> weapons,
+        List<IArmor> armors,
+        List<IClass> classes )
+    {
+        _dataProviderMock.Setup( d => d.Races ).Returns( races );
+        _dataProviderMock.Setup( d => d.Weapons ).Returns( weapons );
+        _dataProviderMock.Setup( d => d.Armors ).Returns( armors );
+        _dataProviderMock.Setup( d => d.Classes ).Returns( classes );
     }
 
     private static IRace EmptyRace()
