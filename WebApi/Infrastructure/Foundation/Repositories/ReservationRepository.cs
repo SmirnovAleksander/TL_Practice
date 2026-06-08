@@ -1,6 +1,7 @@
 using Domain.Entities;
 using Domain.Interfaces.Repositories;
 using Infrastructure.Foundation.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Foundation.Repositories;
 
@@ -12,7 +13,7 @@ public class ReservationRepository : IReservationRepository
         _dbContext = dbContext;
     }
 
-    public List<Reservation> GetAll(
+    public async Task<List<Reservation>> GetAll(
         Guid? propertyId,
         DateOnly? arrivalDate,
         DateOnly? departureDate,
@@ -36,26 +37,26 @@ public class ReservationRepository : IReservationRepository
             query = query.Where( r => r.GuestName.Contains( guestName ) );
         }
 
-        return query.ToList();
+        return await query.ToListAsync();
     }
 
-    public Reservation? GetById( Guid id )
+    public async Task<Reservation?> GetById( Guid id )
     {
-        return _dbContext.Reservations.Find( id );
+        return await _dbContext.Reservations.FindAsync( id );
     }
 
-    public Reservation Create( Reservation reservation )
+    public async Task<Reservation> Create( Reservation reservation )
     {
         reservation.Id = Guid.NewGuid();
         _dbContext.Reservations.Add( reservation );
-        _dbContext.SaveChanges();
+        await _dbContext.SaveChangesAsync();
 
         return reservation;
     }
 
-    public void Cancel( Guid id )
+    public async Task Cancel( Guid id )
     {
-        Reservation? reservation = _dbContext.Reservations.Find( id );
+        Reservation? reservation = await _dbContext.Reservations.FindAsync( id );
         if ( reservation == null )
         {
             return;
@@ -63,12 +64,12 @@ public class ReservationRepository : IReservationRepository
 
         reservation.IsCanceled = true;
 
-        _dbContext.SaveChanges();
+        await _dbContext.SaveChangesAsync();
     }
 
-    public bool HasOverlap( Guid roomTypeId, DateOnly arrivalDate, DateOnly departureDate )
+    public async Task<bool> HasOverlap( Guid roomTypeId, DateOnly arrivalDate, DateOnly departureDate )
     {
-        return _dbContext.Reservations.Any( r =>
+        return await _dbContext.Reservations.AnyAsync( r =>
             r.RoomTypeId == roomTypeId &&
             !r.IsCanceled &&
             r.ArrivalDate < departureDate &&

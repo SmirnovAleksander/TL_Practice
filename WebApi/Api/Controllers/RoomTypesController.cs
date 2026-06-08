@@ -19,24 +19,24 @@ public class RoomTypesController : ControllerBase
     }
 
     [HttpGet( "properties/{propertyId:guid}/roomtypes" )]
-    public IActionResult GetByProperty( [FromRoute] Guid propertyId )
+    public async Task<IActionResult> GetByProperty( [FromRoute] Guid propertyId )
     {
-        Property? property = _propertyRepository.GetById( propertyId );
+        Property? property = await _propertyRepository.GetById( propertyId );
         if ( property == null )
         {
             return NotFound();
         }
 
-        List<RoomType> roomTypes = _roomTypeRepository.GetByProperty( propertyId );
+        List<RoomType> roomTypes = await _roomTypeRepository.GetByProperty( propertyId );
         List<RoomTypeDto> roomTypeDtos = roomTypes.Select( rt => rt.ToRoomTypeDto() ).ToList();
 
         return Ok( roomTypeDtos );
     }
 
     [HttpGet( "roomtypes/{id:guid}" )]
-    public IActionResult GetById( [FromRoute] Guid id )
+    public async Task<IActionResult> GetById( [FromRoute] Guid id )
     {
-        RoomType? roomType = _roomTypeRepository.GetById( id );
+        RoomType? roomType = await _roomTypeRepository.GetById( id );
         if ( roomType == null )
         {
             return NotFound();
@@ -46,45 +46,45 @@ public class RoomTypesController : ControllerBase
     }
 
     [HttpPost( "properties/{propertyId:guid}/roomtypes" )]
-    public IActionResult Create( [FromRoute] Guid propertyId, [FromBody] CreateRoomTypeDto createDto )
+    public async Task<IActionResult> Create( [FromRoute] Guid propertyId, [FromBody] CreateRoomTypeDto createDto )
     {
-        Property? property = _propertyRepository.GetById( propertyId );
+        Property? property = await _propertyRepository.GetById( propertyId );
         if ( property == null )
         {
             return NotFound();
         }
 
         RoomType roomTypeEntity = createDto.ToRoomTypeFromCreate(propertyId);
-        RoomType created = _roomTypeRepository.Create( roomTypeEntity );
+        RoomType created = await _roomTypeRepository.Create( roomTypeEntity );
 
         return CreatedAtAction( nameof( GetById ), new { id = created.Id }, created.ToRoomTypeDto() );
     }
 
     [HttpPut( "roomtypes/{id:guid}" )]
-    public IActionResult Update( [FromRoute] Guid id, [FromBody] UpdateRoomTypeDto updateDto )
+    public async Task<IActionResult> Update( [FromRoute] Guid id, [FromBody] UpdateRoomTypeDto updateDto )
     {
-        RoomType? existing = _roomTypeRepository.GetById( id );
+        RoomType? existing = await _roomTypeRepository.GetById( id );
         if ( existing == null )
         {
             return NotFound();
         }
 
         RoomType roomTypeEntity = updateDto.ToRoomTypeFromUpdate( id, existing.PropertyId );
-        RoomType updated = _roomTypeRepository.Update( roomTypeEntity );
+        RoomType updated = await _roomTypeRepository.Update( roomTypeEntity );
 
         return Ok( updated.ToRoomTypeDto() );
     }
 
     [HttpDelete( "roomtypes/{id:guid}" )]
-    public IActionResult Delete( [FromRoute] Guid id )
+    public async Task<IActionResult> Delete( [FromRoute] Guid id )
     {
-        RoomType? roomType = _roomTypeRepository.GetById( id );
+        RoomType? roomType = await _roomTypeRepository.GetById( id );
         if ( roomType == null )
         {
             return NotFound();
         }
 
-        _roomTypeRepository.Delete( id );
+        await _roomTypeRepository.Delete( id );
 
         return NoContent();
     }

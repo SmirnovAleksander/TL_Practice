@@ -17,18 +17,18 @@ public class PropertiesController : ControllerBase
     }
 
     [HttpGet]
-    public IActionResult GetAll()
+    public async Task<IActionResult> GetAll()
     {
-        List<Property> properties = _propertyRepository.GetAll();
+        List<Property> properties = await _propertyRepository.GetAll();
         List<PropertyDto> propertyDtos = properties.Select( p => p.ToPropertyDto() ).ToList();
 
         return Ok( propertyDtos );
     }
 
     [HttpGet( "{id:guid}" )]
-    public IActionResult GetById( [FromRoute] Guid id )
+    public async Task<IActionResult> GetById( [FromRoute] Guid id )
     {
-        Property? property = _propertyRepository.GetById( id );
+        Property? property = await _propertyRepository.GetById( id );
         if ( property == null )
         {
             return NotFound();
@@ -38,38 +38,38 @@ public class PropertiesController : ControllerBase
     }
 
     [HttpPost]
-    public IActionResult Create( [FromBody] CreatePropertyDto createDto )
+    public async Task<IActionResult> Create( [FromBody] CreatePropertyDto createDto )
     {
-        Property property = _propertyRepository.Create( createDto.ToPropertyFromCreate() );
+        Property property = await _propertyRepository.Create( createDto.ToPropertyFromCreate() );
 
         return CreatedAtAction( nameof( GetById ), new { id = property.Id }, property.ToPropertyDto() );
     }
 
     [HttpPut( "{id:guid}" )]
-    public IActionResult Update( [FromRoute] Guid id, [FromBody] UpdatePropertyDto updateDto )
+    public async Task<IActionResult> Update( [FromRoute] Guid id, [FromBody] UpdatePropertyDto updateDto )
     {
-        Property? existing = _propertyRepository.GetById( id );
+        Property? existing = await _propertyRepository.GetById( id );
         if ( existing == null )
         {
             return NotFound();
         }
 
         Property propertyEntity = updateDto.ToPropertyFromUpdate( id );
-        Property updated = _propertyRepository.Update( propertyEntity );
+        Property updated = await _propertyRepository.Update( propertyEntity );
 
         return Ok( updated.ToPropertyDto() );
     }
 
     [HttpDelete( "{id:guid}" )]
-    public IActionResult Delete( [FromRoute] Guid id )
+    public async Task<IActionResult> Delete( [FromRoute] Guid id )
     {
-        Property? property = _propertyRepository.GetById( id );
+        Property? property = await _propertyRepository.GetById( id );
         if ( property == null )
         {
             return NotFound();
         }
 
-        _propertyRepository.Delete( id );
+        await _propertyRepository.Delete( id );
 
         return NoContent();
     }

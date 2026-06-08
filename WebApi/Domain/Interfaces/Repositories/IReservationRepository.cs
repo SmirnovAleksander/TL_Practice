@@ -4,13 +4,13 @@ namespace Domain.Interfaces.Repositories;
 
 public interface IReservationRepository
 {
-    List<Reservation> GetAll(
+    Task<List<Reservation>> GetAll(
         Guid? propertyId,
         DateOnly? arrivalDate,
         DateOnly? departureDate,
         string? guestName );
-    Reservation? GetById( Guid id );
-    Reservation Create( Reservation reservation );
-    void Cancel( Guid id );
-    bool HasOverlap( Guid roomTypeId, DateOnly arrivalDate, DateOnly departureDate );
+    Task<Reservation?> GetById( Guid id );
+    Task<Reservation> Create( Reservation reservation );
+    Task Cancel( Guid id );
+    Task<bool> HasOverlap( Guid roomTypeId, DateOnly arrivalDate, DateOnly departureDate );
 }

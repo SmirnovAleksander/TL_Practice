@@ -1,6 +1,7 @@
 using Domain.Entities;
 using Domain.Interfaces.Repositories;
 using Infrastructure.Foundation.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Foundation.Repositories;
 
@@ -12,28 +13,32 @@ public class RoomTypeRepository : IRoomTypeRepository
         _dbContext = dbContext;
     }
 
-    public List<RoomType> GetByProperty( Guid propertyId )
+    public async Task<List<RoomType>> GetByProperty( Guid propertyId )
     {
-        return _dbContext.RoomTypes.Where( rt => rt.PropertyId == propertyId ).ToList();
+        return await _dbContext.RoomTypes.Where( rt => rt.PropertyId == propertyId ).ToListAsync();
     }
 
-    public RoomType? GetById( Guid id )
+    public async Task<RoomType?> GetById( Guid id )
     {
-        return _dbContext.RoomTypes.Find( id );
+        return await _dbContext.RoomTypes.FindAsync( id );
     }
 
-    public RoomType Create( RoomType roomType )
+    public async Task<RoomType> Create( RoomType roomType )
     {
         roomType.Id = Guid.NewGuid();
         _dbContext.RoomTypes.Add( roomType );
-        _dbContext.SaveChanges();
+        await _dbContext.SaveChangesAsync();
 
         return roomType;
     }
 
-    public RoomType Update( RoomType roomType )
+    public async Task<RoomType> Update( RoomType roomType )
     {
-        RoomType existing = _dbContext.RoomTypes.Find( roomType.Id )!;
+        RoomType? existing = await _dbContext.RoomTypes.FindAsync( roomType.Id );
+        if ( existing is null )
+        {
+            throw new InvalidOperationException( "RoomType not found" );
+        }
 
         existing.Name = roomType.Name;
         existing.DailyPrice = roomType.DailyPrice;
@@ -43,20 +48,20 @@ public class RoomTypeRepository : IRoomTypeRepository
         existing.Services = roomType.Services;
         existing.Amenities = roomType.Amenities;
 
-        _dbContext.SaveChanges();
+        await _dbContext.SaveChangesAsync();
 
         return existing;
     }
 
-    public void Delete( Guid id )
+    public async Task Delete( Guid id )
     {
-        RoomType? roomType = _dbContext.RoomTypes.Find( id );
+        RoomType? roomType = await _dbContext.RoomTypes.FindAsync( id );
         if ( roomType == null )
         {
             return;
         }
 
         _dbContext.RoomTypes.Remove( roomType );
-        _dbContext.SaveChanges();
+        await _dbContext.SaveChangesAsync();
     }
 }

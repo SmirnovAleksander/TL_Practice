@@ -24,14 +24,14 @@ public class SearchController : ControllerBase
     }
 
     [HttpGet]
-    public IActionResult Search(
+    public async Task<IActionResult> Search(
         [FromQuery] string? city,
         [FromQuery] DateOnly? arrivalDate,
         [FromQuery] DateOnly? departureDate,
         [FromQuery] int? guests,
         [FromQuery] decimal? maxPrice )
     {
-        List<Property> allProperties = _propertyRepository.GetAll();
+        List<Property> allProperties = await _propertyRepository.GetAll();
         if ( !string.IsNullOrWhiteSpace( city ) )
         {
             allProperties = allProperties
@@ -42,7 +42,7 @@ public class SearchController : ControllerBase
         List<SearchResultDto> results = new List<SearchResultDto>();
         foreach ( Property property in allProperties )
         {
-            List<RoomType> roomTypes = _roomTypeRepository.GetByProperty( property.Id );
+            List<RoomType> roomTypes = await _roomTypeRepository.GetByProperty( property.Id );
             if ( guests.HasValue )
             {
                 roomTypes = roomTypes
@@ -60,7 +60,7 @@ public class SearchController : ControllerBase
             {
                 if ( arrivalDate.HasValue && departureDate.HasValue )
                 {
-                    bool hasOverlap = _reservationRepository
+                    bool hasOverlap = await _reservationRepository
                         .HasOverlap( roomType.Id, arrivalDate.Value, departureDate.Value );
                     if ( hasOverlap )
                         continue;

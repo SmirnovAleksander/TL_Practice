@@ -4,9 +4,9 @@ namespace Domain.Interfaces.Repositories;
 
 public interface IRoomTypeRepository
 {
-    List<RoomType> GetByProperty( Guid propertyId );
-    RoomType? GetById( Guid id );
-    RoomType Create( RoomType roomType );
-    RoomType Update( RoomType roomType );
-    void Delete( Guid id );
+    Task<List<RoomType>> GetByProperty( Guid propertyId );
+    Task<RoomType?> GetById( Guid id );
+    Task<RoomType> Create( RoomType roomType );
+    Task<RoomType> Update( RoomType roomType );
+    Task Delete( Guid id );
 }

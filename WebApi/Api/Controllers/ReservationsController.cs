@@ -24,13 +24,13 @@ public class ReservationsController : ControllerBase
     }
 
     [HttpGet]
-    public IActionResult GetAll(
+    public async Task<IActionResult> GetAll(
         [FromQuery] Guid? propertyId,
         [FromQuery] DateOnly? arrivalDate,
         [FromQuery] DateOnly? departureDate,
         [FromQuery] string? guestName )
     {
-        List<Reservation> reservations = _reservationRepository
+        List<Reservation> reservations = await _reservationRepository
             .GetAll( propertyId, arrivalDate, departureDate, guestName );
 
         List<ReservationDto> reservationDtos = reservations
@@ -41,9 +41,9 @@ public class ReservationsController : ControllerBase
     }
 
     [HttpGet( "{id:guid}" )]
-    public IActionResult GetById( [FromRoute] Guid id )
+    public async Task<IActionResult> GetById( [FromRoute] Guid id )
     {
-        Reservation? reservation = _reservationRepository.GetById( id );
+        Reservation? reservation = await _reservationRepository.GetById( id );
         if ( reservation == null )
         {
             return NotFound();
@@ -53,15 +53,15 @@ public class ReservationsController : ControllerBase
     }
 
     [HttpPost]
-    public IActionResult Create( [FromBody] CreateReservationDto createDto )
+    public async Task<IActionResult> Create( [FromBody] CreateReservationDto createDto )
     {
-        Property? property = _propertyRepository.GetById( createDto.PropertyId );
+        Property? property = await _propertyRepository.GetById( createDto.PropertyId );
         if ( property == null )
         {
             return BadRequest( "Property not found" );
         }
 
-        RoomType? roomType = _roomTypeRepository.GetById( createDto.RoomTypeId );
+        RoomType? roomType = await _roomTypeRepository.GetById( createDto.RoomTypeId );
         if ( roomType == null )
         {
             return BadRequest( "RoomType not found" );
@@ -75,7 +75,7 @@ public class ReservationsController : ControllerBase
             return BadRequest( $"Guest must be between {roomType.MinPersonCount} and {roomType.MaxPersonCount}" );
         }
 
-        bool hasOverlap = _reservationRepository
+        bool hasOverlap = await _reservationRepository
             .HasOverlap( createDto.RoomTypeId, createDto.ArrivalDate, createDto.DepartureDate );
 
         if ( hasOverlap )
@@ -88,21 +88,21 @@ public class ReservationsController : ControllerBase
         reservation.Total = roomType.DailyPrice * nights;
         reservation.Currency = roomType.Currency;
         reservation.IsCanceled = false;
-        Reservation created = _reservationRepository.Create( reservation );
+        Reservation created = await _reservationRepository.Create( reservation );
 
         return CreatedAtAction( nameof( GetById ), new { id = created.Id }, created.ToReservationDto() );
     }
 
     [HttpDelete( "{id:guid}" )]
-    public IActionResult Cancel( [FromRoute] Guid id )
+    public async Task<IActionResult> Cancel( [FromRoute] Guid id )
     {
-        Reservation? reservation = _reservationRepository.GetById( id );
+        Reservation? reservation = await _reservationRepository.GetById( id );
         if ( reservation == null )
         {
             return NotFound();
         }
 
-        _reservationRepository.Cancel( id );
+        await _reservationRepository.Cancel( id );
 
         return NoContent();
     }

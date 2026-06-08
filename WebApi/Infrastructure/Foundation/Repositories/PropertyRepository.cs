@@ -1,6 +1,7 @@
 using Domain.Entities;
 using Domain.Interfaces.Repositories;
 using Infrastructure.Foundation.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Foundation.Repositories;
 
@@ -12,28 +13,32 @@ public class PropertyRepository : IPropertyRepository
         _dbContext = dbContext;
     }
 
-    public List<Property> GetAll()
+    public async Task<List<Property>> GetAll()
     {
-        return _dbContext.Properties.ToList();
+        return await _dbContext.Properties.ToListAsync();
     }
 
-    public Property? GetById( Guid id )
+    public async Task<Property?> GetById( Guid id )
     {
-        return _dbContext.Properties.Find( id );
+        return await _dbContext.Properties.FindAsync( id );
     }
 
-    public Property Create( Property property )
+    public async Task<Property> Create( Property property )
     {
         property.Id = Guid.NewGuid();
         _dbContext.Properties.Add( property );
-        _dbContext.SaveChanges();
+        await _dbContext.SaveChangesAsync();
 
         return property;
     }
 
-    public Property Update( Property property )
+    public async Task<Property> Update( Property property )
     {
-        Property existing = _dbContext.Properties.Find( property.Id )!;
+        Property? existing = await _dbContext.Properties.FindAsync( property.Id );
+        if ( existing is null )
+        {
+            throw new InvalidOperationException( "Property not found" );
+        }
 
         existing.Name = property.Name;
         existing.Country = property.Country;
@@ -42,20 +47,20 @@ public class PropertyRepository : IPropertyRepository
         existing.Latitude = property.Latitude;
         existing.Longitude = property.Longitude;
 
-        _dbContext.SaveChanges();
+        await _dbContext.SaveChangesAsync();
 
         return existing;
     }
 
-    public void Delete( Guid id )
+    public async Task Delete( Guid id )
     {
-        Property? property = _dbContext.Properties.Find( id );
+        Property? property = await _dbContext.Properties.FindAsync( id );
         if ( property == null )
         {
             return;
         }
 
         _dbContext.Properties.Remove( property );
-        _dbContext.SaveChanges();
+        await _dbContext.SaveChangesAsync();
     }
 }

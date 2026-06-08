@@ -5,7 +5,7 @@ namespace Api.Mappers;
 
 public static class SearchResultMappers
 {
-    public static SearchResultDto ToSearchResultDto(this RoomType roomType, Property property)
+    public static SearchResultDto ToSearchResultDto( this RoomType roomType, Property property )
     {
         return new SearchResultDto
         {
