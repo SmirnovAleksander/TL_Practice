@@ -1,0 +1,1 @@
+export { MoreAboutCurrency } from './MoreAboutCurrency';
