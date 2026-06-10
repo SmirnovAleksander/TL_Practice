@@ -4,9 +4,9 @@ namespace Domain.Interfaces.Repositories;
 
 public interface IPropertyRepository
 {
-    Task<List<Property>> GetAll();
-    Task<Property?> GetById( Guid id );
-    Task<Property> Create( Property property );
-    Task<Property> Update( Property property );
-    Task Delete( Guid id );
+    Task<List<Property>> GetAll( CancellationToken ct = default );
+    Task<Property?> GetById( Guid id, CancellationToken ct = default );
+    Task<Property> Create( Property property, CancellationToken ct = default );
+    Task<Property> Update( Property property, CancellationToken ct = default );
+    Task Delete( Guid id, CancellationToken ct = default );
 }

@@ -13,55 +13,41 @@ public class RoomTypeRepository : IRoomTypeRepository
         _dbContext = dbContext;
     }
 
-    public async Task<List<RoomType>> GetByProperty( Guid propertyId )
+    public async Task<List<RoomType>> GetByProperty( Guid propertyId, CancellationToken ct = default )
     {
-        return await _dbContext.RoomTypes.Where( rt => rt.PropertyId == propertyId ).ToListAsync();
+        return await _dbContext.RoomTypes.Where( rt => rt.PropertyId == propertyId ).ToListAsync( ct );
     }
 
-    public async Task<RoomType?> GetById( Guid id )
+    public async Task<RoomType?> GetById( Guid id, CancellationToken ct = default )
     {
-        return await _dbContext.RoomTypes.FindAsync( id );
+        return await _dbContext.RoomTypes.FindAsync( id, ct );
     }
 
-    public async Task<RoomType> Create( RoomType roomType )
+    public async Task<RoomType> Create( RoomType roomType, CancellationToken ct = default )
     {
-        roomType.Id = Guid.NewGuid();
-        _dbContext.RoomTypes.Add( roomType );
-        await _dbContext.SaveChangesAsync();
+        await _dbContext.RoomTypes.AddAsync( roomType, ct );
+        await _dbContext.SaveChangesAsync( ct );
 
         return roomType;
     }
 
-    public async Task<RoomType> Update( RoomType roomType )
+    public async Task<RoomType> Update( RoomType roomType, CancellationToken ct = default )
     {
-        RoomType? existing = await _dbContext.RoomTypes.FindAsync( roomType.Id );
-        if ( existing is null )
-        {
-            throw new InvalidOperationException( "RoomType not found" );
-        }
+        _dbContext.RoomTypes.Update( roomType );
+        await _dbContext.SaveChangesAsync( ct );
 
-        existing.Name = roomType.Name;
-        existing.DailyPrice = roomType.DailyPrice;
-        existing.Currency = roomType.Currency;
-        existing.MinPersonCount = roomType.MinPersonCount;
-        existing.MaxPersonCount = roomType.MaxPersonCount;
-        existing.Services = roomType.Services;
-        existing.Amenities = roomType.Amenities;
-
-        await _dbContext.SaveChangesAsync();
-
-        return existing;
+        return roomType;
     }
 
-    public async Task Delete( Guid id )
+    public async Task Delete( Guid id, CancellationToken ct = default )
     {
-        RoomType? roomType = await _dbContext.RoomTypes.FindAsync( id );
+        RoomType? roomType = await _dbContext.RoomTypes.FindAsync( id, ct );
         if ( roomType == null )
         {
-            return;
+            throw new InvalidOperationException( $"RoomType with id '{id}' not found" );
         }
 
         _dbContext.RoomTypes.Remove( roomType );
-        await _dbContext.SaveChangesAsync();
+        await _dbContext.SaveChangesAsync( ct );
     }
 }

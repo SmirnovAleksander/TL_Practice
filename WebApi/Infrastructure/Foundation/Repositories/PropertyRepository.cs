@@ -13,54 +13,41 @@ public class PropertyRepository : IPropertyRepository
         _dbContext = dbContext;
     }
 
-    public async Task<List<Property>> GetAll()
+    public async Task<List<Property>> GetAll( CancellationToken ct = default )
     {
-        return await _dbContext.Properties.ToListAsync();
+        return await _dbContext.Properties.ToListAsync( ct );
     }
 
-    public async Task<Property?> GetById( Guid id )
+    public async Task<Property?> GetById( Guid id, CancellationToken ct = default )
     {
-        return await _dbContext.Properties.FindAsync( id );
+        return await _dbContext.Properties.FindAsync( id, ct );
     }
 
-    public async Task<Property> Create( Property property )
+    public async Task<Property> Create( Property property, CancellationToken ct = default )
     {
-        property.Id = Guid.NewGuid();
-        _dbContext.Properties.Add( property );
-        await _dbContext.SaveChangesAsync();
+        await _dbContext.Properties.AddAsync( property, ct );
+        await _dbContext.SaveChangesAsync( ct );
 
         return property;
     }
 
-    public async Task<Property> Update( Property property )
+    public async Task<Property> Update( Property property, CancellationToken ct = default )
     {
-        Property? existing = await _dbContext.Properties.FindAsync( property.Id );
-        if ( existing is null )
-        {
-            throw new InvalidOperationException( "Property not found" );
-        }
+        _dbContext.Properties.Update( property );
+        await _dbContext.SaveChangesAsync( ct );
 
-        existing.Name = property.Name;
-        existing.Country = property.Country;
-        existing.City = property.City;
-        existing.Address = property.Address;
-        existing.Latitude = property.Latitude;
-        existing.Longitude = property.Longitude;
-
-        await _dbContext.SaveChangesAsync();
-
-        return existing;
+        return property;
     }
 
-    public async Task Delete( Guid id )
+    public async Task Delete( Guid id, CancellationToken ct = default )
     {
-        Property? property = await _dbContext.Properties.FindAsync( id );
+        Property? property = await _dbContext.Properties.FindAsync( id, ct );
         if ( property == null )
         {
-            return;
+            throw new InvalidOperationException( $"Property with id '{id}' not found" );
         }
 
         _dbContext.Properties.Remove( property );
-        await _dbContext.SaveChangesAsync();
+        await _dbContext.SaveChangesAsync( ct );
     }
 }

@@ -17,62 +17,66 @@ public class ReservationRepository : IReservationRepository
         Guid? propertyId,
         DateOnly? arrivalDate,
         DateOnly? departureDate,
-        string? guestName )
+        string? guestName,
+        CancellationToken ct = default )
     {
         IQueryable<Reservation> query = _dbContext.Reservations.AsQueryable();
-        if ( propertyId.HasValue)
+        if ( propertyId.HasValue )
         {
             query = query.Where( r => r.PropertyId == propertyId );
         }
-        if ( arrivalDate.HasValue)
+        if ( arrivalDate.HasValue )
         {
             query = query.Where( r => r.ArrivalDate >= arrivalDate );
         }
-        if ( departureDate.HasValue)
+        if ( departureDate.HasValue )
         {
             query = query.Where( r => r.DepartureDate <= departureDate );
         }
-        if ( !string.IsNullOrWhiteSpace( guestName ))
+        if ( !string.IsNullOrWhiteSpace( guestName ) )
         {
             query = query.Where( r => r.GuestName.Contains( guestName ) );
         }
 
-        return await query.ToListAsync();
+        return await query.ToListAsync( ct );
     }
 
-    public async Task<Reservation?> GetById( Guid id )
+    public async Task<Reservation?> GetById( Guid id, CancellationToken ct = default )
     {
-        return await _dbContext.Reservations.FindAsync( id );
+        return await _dbContext.Reservations.FindAsync( id, ct );
     }
 
-    public async Task<Reservation> Create( Reservation reservation )
+    public async Task<Reservation> Create( Reservation reservation, CancellationToken ct = default )
     {
-        reservation.Id = Guid.NewGuid();
-        _dbContext.Reservations.Add( reservation );
-        await _dbContext.SaveChangesAsync();
+        await _dbContext.Reservations.AddAsync( reservation, ct );
+        await _dbContext.SaveChangesAsync( ct );
 
         return reservation;
     }
 
-    public async Task Cancel( Guid id )
+    public async Task Cancel( Guid id, CancellationToken ct = default )
     {
-        Reservation? reservation = await _dbContext.Reservations.FindAsync( id );
+        Reservation? reservation = await _dbContext.Reservations.FindAsync( id, ct );
         if ( reservation == null )
         {
-            return;
+            throw new InvalidOperationException( $"Reservation with id '{id}' not found" );
         }
 
         reservation.IsCanceled = true;
 
-        await _dbContext.SaveChangesAsync();
+        await _dbContext.SaveChangesAsync( ct );
     }
 
-    public async Task<bool> HasOverlap( Guid roomTypeId, DateOnly arrivalDate, DateOnly departureDate )
+    public async Task<bool> HasOverlap(
+        Guid roomTypeId,
+        DateOnly arrivalDate,
+        DateOnly departureDate,
+        CancellationToken ct = default )
     {
         return await _dbContext.Reservations.AnyAsync( r =>
             r.RoomTypeId == roomTypeId &&
             !r.IsCanceled &&
             r.ArrivalDate < departureDate &&
-            r.DepartureDate > arrivalDate );
+            r.DepartureDate > arrivalDate, ct );
     }
 }
