@@ -146,16 +146,17 @@ public class DamageCalculatorTests
         _randomProviderMock.Setup( r => r.Next( MinRandomModifier, MaxRandomModifier + 1 ) ).Returns( randomModifier );
         _randomProviderMock.Setup( r => r.NextDouble() ).Returns( 0.0 );
 
-        // Act
-        int damage = _calculator.CalculateDamage( _attackerMock.Object, _defenderMock.Object );
-
-        // Assert
         // randomModifier -10%: 100 * 0.9 = 90
         int afterRandomModifier = ( int )( baseDamage * ( 1.0 + randomModifier / 100.0 ) );
         // крит x2: 90 * 2 = 180
         int afterCrit = afterRandomModifier * 2;
         // вычет брони: 180 - 10 = 170
         int expectedDamage = afterCrit - armor;
+
+        // Act
+        int damage = _calculator.CalculateDamage( _attackerMock.Object, _defenderMock.Object );
+
+        // Assert
         Assert.Equal( expectedDamage, damage );
     }
 }

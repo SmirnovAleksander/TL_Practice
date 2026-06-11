@@ -25,7 +25,7 @@ public class FighterTests
     [Fact]
     public void Constructor_ValidName_SetsName()
     {
-        // Arrange
+        // Act
         IFighter fighter = CreateFighter( "Fighter" );
 
         // Assert
@@ -41,8 +41,11 @@ public class FighterTests
 
         IFighter fighter = CreateFighter( "MaxHealthTest" );
 
-        // Act + Assert
-        Assert.Equal( 100, fighter.GetMaxHealth() );
+        // Act
+        int maxHealth = fighter.GetMaxHealth();
+
+        // Assert
+        Assert.Equal( 100, maxHealth );
     }
 
     [Fact]
@@ -55,8 +58,11 @@ public class FighterTests
 
         IFighter fighter = CreateFighter( "DamageTest" );
 
-        // Act + Assert
-        Assert.Equal( 18, fighter.CalculateDamage() );
+        // Act
+        int damage = fighter.CalculateDamage();
+
+        // Assert
+        Assert.Equal( 18, damage );
     }
 
     [Fact]
@@ -68,8 +74,11 @@ public class FighterTests
 
         IFighter fighter = CreateFighter( "ArmorTest" );
 
-        // Act + Assert
-        Assert.Equal( 12, fighter.CalculateArmor() );
+        // Act
+        int armor = fighter.CalculateArmor();
+
+        // Assert
+        Assert.Equal( 12, armor );
     }
 
     [Fact]
@@ -81,8 +90,11 @@ public class FighterTests
 
         IFighter fighter = CreateFighter( "InitiativeTest" );
 
-        // Act + Assert
-        Assert.Equal( 5, fighter.Initiative );
+        // Act
+        int initiative = fighter.Initiative;
+
+        // Assert
+        Assert.Equal( 5, initiative );
     }
 
     [Fact]
@@ -127,8 +139,11 @@ public class FighterTests
 
         IFighter fighter = CreateFighter( "TrueTest" );
 
-        // Act + Assert
-        Assert.True( fighter.IsAlive() );
+        // Act
+        bool isAlive = fighter.IsAlive();
+
+        // Assert
+        Assert.True( isAlive );
     }
 
     [Fact]
@@ -141,8 +156,11 @@ public class FighterTests
         IFighter fighter = CreateFighter( "FalseTest" );
         fighter.TakeDamage( 100 );
 
+        // Act
+        bool isAlive = fighter.IsAlive();
+
         // Assert
-        Assert.False( fighter.IsAlive() );
+        Assert.False( isAlive );
     }
 
     [Fact]
@@ -154,14 +172,20 @@ public class FighterTests
 
         IFighter fighter = CreateFighter( "HealthTest" );
 
-        // Assert
-        Assert.Equal( fighter.GetMaxHealth(), fighter.GetCurrentHealth() );
-
         // Act
+        int currentHealthAfterCreation = fighter.GetCurrentHealth();
+
+        // Assert
+        Assert.Equal( fighter.GetMaxHealth(), currentHealthAfterCreation );
+
+        // Arrange
         fighter.TakeDamage( 30 );
 
+        // Act
+        int currentHealthAfterDamage = fighter.GetCurrentHealth();
+
         // Assert
-        Assert.Equal( fighter.GetMaxHealth() - 30, fighter.GetCurrentHealth() );
+        Assert.Equal( fighter.GetMaxHealth() - 30, currentHealthAfterDamage );
     }
 
     private IFighter CreateFighter( string name )
