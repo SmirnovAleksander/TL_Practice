@@ -1,7 +1,9 @@
 using Api.Dtos.Reservation;
-using Api.Mappers;
+using Api.Mappers.Entity;
+using Api.Mappers.Service;
+using Domain.Dtos.Reservation;
 using Domain.Entities;
-using Domain.Interfaces.Repositories;
+using Domain.Interfaces.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
@@ -10,17 +12,10 @@ namespace Api.Controllers;
 [ApiController]
 public class ReservationsController : ControllerBase
 {
-    private readonly IReservationRepository _reservationRepository;
-    private readonly IPropertyRepository _propertyRepository;
-    private readonly IRoomTypeRepository _roomTypeRepository;
-    public ReservationsController(
-        IReservationRepository reservationRepository,
-        IPropertyRepository propertyRepository,
-        IRoomTypeRepository roomTypeRepository )
+    private readonly IReservationService _reservationService;
+    public ReservationsController( IReservationService reservationService )
     {
-        _reservationRepository = reservationRepository;
-        _propertyRepository = propertyRepository;
-        _roomTypeRepository = roomTypeRepository;
+        _reservationService = reservationService;
     }
 
     [HttpGet]
@@ -28,81 +23,43 @@ public class ReservationsController : ControllerBase
         [FromQuery] Guid? propertyId,
         [FromQuery] DateOnly? arrivalDate,
         [FromQuery] DateOnly? departureDate,
-        [FromQuery] string? guestName )
+        [FromQuery] string? guestName,
+         CancellationToken ct )
     {
-        List<Reservation> reservations = await _reservationRepository
-            .GetAll( propertyId, arrivalDate, departureDate, guestName );
+        ReservationFilterServiceDto filter = new ReservationFilterServiceDto
+        {
+            PropertyId = propertyId,
+            ArrivalDate = arrivalDate,
+            DepartureDate = departureDate,
+            GuestName = guestName
+        };
 
-        List<ReservationDto> reservationDtos = reservations
-            .Select( r => r.ToReservationDto() )
-            .ToList();
+        List<Reservation> reservations = await _reservationService.GetAllAsync( filter, ct );
+        List<ReservationDto> reservationDtos = reservations.Select( r => r.ToReservationDto() ).ToList();
 
         return Ok( reservationDtos );
     }
 
     [HttpGet( "{id:guid}" )]
-    public async Task<IActionResult> GetById( [FromRoute] Guid id )
+    public async Task<IActionResult> GetById( [FromRoute] Guid id, CancellationToken ct )
     {
-        Reservation? reservation = await _reservationRepository.GetById( id );
-        if ( reservation == null )
-        {
-            return NotFound();
-        }
+        Reservation reservation = await _reservationService.GetByIdAsync( id, ct );
 
         return Ok( reservation.ToReservationDto() );
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create( [FromBody] CreateReservationDto createDto )
+    public async Task<IActionResult> Create( [FromBody] CreateReservationDto createDto, CancellationToken ct )
     {
-        Property? property = await _propertyRepository.GetById( createDto.PropertyId );
-        if ( property == null )
-        {
-            return BadRequest( "Property not found" );
-        }
-
-        RoomType? roomType = await _roomTypeRepository.GetById( createDto.RoomTypeId );
-        if ( roomType == null )
-        {
-            return BadRequest( "RoomType not found" );
-        }
-        if ( createDto.ArrivalDate >= createDto.DepartureDate )
-        {
-            return BadRequest( "ArrivalDate must be before DepartureDate" );
-        }
-        if ( createDto.Guests < roomType.MinPersonCount || createDto.Guests > roomType.MaxPersonCount )
-        {
-            return BadRequest( $"Guest must be between {roomType.MinPersonCount} and {roomType.MaxPersonCount}" );
-        }
-
-        bool hasOverlap = await _reservationRepository
-            .HasOverlap( createDto.RoomTypeId, createDto.ArrivalDate, createDto.DepartureDate );
-
-        if ( hasOverlap )
-        {
-            return BadRequest( "RoomType is not available for this date" );
-        }
-
-        Reservation reservation = createDto.ToReservationFromCreate();
-        int nights = reservation.DepartureDate.DayNumber - reservation.ArrivalDate.DayNumber;
-        reservation.Total = roomType.DailyPrice * nights;
-        reservation.Currency = roomType.Currency;
-        reservation.IsCanceled = false;
-        Reservation created = await _reservationRepository.Create( reservation );
+        Reservation created = await _reservationService.CreateAsync( createDto.ToServiceDto(), ct );
 
         return CreatedAtAction( nameof( GetById ), new { id = created.Id }, created.ToReservationDto() );
     }
 
     [HttpDelete( "{id:guid}" )]
-    public async Task<IActionResult> Cancel( [FromRoute] Guid id )
+    public async Task<IActionResult> Cancel( [FromRoute] Guid id, CancellationToken ct )
     {
-        Reservation? reservation = await _reservationRepository.GetById( id );
-        if ( reservation == null )
-        {
-            return NotFound();
-        }
-
-        await _reservationRepository.Cancel( id );
+        await _reservationService.CancelAsync( id, ct );
 
         return NoContent();
     }

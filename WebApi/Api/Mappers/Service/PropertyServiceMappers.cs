@@ -5,7 +5,7 @@ namespace Api.Mappers.Service;
 
 public static class PropertyServiceMappers
 {
-    public static CreatePropertyServiceDto ToServiceDto(this CreatePropertyDto dto)
+    public static CreatePropertyServiceDto ToServiceDto( this CreatePropertyDto dto )
     {
         return new CreatePropertyServiceDto
         {
@@ -18,7 +18,7 @@ public static class PropertyServiceMappers
         };
     }
 
-    public static UpdatePropertyServiceDto ToServiceDto(this UpdatePropertyDto dto, Guid id)
+    public static UpdatePropertyServiceDto ToServiceDto( this UpdatePropertyDto dto, Guid id )
     {
         return new UpdatePropertyServiceDto
         {

@@ -1,7 +1,8 @@
 using Api.Dtos.Property;
-using Api.Mappers;
+using Api.Mappers.Entity;
+using Api.Mappers.Service;
 using Domain.Entities;
-using Domain.Interfaces.Repositories;
+using Domain.Interfaces.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
@@ -10,66 +11,49 @@ namespace Api.Controllers;
 [ApiController]
 public class PropertiesController : ControllerBase
 {
-    private readonly IPropertyRepository _propertyRepository;
-    public PropertiesController( IPropertyRepository propertyRepository )
+    private readonly IPropertyService _propertyService;
+    public PropertiesController( IPropertyService propertyService )
     {
-        _propertyRepository = propertyRepository;
+        _propertyService = propertyService;
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> GetAll( CancellationToken ct )
     {
-        List<Property> properties = await _propertyRepository.GetAll();
+        List<Property> properties = await _propertyService.GetAllAsync( ct );
         List<PropertyDto> propertyDtos = properties.Select( p => p.ToPropertyDto() ).ToList();
 
         return Ok( propertyDtos );
     }
 
     [HttpGet( "{id:guid}" )]
-    public async Task<IActionResult> GetById( [FromRoute] Guid id )
+    public async Task<IActionResult> GetById( [FromRoute] Guid id, CancellationToken ct )
     {
-        Property? property = await _propertyRepository.GetById( id );
-        if ( property == null )
-        {
-            return NotFound();
-        }
+        Property property = await _propertyService.GetByIdAsync( id, ct );
 
         return Ok( property.ToPropertyDto() );
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create( [FromBody] CreatePropertyDto createDto )
+    public async Task<IActionResult> Create( [FromBody] CreatePropertyDto createDto, CancellationToken ct )
     {
-        Property property = await _propertyRepository.Create( createDto.ToPropertyFromCreate() );
+        Property property = await _propertyService.CreateAsync( createDto.ToServiceDto(), ct );
 
         return CreatedAtAction( nameof( GetById ), new { id = property.Id }, property.ToPropertyDto() );
     }
 
     [HttpPut( "{id:guid}" )]
-    public async Task<IActionResult> Update( [FromRoute] Guid id, [FromBody] UpdatePropertyDto updateDto )
+    public async Task<IActionResult> Update( [FromRoute] Guid id, [FromBody] UpdatePropertyDto updateDto, CancellationToken ct )
     {
-        Property? existing = await _propertyRepository.GetById( id );
-        if ( existing == null )
-        {
-            return NotFound();
-        }
-
-        Property propertyEntity = updateDto.ToPropertyFromUpdate( id );
-        Property updated = await _propertyRepository.Update( propertyEntity );
+        Property updated = await _propertyService.UpdateAsync( updateDto.ToServiceDto( id ), ct );
 
         return Ok( updated.ToPropertyDto() );
     }
 
     [HttpDelete( "{id:guid}" )]
-    public async Task<IActionResult> Delete( [FromRoute] Guid id )
+    public async Task<IActionResult> Delete( [FromRoute] Guid id, CancellationToken ct )
     {
-        Property? property = await _propertyRepository.GetById( id );
-        if ( property == null )
-        {
-            return NotFound();
-        }
-
-        await _propertyRepository.Delete( id );
+        await _propertyService.DeleteAsync( id, ct );
 
         return NoContent();
     }

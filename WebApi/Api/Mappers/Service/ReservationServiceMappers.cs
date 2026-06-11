@@ -5,7 +5,7 @@ namespace Api.Mappers.Service;
 
 public static class ReservationServiceMappers
 {
-    public static CreateReservationServiceDto ToServiceDto(this CreateReservationDto dto)
+    public static CreateReservationServiceDto ToServiceDto( this CreateReservationDto dto )
     {
         return new CreateReservationServiceDto
         {

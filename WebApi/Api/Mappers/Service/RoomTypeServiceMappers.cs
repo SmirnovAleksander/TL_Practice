@@ -5,7 +5,7 @@ namespace Api.Mappers.Service;
 
 public static class RoomTypeServiceMappers
 {
-    public static CreateRoomTypeServiceDto ToServiceDto(this CreateRoomTypeDto dto, Guid propertyId)
+    public static CreateRoomTypeServiceDto ToServiceDto( this CreateRoomTypeDto dto, Guid propertyId )
     {
         return new CreateRoomTypeServiceDto
         {
@@ -20,7 +20,7 @@ public static class RoomTypeServiceMappers
         };
     }
 
-    public static UpdateRoomTypeServiceDto ToServiceDto(this UpdateRoomTypeDto dto, Guid id)
+    public static UpdateRoomTypeServiceDto ToServiceDto( this UpdateRoomTypeDto dto, Guid id )
     {
         return new UpdateRoomTypeServiceDto
         {

@@ -1,7 +1,8 @@
 using Api.Dtos.RoomType;
-using Api.Mappers;
+using Api.Mappers.Entity;
+using Api.Mappers.Service;
 using Domain.Entities;
-using Domain.Interfaces.Repositories;
+using Domain.Interfaces.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
@@ -10,81 +11,50 @@ namespace Api.Controllers;
 [ApiController]
 public class RoomTypesController : ControllerBase
 {
-    private readonly IRoomTypeRepository _roomTypeRepository;
-    private readonly IPropertyRepository _propertyRepository;
-    public RoomTypesController( IRoomTypeRepository roomTypeRepository, IPropertyRepository propertyRepository )
+    private readonly IRoomTypeService _roomTypeService;
+
+    public RoomTypesController( IRoomTypeService roomTypeService )
     {
-        _roomTypeRepository = roomTypeRepository;
-        _propertyRepository = propertyRepository;
+        _roomTypeService = roomTypeService;
     }
 
     [HttpGet( "properties/{propertyId:guid}/roomtypes" )]
-    public async Task<IActionResult> GetByProperty( [FromRoute] Guid propertyId )
+    public async Task<IActionResult> GetByProperty( [FromRoute] Guid propertyId, CancellationToken ct )
     {
-        Property? property = await _propertyRepository.GetById( propertyId );
-        if ( property == null )
-        {
-            return NotFound();
-        }
-
-        List<RoomType> roomTypes = await _roomTypeRepository.GetByProperty( propertyId );
-        List<RoomTypeDto> roomTypeDtos = roomTypes.Select( rt => rt.ToRoomTypeDto() ).ToList();
+        List<RoomType> roomTypes = await _roomTypeService.GetByPropertyAsync( propertyId, ct );
+        List<RoomTypeDto> roomTypeDtos = roomTypes.Select( r => r.ToRoomTypeDto() ).ToList();
 
         return Ok( roomTypeDtos );
     }
 
     [HttpGet( "roomtypes/{id:guid}" )]
-    public async Task<IActionResult> GetById( [FromRoute] Guid id )
+    public async Task<IActionResult> GetById( [FromRoute] Guid id, CancellationToken ct )
     {
-        RoomType? roomType = await _roomTypeRepository.GetById( id );
-        if ( roomType == null )
-        {
-            return NotFound();
-        }
+        RoomType roomType = await _roomTypeService.GetByIdAsync( id, ct );
 
         return Ok( roomType.ToRoomTypeDto() );
     }
 
     [HttpPost( "properties/{propertyId:guid}/roomtypes" )]
-    public async Task<IActionResult> Create( [FromRoute] Guid propertyId, [FromBody] CreateRoomTypeDto createDto )
+    public async Task<IActionResult> Create( [FromRoute] Guid propertyId, [FromBody] CreateRoomTypeDto createDto, CancellationToken ct )
     {
-        Property? property = await _propertyRepository.GetById( propertyId );
-        if ( property == null )
-        {
-            return NotFound();
-        }
-
-        RoomType roomTypeEntity = createDto.ToRoomTypeFromCreate(propertyId);
-        RoomType created = await _roomTypeRepository.Create( roomTypeEntity );
+        RoomType created = await _roomTypeService.CreateAsync( createDto.ToServiceDto( propertyId ), ct );
 
         return CreatedAtAction( nameof( GetById ), new { id = created.Id }, created.ToRoomTypeDto() );
     }
 
     [HttpPut( "roomtypes/{id:guid}" )]
-    public async Task<IActionResult> Update( [FromRoute] Guid id, [FromBody] UpdateRoomTypeDto updateDto )
+    public async Task<IActionResult> Update( [FromRoute] Guid id, [FromBody] UpdateRoomTypeDto updateDto, CancellationToken ct )
     {
-        RoomType? existing = await _roomTypeRepository.GetById( id );
-        if ( existing == null )
-        {
-            return NotFound();
-        }
-
-        RoomType roomTypeEntity = updateDto.ToRoomTypeFromUpdate( id, existing.PropertyId );
-        RoomType updated = await _roomTypeRepository.Update( roomTypeEntity );
+        RoomType updated = await _roomTypeService.UpdateAsync( updateDto.ToServiceDto( id ), ct );
 
         return Ok( updated.ToRoomTypeDto() );
     }
 
     [HttpDelete( "roomtypes/{id:guid}" )]
-    public async Task<IActionResult> Delete( [FromRoute] Guid id )
+    public async Task<IActionResult> Delete( [FromRoute] Guid id, CancellationToken ct )
     {
-        RoomType? roomType = await _roomTypeRepository.GetById( id );
-        if ( roomType == null )
-        {
-            return NotFound();
-        }
-
-        await _roomTypeRepository.Delete( id );
+        await _roomTypeService.DeleteAsync( id, ct );
 
         return NoContent();
     }

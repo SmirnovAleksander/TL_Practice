@@ -1,7 +1,8 @@
 using Api.Dtos.Reservation;
-using Api.Mappers;
-using Domain.Entities;
-using Domain.Interfaces.Repositories;
+using Api.Mappers.Entity;
+using Domain.Dtos.Reservation;
+using Domain.Dtos.Search;
+using Domain.Interfaces.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
@@ -10,17 +11,11 @@ namespace Api.Controllers;
 [ApiController]
 public class SearchController : ControllerBase
 {
-    private readonly IPropertyRepository _propertyRepository;
-    private readonly IRoomTypeRepository _roomTypeRepository;
-    private readonly IReservationRepository _reservationRepository;
-    public SearchController(
-        IPropertyRepository propertyRepository,
-        IRoomTypeRepository roomTypeRepository,
-        IReservationRepository reservationRepository )
+    private readonly IReservationService _reservationService;
+
+    public SearchController( IReservationService reservationService )
     {
-        _propertyRepository = propertyRepository;
-        _roomTypeRepository = roomTypeRepository;
-        _reservationRepository = reservationRepository;
+        _reservationService = reservationService;
     }
 
     [HttpGet]
@@ -29,45 +24,21 @@ public class SearchController : ControllerBase
         [FromQuery] DateOnly? arrivalDate,
         [FromQuery] DateOnly? departureDate,
         [FromQuery] int? guests,
-        [FromQuery] decimal? maxPrice )
+        [FromQuery] decimal? maxPrice,
+        CancellationToken ct )
     {
-        List<Property> allProperties = await _propertyRepository.GetAll();
-        if ( !string.IsNullOrWhiteSpace( city ) )
+        SearchFilterServiceDto filter = new SearchFilterServiceDto
         {
-            allProperties = allProperties
-                .Where( p => p.City.Contains( city, StringComparison.OrdinalIgnoreCase ) )
-                .ToList();
-        }
+            City = city,
+            ArrivalDate = arrivalDate,
+            DepartureDate = departureDate,
+            Guests = guests,
+            MaxPrice = maxPrice
+        };
 
-        List<SearchResultDto> results = new List<SearchResultDto>();
-        foreach ( Property property in allProperties )
-        {
-            List<RoomType> roomTypes = await _roomTypeRepository.GetByProperty( property.Id );
-            if ( guests.HasValue )
-            {
-                roomTypes = roomTypes
-                    .Where( r => r.MinPersonCount <= guests && r.MaxPersonCount >= guests )
-                    .ToList();
-            }
-            if ( maxPrice.HasValue )
-            {
-                roomTypes = roomTypes
-                    .Where( r => r.DailyPrice <= maxPrice )
-                    .ToList();
-            }
+        List<SearchResultServiceDto> results = await _reservationService.SearchAsync( filter, ct );
+        List<SearchResultDto> searchResults = results.Select( r => r.RoomType.ToSearchResultDto( r.Property ) ).ToList();
 
-            foreach ( RoomType roomType in roomTypes )
-            {
-                if ( arrivalDate.HasValue && departureDate.HasValue )
-                {
-                    bool hasOverlap = await _reservationRepository
-                        .HasOverlap( roomType.Id, arrivalDate.Value, departureDate.Value );
-                    if ( hasOverlap )
-                        continue;
-                }
-                results.Add( roomType.ToSearchResultDto( property ) );
-            }
-        }
         return Ok( results );
     }
 }

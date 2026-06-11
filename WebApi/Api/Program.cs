@@ -1,6 +1,8 @@
 using Domain.Interfaces.Repositories;
+using Domain.Interfaces.Services;
 using Infrastructure.Foundation.Data;
 using Infrastructure.Foundation.Repositories;
+using Infrastructure.Foundation.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace Api;
@@ -23,6 +25,10 @@ public class Program
         builder.Services.AddScoped<IPropertyRepository, PropertyRepository>();
         builder.Services.AddScoped<IRoomTypeRepository, RoomTypeRepository>();
         builder.Services.AddScoped<IReservationRepository, ReservationRepository>();
+
+        builder.Services.AddScoped<IPropertyService, PropertyService>();
+        builder.Services.AddScoped<IRoomTypeService, RoomTypeService>();
+        builder.Services.AddScoped<IReservationService, ReservationService>();
 
         var app = builder.Build();
 
