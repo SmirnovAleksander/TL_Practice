@@ -30,39 +30,48 @@ public class GameManagerTests
     [Fact]
     public void PlayGame_EmptyName_DoesNotCreateFighter()
     {
+        // Arrange
         _inputHelperMock.SetupSequence( i => i.ReadChoice( maxOption: 4 ) )
             .Returns( 1 )
             .Returns( 4 );
         _consoleMock.Setup( c => c.ReadLine() ).Returns( "" );
 
+        // Act
         _gameManager.PlayGame();
 
+        // Assert
         _factoryMock.Verify( f => f.CreateFighter( It.IsAny<string>() ), Times.Never );
     }
 
     [Fact]
     public void PlayGame_ValidName_CreatesFighter()
     {
+        // Arrange
         _inputHelperMock.SetupSequence( i => i.ReadChoice( maxOption: 4 ) )
             .Returns( 1 )
             .Returns( 4 );
         _consoleMock.Setup( c => c.ReadLine() ).Returns( "Fighter" );
         _factoryMock.Setup( f => f.CreateFighter( "Fighter" ) ).Returns( new Mock<IFighter>().Object );
 
+        // Act
         _gameManager.PlayGame();
 
+        // Assert
         _factoryMock.Verify( f => f.CreateFighter( "Fighter" ), Times.Once );
     }
 
     [Fact]
     public void PlayGame_LessThanTwoFighters_DoesNotStartBattle()
     {
+        // Arrange
         _inputHelperMock.SetupSequence( i => i.ReadChoice( maxOption: 4 ) )
             .Returns( 3 )
             .Returns( 4 );
 
+        // Act
         _gameManager.PlayGame();
 
+        // Assert
         _battleManagerMock.Verify( b => b.StartBattle( It.IsAny<List<IFighter>>() ), Times.Never );
     }
 }

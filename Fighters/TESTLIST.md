@@ -2,58 +2,47 @@
 
 ## Fighter
 
-- [x] Конструктор устанавливает имя бойца
-- [x] GetMaxHealth = Race.Health + Class.Health
-- [x] CalculateDamage = Weapon.Damage + Class.Damage + Race.Damage
-- [x] CalculateArmor = Armor.Armor + Race.Armor
-- [x] Initiative = Race.Initiative + Class.Initiative
-- [x] TakeDamage уменьшает текущее здоровье
-- [x] TakeDamage при уроне больше HP устанавливает 0
-- [x] IsAlive возвращает true при HP > 0
-- [x] IsAlive возвращает false при HP = 0
-- [x] GetCurrentHealth равен GetMaxHealth после создания
+- [x] Constructor_ValidName_SetsName - конструктор устанавливает имя
+- [x] GetMaxHealth_RaceAndClassHealthSum_ReturnsTotalMaxHealth - здоровье = Race.Health + Class.Health
+- [x] CalculateDamage_AllComponentsSum_ReturnsTotalDamage - урон = Weapon + Class + Race
+- [x] CalculateArmor_ArmorAndRaceArmorSum_ReturnsTotalArmor - броня = Armor + Race
+- [x] Initiative_RaceAndClassInitiativeSum_ReturnsTotalInitiative - инициатива = Race + Class
+- [x] TakeDamage_DamageLessThanHealth_ReduceCurrentHealth - урон уменьшает HP
+- [x] TakeDamage_DamageMoreHealth_SetHealthToZero - урон > HP = 0
+- [x] IsAlive_HealthGreaterThanZero_ReturnsTrue - жив при HP > 0
+- [x] IsAlive_HealthZero_ReturnsFalse - мёртв при HP = 0
+- [x] GetCurrentHealth_AfterDamage_ReturnsMaxHealthMinusDamage - после создания HP = max, после урона max - damage
 
 ## DamageCalculator
 
-- [x] Базовый расчёт: baseDamage - armor
-- [x] Отрицательный модификатор (-20%) уменьшает урон
-- [x] Положительный модификатор (+10%) увеличивает урон
-- [x] Критический удар удваивает урон до вычета брони
-- [x] Урон меньше брони - результат 0
-- [x] Нулевая броня - полный урон
-- [x] Крит и отрицательный модификатор применяются вместе
+- [x] CalculateDamage_BaseDamageMinusArmor_ReturnsReducedDamage - baseDamage - armor
+- [x] CalculateDamage_NegativeModifier_ReduceDamage - модификатор -20% уменьшает урон
+- [x] CalculateDamage_PositiveModifier_IncreasesDamage - модификатор +10% увеличивает урон
+- [x] CalculateDamage_CriticalHit_DoublesDamageBeforeArmor - крит ×2 до вычета брони
+- [x] CalculateDamage_DamageLessThanArmor_ReturnsZero - урон меньше брони -> 0
+- [x] CalculateDamage_ZeroArmor_ReturnsFullDamage - без брони полный урон
+- [x] CalculateDamage_CriticalWithNegativeModifier_AppliesBothMultipliers - крит + отрицательный модификатор
 
 ## BattleManager
 
-- [x] Меньше 2 бойцов - вывод ошибки, битва не начинается
-- [x] 2 бойца - объявляется победитель
-- [x] 3 бойца - мёртвые удаляются, победитель определён
+- [x] StartBattle_LessThanTwoFighters_WritesError - < 2 бойцов: битва не начинается, боец жив
+- [x] StartBattle_TwoFighters_DeclaresWinner - 2 бойца: победитель жив, проигравший мёртв
+- [x] StartBattle_ThreeFighters_RemovesDeadAndDeclaresWinner - 3 бойца: выживает сильнейший
 
 ## FighterFactory
 
-- [x] Создание бойца с выбранными компонентами (проверка статов)
-- [x] Выводятся все 4 меню выбора
-- [x] Выбор второго элемента из списка
+- [x] CreateFighter_ValidChoices_ReturnsFighterWithCorrectStats - создание с верными статами
+- [x] CreateFighter_AllMenusDisplayed_ShowsAllFourChoices - выводятся все 4 меню с пунктами
+- [x] CreateFighter_SelectSecondItem_ReturnsWeaponWithCorrectDamage - выбор 2-го оружия
 
 ## GameManager
 
-- [x] Выбор 4 завершает игру
-- [x] Выбор 1 с пустым именем - ошибка, боец не создаётся
-- [x] Выбор 1 с именем - боец создаётся
-- [x] Выбор 2 при пустом списке - "Нет бойцов!"
-- [x] Выбор 2 после добавления - вывод имени
-- [x] Выбор 3 при менее 2 бойцов - ошибка
-
-## RandomProvider
-
-- [x] Next возвращает значение в заданном диапазоне
-- [x] Next при min = max-1 возвращает min
-- [x] NextDouble возвращает значение от 0.0 до 1.0
+- [x] PlayGame_EmptyName_DoesNotCreateFighter - пустое имя: боец не создаётся
+- [x] PlayGame_ValidName_CreatesFighter - валидное имя: боец создаётся
+- [x] PlayGame_LessThanTwoFighters_DoesNotStartBattle - < 2 бойцов: битва не запускается
 
 ## InputHelper
 
-- [x] Валидный ввод - возвращается число
-- [x] Число меньше 1 - повтор
-- [x] Число больше maxOption - повтор
-- [x] Пустая строка - повтор
-- [x] Невалидная строка - повтор с сообщением об ошибке
+- [x] ReadChoice_ValidInput_ReturnsNumber - валидный ввод возвращает число
+- [x] ReadChoice_InvalidInput_RetriesUntilValid - невалидный ввод: повтор до успеха (0, больше max, пустая строка)
+- [x] ReadChoice_InvalidString_ShowsErrorMessage - "abc": сообщение об ошибке
