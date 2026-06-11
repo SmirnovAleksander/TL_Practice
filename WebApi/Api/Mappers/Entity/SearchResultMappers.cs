@@ -1,18 +1,18 @@
 using Api.Dtos.Reservation;
-using Domain.Entities;
+using Domain.Dtos.Search;
 
 namespace Api.Mappers.Entity;
 
 public static class SearchResultMappers
 {
-    public static SearchResultDto ToSearchResultDto( this RoomType roomType, Property property )
+    public static SearchResultDto ToSearchResultDto( this SearchResultServiceDto dto )
     {
         return new SearchResultDto
         {
-            Property = property.ToPropertyDto(),
-            RoomType = roomType.ToRoomTypeDto(),
-            DailyPrice = roomType.DailyPrice,
-            Currency = roomType.Currency
+            Property = dto.Property.ToPropertyDto(),
+            RoomType = dto.RoomType.ToRoomTypeDto(),
+            DailyPrice = dto.DailyPrice,
+            Currency = dto.Currency
         };
     }
 }

@@ -4,7 +4,7 @@ namespace Domain.Interfaces.Repositories;
 
 public interface IReservationRepository
 {
-    Task<List<Reservation>> GetAll(
+    Task<IReadOnlyList<Reservation>> GetAll(
         Guid? propertyId,
         DateOnly? arrivalDate,
         DateOnly? departureDate,

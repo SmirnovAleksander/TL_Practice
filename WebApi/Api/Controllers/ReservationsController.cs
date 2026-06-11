@@ -13,6 +13,7 @@ namespace Api.Controllers;
 public class ReservationsController : ControllerBase
 {
     private readonly IReservationService _reservationService;
+
     public ReservationsController( IReservationService reservationService )
     {
         _reservationService = reservationService;
@@ -34,7 +35,7 @@ public class ReservationsController : ControllerBase
             GuestName = guestName
         };
 
-        List<Reservation> reservations = await _reservationService.GetAllAsync( filter, ct );
+        IReadOnlyList<Reservation> reservations = await _reservationService.GetAllAsync( filter, ct );
         List<ReservationDto> reservationDtos = reservations.Select( r => r.ToReservationDto() ).ToList();
 
         return Ok( reservationDtos );

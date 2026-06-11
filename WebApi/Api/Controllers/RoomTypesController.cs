@@ -21,7 +21,7 @@ public class RoomTypesController : ControllerBase
     [HttpGet( "properties/{propertyId:guid}/roomtypes" )]
     public async Task<IActionResult> GetByProperty( [FromRoute] Guid propertyId, CancellationToken ct )
     {
-        List<RoomType> roomTypes = await _roomTypeService.GetByPropertyAsync( propertyId, ct );
+        IReadOnlyList<RoomType> roomTypes = await _roomTypeService.GetByPropertyAsync( propertyId, ct );
         List<RoomTypeDto> roomTypeDtos = roomTypes.Select( r => r.ToRoomTypeDto() ).ToList();
 
         return Ok( roomTypeDtos );

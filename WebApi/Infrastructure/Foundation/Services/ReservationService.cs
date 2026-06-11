@@ -23,7 +23,7 @@ public class ReservationService : IReservationService
         _roomTypeRepository = roomTypeRepository;
     }
 
-    public async Task<List<Reservation>> GetAllAsync( ReservationFilterServiceDto filter, CancellationToken ct = default )
+    public async Task<IReadOnlyList<Reservation>> GetAllAsync( ReservationFilterServiceDto filter, CancellationToken ct = default )
     {
         return await _reservationRepository.GetAll(
             filter.PropertyId,
@@ -110,9 +110,9 @@ public class ReservationService : IReservationService
         await _reservationRepository.Cancel( id, ct );
     }
 
-    public async Task<List<SearchResultServiceDto>> SearchAsync( SearchFilterServiceDto filter, CancellationToken ct = default )
+    public async Task<IReadOnlyList<SearchResultServiceDto>> SearchAsync( SearchFilterServiceDto filter, CancellationToken ct = default )
     {
-        List<Property> allProperties = await _propertyRepository.GetAll( ct );
+        IReadOnlyList<Property> allProperties = await _propertyRepository.GetAll( ct );
 
         if ( !string.IsNullOrWhiteSpace( filter.City ) )
         {
@@ -125,7 +125,7 @@ public class ReservationService : IReservationService
 
         foreach ( Property property in allProperties )
         {
-            List<RoomType> roomTypes = await _roomTypeRepository.GetByProperty( property.Id, ct );
+            IReadOnlyList<RoomType> roomTypes = await _roomTypeRepository.GetByProperty( property.Id, ct );
 
             if ( filter.Guests.HasValue )
             {

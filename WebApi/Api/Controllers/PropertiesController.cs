@@ -12,6 +12,7 @@ namespace Api.Controllers;
 public class PropertiesController : ControllerBase
 {
     private readonly IPropertyService _propertyService;
+
     public PropertiesController( IPropertyService propertyService )
     {
         _propertyService = propertyService;
@@ -20,7 +21,7 @@ public class PropertiesController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAll( CancellationToken ct )
     {
-        List<Property> properties = await _propertyService.GetAllAsync( ct );
+        IReadOnlyList<Property> properties = await _propertyService.GetAllAsync( ct );
         List<PropertyDto> propertyDtos = properties.Select( p => p.ToPropertyDto() ).ToList();
 
         return Ok( propertyDtos );

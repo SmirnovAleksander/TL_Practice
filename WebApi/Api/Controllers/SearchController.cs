@@ -36,8 +36,8 @@ public class SearchController : ControllerBase
             MaxPrice = maxPrice
         };
 
-        List<SearchResultServiceDto> results = await _reservationService.SearchAsync( filter, ct );
-        List<SearchResultDto> searchResults = results.Select( r => r.RoomType.ToSearchResultDto( r.Property ) ).ToList();
+        IReadOnlyList<SearchResultServiceDto> results = await _reservationService.SearchAsync( filter, ct );
+        List<SearchResultDto> searchResults = results.Select( r => r.ToSearchResultDto() ).ToList();
 
         return Ok( results );
     }

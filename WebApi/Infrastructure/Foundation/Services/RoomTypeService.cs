@@ -10,13 +10,14 @@ public class RoomTypeService : IRoomTypeService
 {
     private readonly IRoomTypeRepository _roomTypeRepository;
     private readonly IPropertyRepository _propertyRepository;
+
     public RoomTypeService( IRoomTypeRepository roomTypeRepository, IPropertyRepository propertyRepository )
     {
         _roomTypeRepository = roomTypeRepository;
         _propertyRepository = propertyRepository;
     }
 
-    public async Task<List<RoomType>> GetByPropertyAsync( Guid propertyId, CancellationToken ct = default )
+    public async Task<IReadOnlyList<RoomType>> GetByPropertyAsync( Guid propertyId, CancellationToken ct = default )
     {
         Property? property = await _propertyRepository.GetById( propertyId, ct );
         if ( property == null )

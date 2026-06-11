@@ -8,12 +8,13 @@ namespace Infrastructure.Foundation.Repositories;
 public class PropertyRepository : IPropertyRepository
 {
     private readonly HotelManagementDbContext _dbContext;
+
     public PropertyRepository( HotelManagementDbContext dbContext )
     {
         _dbContext = dbContext;
     }
 
-    public async Task<List<Property>> GetAll( CancellationToken ct = default )
+    public async Task<IReadOnlyList<Property>> GetAll( CancellationToken ct = default )
     {
         return await _dbContext.Properties.ToListAsync( ct );
     }

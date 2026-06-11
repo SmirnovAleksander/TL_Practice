@@ -8,12 +8,13 @@ namespace Infrastructure.Foundation.Repositories;
 public class ReservationRepository : IReservationRepository
 {
     private readonly HotelManagementDbContext _dbContext;
+
     public ReservationRepository( HotelManagementDbContext dbContext )
     {
         _dbContext = dbContext;
     }
 
-    public async Task<List<Reservation>> GetAll(
+    public async Task<IReadOnlyList<Reservation>> GetAll(
         Guid? propertyId,
         DateOnly? arrivalDate,
         DateOnly? departureDate,

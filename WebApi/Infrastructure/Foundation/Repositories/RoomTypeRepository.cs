@@ -8,12 +8,13 @@ namespace Infrastructure.Foundation.Repositories;
 public class RoomTypeRepository : IRoomTypeRepository
 {
     private readonly HotelManagementDbContext _dbContext;
+
     public RoomTypeRepository( HotelManagementDbContext dbContext )
     {
         _dbContext = dbContext;
     }
 
-    public async Task<List<RoomType>> GetByProperty( Guid propertyId, CancellationToken ct = default )
+    public async Task<IReadOnlyList<RoomType>> GetByProperty( Guid propertyId, CancellationToken ct = default )
     {
         return await _dbContext.RoomTypes.Where( rt => rt.PropertyId == propertyId ).ToListAsync( ct );
     }

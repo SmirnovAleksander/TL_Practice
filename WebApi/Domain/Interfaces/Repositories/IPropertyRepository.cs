@@ -4,7 +4,7 @@ namespace Domain.Interfaces.Repositories;
 
 public interface IPropertyRepository
 {
-    Task<List<Property>> GetAll( CancellationToken ct = default );
+    Task<IReadOnlyList<Property>> GetAll( CancellationToken ct = default );
     Task<Property?> GetById( Guid id, CancellationToken ct = default );
     Task<Property> Create( Property property, CancellationToken ct = default );
     Task<Property> Update( Property property, CancellationToken ct = default );

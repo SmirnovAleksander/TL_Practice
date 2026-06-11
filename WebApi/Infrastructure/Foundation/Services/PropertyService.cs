@@ -10,12 +10,13 @@ namespace Infrastructure.Foundation.Services;
 public class PropertyService : IPropertyService
 {
     private readonly IPropertyRepository _propertyRepository;
+
     public PropertyService( IPropertyRepository propertyRepository )
     {
         _propertyRepository = propertyRepository;
     }
 
-    public async Task<List<Property>> GetAllAsync( CancellationToken ct = default )
+    public async Task<IReadOnlyList<Property>> GetAllAsync( CancellationToken ct = default )
     {
         return await _propertyRepository.GetAll( ct );
     }

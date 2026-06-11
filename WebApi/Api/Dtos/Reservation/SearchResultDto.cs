@@ -6,8 +6,8 @@ namespace Api.Dtos.Reservation;
 
 public class SearchResultDto
 {
-    public PropertyDto Property { get; set; } = null!;
-    public RoomTypeDto RoomType { get; set; } = null!;
+    public required PropertyDto Property { get; set; }
+    public required RoomTypeDto RoomType { get; set; }
     public decimal DailyPrice { get; set; }
     public Currency Currency { get; set; }
 }
