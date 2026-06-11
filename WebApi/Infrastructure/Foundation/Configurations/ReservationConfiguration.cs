@@ -33,9 +33,6 @@ internal class ReservationConfiguration : IEntityTypeConfiguration<Reservation>
         builder.Property( r => r.DepartureDate )
             .IsRequired();
 
-        builder.Property( r => r.IsCanceled )
-            .HasDefaultValue( false );
-
         builder.HasOne<Property>()
             .WithMany()
             .HasForeignKey( r => r.PropertyId )

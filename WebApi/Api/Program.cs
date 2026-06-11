@@ -20,7 +20,9 @@ public class Program
 
         builder.Services.AddDbContext<HotelManagementDbContext>( options =>
         {
-            options.UseSqlServer( builder.Configuration.GetConnectionString( "DefaultConnection" ) );
+            options
+                .UseSqlServer( builder.Configuration.GetConnectionString( "DefaultConnection" ) )
+                .UseSnakeCaseNamingConvention();
         } );
 
         builder.Services.AddScoped<IPropertyRepository, PropertyRepository>();
