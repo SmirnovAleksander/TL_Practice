@@ -14,11 +14,13 @@ public class FighterFactory : IFighterFactory
 {
     private readonly IDataProvider _dataProvider;
     private readonly IInputHelper _inputHelper;
+    private readonly IConsole _console;
 
-    public FighterFactory( IDataProvider dataProvider, IInputHelper inputHelper )
+    public FighterFactory( IDataProvider dataProvider, IInputHelper inputHelper, IConsole console )
     {
         _dataProvider = dataProvider;
         _inputHelper = inputHelper;
+        _console = console;
     }
 
     public IFighter CreateFighter( string name )
@@ -38,10 +40,10 @@ public class FighterFactory : IFighterFactory
 
     private T SelectItem<T>( List<T> items, string textMessage ) where T : INamed
     {
-        Console.WriteLine( textMessage );
+        _console.WriteLine( textMessage );
         for ( int i = 0; i < items.Count; i++ )
         {
-            Console.WriteLine( $"{i + 1} - {items[ i ].Name}" );
+            _console.WriteLine( $"{i + 1} - {items[ i ].Name}" );
         }
         int choice = _inputHelper.ReadChoice( items.Count );
         return items[ choice - 1 ];

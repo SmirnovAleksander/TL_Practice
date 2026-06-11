@@ -1,22 +1,25 @@
 using Fighters.Models.Fighters;
 using Fighters.Services.Interfaces;
+using Fighters.Utils;
 
 namespace Fighters.Services.Implementations;
 
 public class BattleManager : IBattleManager
 {
     private readonly IDamageCalculator _damageCalculator;
+    private readonly IConsole _console;
 
-    public BattleManager( IDamageCalculator damageCalculator )
+    public BattleManager( IDamageCalculator damageCalculator, IConsole console )
     {
         _damageCalculator = damageCalculator;
+        _console = console;
     }
 
     public void StartBattle( List<IFighter> fighters )
     {
         if ( fighters.Count < 2 )
         {
-            Console.WriteLine( "Для битвы нужно минимум 2 бойца!" );
+            _console.WriteLine( "Для битвы нужно минимум 2 бойца!" );
 
             return;
         }
@@ -26,14 +29,14 @@ public class BattleManager : IBattleManager
 
         while ( orderedFighters.Count > 1 )
         {
-            Console.WriteLine();
-            Console.WriteLine( $"Раунд {round}" );
+            _console.WriteLine( "" );
+            _console.WriteLine( $"Раунд {round}" );
             RoundFight( orderedFighters );
             orderedFighters.RemoveAll( f => !f.IsAlive() );
             round++;
         }
 
-        Console.WriteLine( $"{orderedFighters[ 0 ].Name} выигрывает битву!" );
+        _console.WriteLine( $"{orderedFighters[ 0 ].Name} выигрывает битву!" );
     }
 
     private void RoundFight( List<IFighter> fighters )
@@ -52,8 +55,8 @@ public class BattleManager : IBattleManager
             int damage = _damageCalculator.CalculateDamage( attacker, defender );
             defender.TakeDamage( damage );
 
-            Console.WriteLine( $"{attacker.Name} наносит {damage} урона {defender.Name}" );
-            Console.WriteLine( $"{defender.Name} получил {damage} урона, осталось {defender.GetCurrentHealth()} HP" );
+            _console.WriteLine( $"{attacker.Name} наносит {damage} урона {defender.Name}" );
+            _console.WriteLine( $"{defender.Name} получил {damage} урона, осталось {defender.GetCurrentHealth()} HP" );
         }
     }
 }
