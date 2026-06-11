@@ -1,7 +1,7 @@
 using Api.Dtos.RoomType;
 using Domain.Entities;
 
-namespace Api.Mappers;
+namespace Api.Mappers.Entity;
 
 public static class RoomTypeMappers
 {
