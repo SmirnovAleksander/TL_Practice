@@ -1,3 +1,4 @@
+using Api.Middleware;
 using Domain.Interfaces.Repositories;
 using Domain.Interfaces.Services;
 using Infrastructure.Foundation.Data;
@@ -31,6 +32,8 @@ public class Program
         builder.Services.AddScoped<IReservationService, ReservationService>();
 
         var app = builder.Build();
+
+        app.UseMiddleware<ExceptionMiddleware>();
 
         if ( app.Environment.IsDevelopment() )
         {
