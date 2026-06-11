@@ -18,31 +18,4 @@ public static class PropertyMappers
             Longitude = property.Longitude
         };
     }
-
-    public static Property ToPropertyFromCreate( this CreatePropertyDto dto )
-    {
-        return new Property
-        {
-            Name = dto.Name,
-            Country = dto.Country,
-            City = dto.City,
-            Address = dto.Address,
-            Latitude = dto.Latitude,
-            Longitude = dto.Longitude
-        };
-    }
-
-    public static Property ToPropertyFromUpdate( this UpdatePropertyDto dto, Guid id )
-    {
-        return new Property
-        {
-            Id = id,
-            Name = dto.Name,
-            Country = dto.Country,
-            City = dto.City,
-            Address = dto.Address,
-            Latitude = dto.Latitude,
-            Longitude = dto.Longitude
-        };
-    }
 }

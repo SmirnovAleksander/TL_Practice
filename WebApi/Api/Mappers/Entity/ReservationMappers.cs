@@ -23,19 +23,4 @@ public static class ReservationMappers
             IsCanceled = reservation.IsCanceled
         };
     }
-
-    public static Reservation ToReservationFromCreate( this CreateReservationDto dto )
-    {
-        return new Reservation
-        {
-            PropertyId = dto.PropertyId,
-            RoomTypeId = dto.RoomTypeId,
-            ArrivalDate = dto.ArrivalDate,
-            DepartureDate = dto.DepartureDate,
-            ArrivalTime = dto.ArrivalTime,
-            DepartureTime = dto.DepartureTime,
-            GuestName = dto.GuestName,
-            GuestPhoneNumber = dto.GuestPhoneNumber
-        };
-    }
 }

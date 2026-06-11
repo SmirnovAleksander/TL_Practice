@@ -16,11 +16,12 @@ internal class RoomTypeConfiguration : IEntityTypeConfiguration<RoomType>
             .IsRequired();
 
         builder.Property( r => r.DailyPrice )
-            .HasColumnType( "decimal(18,2)" )
+            .HasColumnType( "money" )
             .IsRequired();
 
         builder.Property( r => r.Currency )
             .HasMaxLength( 3 )
+            .HasConversion<string>()
             .IsRequired();
 
         builder.Property( r => r.MinPersonCount )

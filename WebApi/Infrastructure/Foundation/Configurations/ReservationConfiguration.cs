@@ -19,11 +19,12 @@ internal class ReservationConfiguration : IEntityTypeConfiguration<Reservation>
             .HasMaxLength( 20 );
 
         builder.Property( r => r.Total )
-            .HasColumnType( "decimal(18,2)" )
+            .HasColumnType( "money" )
             .IsRequired();
 
         builder.Property( r => r.Currency )
             .HasMaxLength( 3 )
+            .HasConversion<string>()
             .IsRequired();
 
         builder.Property( r => r.ArrivalDate )

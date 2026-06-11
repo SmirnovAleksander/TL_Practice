@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Domain.Enums;
 
 namespace Api.Dtos.RoomType;
 
@@ -12,8 +13,9 @@ public class UpdateRoomTypeDto
     [Range( 0.01, double.MaxValue, ErrorMessage = "DailyPrice must be greater than 0" )]
     public decimal DailyPrice { get; set; }
 
-    [MaxLength( 10, ErrorMessage = "Currency can not be over 10 symbols" )]
-    public string Currency { get; set; } = string.Empty;
+    [Required( ErrorMessage = "Currency is required" )]
+    [EnumDataType( typeof( Currency ), ErrorMessage = "Invalid currency value" )]
+    public Currency Currency { get; set; }
 
     [Required( ErrorMessage = "MinPersonCount is required" )]
     [Range( 1, 100, ErrorMessage = "MinPersonCount must be between 1 and 100" )]

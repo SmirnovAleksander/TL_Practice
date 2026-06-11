@@ -1,3 +1,5 @@
+using Domain.Enums;
+
 namespace Api.Dtos.Reservation;
 
 public class ReservationDto
@@ -12,6 +14,6 @@ public class ReservationDto
     public string GuestName { get; set; } = string.Empty;
     public string GuestPhoneNumber { get; set; } = string.Empty;
     public decimal Total { get; set; }
-    public string Currency { get; set; } = string.Empty;
+    public Currency Currency { get; set; }
     public bool IsCanceled { get; set; }
 }
