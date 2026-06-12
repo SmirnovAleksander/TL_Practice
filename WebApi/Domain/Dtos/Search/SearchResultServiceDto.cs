@@ -4,8 +4,8 @@ namespace Domain.Dtos.Search;
 
 public class SearchResultServiceDto
 {
-    public required Entities.Property Property { get; set; }
-    public required Entities.RoomType RoomType { get; set; }
-    public decimal DailyPrice { get; set; }
-    public Currency Currency { get; set; }
+    public required Entities.Property Property { get; init; }
+    public required Entities.RoomType RoomType { get; init; }
+    public decimal DailyPrice { get; init; }
+    public Currency Currency { get; init; }
 }

@@ -4,16 +4,16 @@ namespace Api.Dtos.Reservation;
 
 public class ReservationDto
 {
-    public Guid Id { get; set; }
-    public Guid PropertyId { get; set; }
-    public Guid RoomTypeId { get; set; }
-    public DateOnly ArrivalDate { get; set; }
-    public DateOnly DepartureDate { get; set; }
-    public TimeSpan? ArrivalTime { get; set; }
-    public TimeSpan? DepartureTime { get; set; }
-    public string GuestName { get; set; } = string.Empty;
-    public string GuestPhoneNumber { get; set; } = string.Empty;
-    public decimal Total { get; set; }
-    public Currency Currency { get; set; }
-    public bool IsCanceled { get; set; }
+    public Guid Id { get; init; }
+    public Guid PropertyId { get; init; }
+    public Guid RoomTypeId { get; init; }
+    public DateOnly ArrivalDate { get; init; }
+    public DateOnly DepartureDate { get; init; }
+    public TimeSpan? ArrivalTime { get; init; }
+    public TimeSpan? DepartureTime { get; init; }
+    public string GuestName { get; init; } = string.Empty;
+    public string GuestPhoneNumber { get; init; } = string.Empty;
+    public decimal Total { get; init; }
+    public Currency Currency { get; init; }
+    public bool IsCanceled { get; init; }
 }
