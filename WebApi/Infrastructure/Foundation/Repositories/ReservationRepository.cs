@@ -1,6 +1,8 @@
+using Domain.Dtos.Reservation;
 using Domain.Entities;
 using Domain.Interfaces.Repositories;
 using Infrastructure.Foundation.Data;
+using Infrastructure.Foundation.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Foundation.Repositories;
@@ -21,23 +23,15 @@ public class ReservationRepository : IReservationRepository
         string? guestName,
         CancellationToken ct = default )
     {
-        IQueryable<Reservation> query = _dbContext.Reservations.AsQueryable();
-        if ( propertyId.HasValue )
+        ReservationFilterServiceDto filter = new ReservationFilterServiceDto
         {
-            query = query.Where( r => r.PropertyId == propertyId );
-        }
-        if ( arrivalDate.HasValue )
-        {
-            query = query.Where( r => r.ArrivalDate >= arrivalDate );
-        }
-        if ( departureDate.HasValue )
-        {
-            query = query.Where( r => r.DepartureDate <= departureDate );
-        }
-        if ( !string.IsNullOrWhiteSpace( guestName ) )
-        {
-            query = query.Where( r => r.GuestName.Contains( guestName ) );
-        }
+            PropertyId = propertyId,
+            ArrivalDate = arrivalDate,
+            DepartureDate = departureDate,
+            GuestName = guestName
+        };
+
+        IQueryable<Reservation> query = _dbContext.Reservations.AsQueryable().ReservationFilter( filter );
 
         return await query.ToListAsync( ct );
     }
