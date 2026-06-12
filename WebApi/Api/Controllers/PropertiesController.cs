@@ -1,4 +1,5 @@
 using Api.Dtos.Property;
+using Api.Dtos.RoomType;
 using Api.Mappers.Entity;
 using Api.Mappers.Service;
 using Domain.Entities;
@@ -12,10 +13,12 @@ namespace Api.Controllers;
 public class PropertiesController : ControllerBase
 {
     private readonly IPropertyService _propertyService;
+    private readonly IRoomTypeService _roomTypeService;
 
-    public PropertiesController( IPropertyService propertyService )
+    public PropertiesController( IPropertyService propertyService, IRoomTypeService roomTypeService )
     {
         _propertyService = propertyService;
+        _roomTypeService = roomTypeService;
     }
 
     [HttpGet]
@@ -33,6 +36,15 @@ public class PropertiesController : ControllerBase
         Property property = await _propertyService.GetByIdAsync( id, ct );
 
         return Ok( property.ToPropertyDto() );
+    }
+
+    [HttpGet( "{propertyId:guid}/roomtypes" )]
+    public async Task<IActionResult> GetRoomTypes( [FromRoute] Guid propertyId, CancellationToken ct )
+    {
+        IReadOnlyList<RoomType> roomTypes = await _roomTypeService.GetByPropertyAsync( propertyId, ct );
+        List<RoomTypeDto> roomTypeDtos = roomTypes.Select( r => r.ToRoomTypeDto() ).ToList();
+
+        return Ok( roomTypeDtos );
     }
 
     [HttpPost]
