@@ -88,6 +88,6 @@ public class PropertyService : IPropertyService
             throw new NotFoundException( "Property", id );
         }
 
-        await _propertyRepository.Delete( id, ct );
+        await _propertyRepository.Delete( existing, ct );
     }
 }

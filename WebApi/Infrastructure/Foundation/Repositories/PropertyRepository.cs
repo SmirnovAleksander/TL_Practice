@@ -40,14 +40,8 @@ public class PropertyRepository : IPropertyRepository
         return property;
     }
 
-    public async Task Delete( Guid id, CancellationToken ct = default )
+    public async Task Delete( Property property, CancellationToken ct = default )
     {
-        Property? property = await _dbContext.Properties.FindAsync( id, ct );
-        if ( property == null )
-        {
-            throw new InvalidOperationException( $"Property with id '{id}' not found" );
-        }
-
         _dbContext.Properties.Remove( property );
         await _dbContext.SaveChangesAsync( ct );
     }

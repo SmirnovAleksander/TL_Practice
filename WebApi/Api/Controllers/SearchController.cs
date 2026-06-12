@@ -39,6 +39,6 @@ public class SearchController : ControllerBase
         IReadOnlyList<SearchResultServiceDto> results = await _reservationService.SearchAsync( filter, ct );
         List<SearchResultDto> searchResults = results.Select( r => r.ToSearchResultDto() ).ToList();
 
-        return Ok( results );
+        return Ok( searchResults );
     }
 }

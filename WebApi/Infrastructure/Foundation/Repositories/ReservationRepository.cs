@@ -49,17 +49,12 @@ public class ReservationRepository : IReservationRepository
         return reservation;
     }
 
-    public async Task Cancel( Guid id, CancellationToken ct = default )
+    public async Task<Reservation> Update( Reservation reservation, CancellationToken ct = default )
     {
-        Reservation? reservation = await _dbContext.Reservations.FindAsync( id, ct );
-        if ( reservation == null )
-        {
-            throw new InvalidOperationException( $"Reservation with id '{id}' not found" );
-        }
-
-        reservation.IsCanceled = true;
-
+        _dbContext.Reservations.Update( reservation );
         await _dbContext.SaveChangesAsync( ct );
+
+        return reservation;
     }
 
     public async Task<bool> HasOverlap(

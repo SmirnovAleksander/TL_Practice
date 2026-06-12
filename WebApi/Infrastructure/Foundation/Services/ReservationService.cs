@@ -107,7 +107,9 @@ public class ReservationService : IReservationService
             throw new NotFoundException( "Reservation", id );
         }
 
-        await _reservationRepository.Cancel( id, ct );
+        existing.IsCanceled = true;
+
+        await _reservationRepository.Update( existing, ct );
     }
 
     public async Task<IReadOnlyList<SearchResultServiceDto>> SearchAsync( SearchFilterServiceDto filter, CancellationToken ct = default )

@@ -8,5 +8,5 @@ public interface IRoomTypeRepository
     Task<RoomType?> GetById( Guid id, CancellationToken ct = default );
     Task<RoomType> Create( RoomType roomType, CancellationToken ct = default );
     Task<RoomType> Update( RoomType roomType, CancellationToken ct = default );
-    Task Delete( Guid id, CancellationToken ct = default );
+    Task Delete( RoomType roomType, CancellationToken ct = default );
 }

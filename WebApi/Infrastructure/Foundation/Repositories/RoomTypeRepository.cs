@@ -40,14 +40,8 @@ public class RoomTypeRepository : IRoomTypeRepository
         return roomType;
     }
 
-    public async Task Delete( Guid id, CancellationToken ct = default )
+    public async Task Delete( RoomType roomType, CancellationToken ct = default )
     {
-        RoomType? roomType = await _dbContext.RoomTypes.FindAsync( id, ct );
-        if ( roomType == null )
-        {
-            throw new InvalidOperationException( $"RoomType with id '{id}' not found" );
-        }
-
         _dbContext.RoomTypes.Remove( roomType );
         await _dbContext.SaveChangesAsync( ct );
     }

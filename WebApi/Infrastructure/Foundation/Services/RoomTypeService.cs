@@ -119,6 +119,6 @@ public class RoomTypeService : IRoomTypeService
             throw new NotFoundException( "RoomType", id );
         }
 
-        await _roomTypeRepository.Delete( id, ct );
+        await _roomTypeRepository.Delete( existing, ct );
     }
 }

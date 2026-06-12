@@ -12,7 +12,7 @@ public interface IReservationRepository
         CancellationToken ct = default );
     Task<Reservation?> GetById( Guid id, CancellationToken ct = default );
     Task<Reservation> Create( Reservation reservation, CancellationToken ct = default );
-    Task Cancel( Guid id, CancellationToken ct = default );
+    Task<Reservation> Update( Reservation reservation, CancellationToken ct = default );
     Task<bool> HasOverlap(
         Guid roomTypeId,
         DateOnly arrivalDate,
