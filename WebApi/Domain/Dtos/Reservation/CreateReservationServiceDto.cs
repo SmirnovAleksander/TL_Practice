@@ -1,0 +1,14 @@
+namespace Domain.Dtos.Reservation;
+
+public class CreateReservationServiceDto
+{
+    public Guid PropertyId { get; init; }
+    public Guid RoomTypeId { get; init; }
+    public DateOnly ArrivalDate { get; init; }
+    public DateOnly DepartureDate { get; init; }
+    public TimeSpan? ArrivalTime { get; init; }
+    public TimeSpan? DepartureTime { get; init; }
+    public int Guests { get; init; }
+    public string GuestName { get; init; } = string.Empty;
+    public string GuestPhoneNumber { get; init; } = string.Empty;
+}
