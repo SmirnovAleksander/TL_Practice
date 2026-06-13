@@ -1,6 +1,7 @@
 using Domain.Entities;
 using Domain.Interfaces.Repositories;
 using Infrastructure.Foundation.Data;
+using Infrastructure.Foundation.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Foundation.Repositories;
@@ -14,9 +15,11 @@ public class PropertyRepository : IPropertyRepository
         _dbContext = dbContext;
     }
 
-    public async Task<IReadOnlyList<Property>> GetAll( CancellationToken ct = default )
+    public async Task<IReadOnlyList<Property>> GetAll( string? city = null, CancellationToken ct = default )
     {
-        return await _dbContext.Properties.ToListAsync( ct );
+        IQueryable<Property> query = _dbContext.Properties.AsQueryable().PropertyFilter( city );
+
+        return await query.ToListAsync( ct );
     }
 
     public async Task<Property?> GetById( Guid id, CancellationToken ct = default )

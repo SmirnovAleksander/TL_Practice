@@ -18,7 +18,7 @@ public class PropertyService : IPropertyService
 
     public async Task<IReadOnlyList<Property>> GetAllAsync( CancellationToken ct = default )
     {
-        return await _propertyRepository.GetAll( ct );
+        return await _propertyRepository.GetAll( null, ct );
     }
 
     public async Task<Property> GetByIdAsync( Guid id, CancellationToken ct = default )

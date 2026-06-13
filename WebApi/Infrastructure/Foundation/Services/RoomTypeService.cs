@@ -25,7 +25,7 @@ public class RoomTypeService : IRoomTypeService
             throw new NotFoundException( "Property", propertyId );
         }
 
-        return await _roomTypeRepository.GetByProperty( propertyId, ct );
+        return await _roomTypeRepository.GetByProperty( propertyId, null, null, ct );
     }
 
     public async Task<RoomType> GetByIdAsync( Guid id, CancellationToken ct = default )

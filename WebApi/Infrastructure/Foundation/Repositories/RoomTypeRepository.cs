@@ -1,6 +1,7 @@
 using Domain.Entities;
 using Domain.Interfaces.Repositories;
 using Infrastructure.Foundation.Data;
+using Infrastructure.Foundation.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Foundation.Repositories;
@@ -14,9 +15,16 @@ public class RoomTypeRepository : IRoomTypeRepository
         _dbContext = dbContext;
     }
 
-    public async Task<IReadOnlyList<RoomType>> GetByProperty( Guid propertyId, CancellationToken ct = default )
+    public async Task<IReadOnlyList<RoomType>> GetByProperty(
+        Guid propertyId,
+        int? guests = null,
+        decimal? maxPrice = null,
+        CancellationToken ct = default )
     {
-        return await _dbContext.RoomTypes.Where( rt => rt.PropertyId == propertyId ).ToListAsync( ct );
+        IQueryable<RoomType> query = _dbContext.RoomTypes
+            .Where( rt => rt.PropertyId == propertyId ).RoomTypeFilter( guests, maxPrice );
+
+        return await query.ToListAsync( ct );
     }
 
     public async Task<RoomType?> GetById( Guid id, CancellationToken ct = default )

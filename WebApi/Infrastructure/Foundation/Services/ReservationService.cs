@@ -114,34 +114,14 @@ public class ReservationService : IReservationService
 
     public async Task<IReadOnlyList<SearchResultServiceDto>> SearchAsync( SearchFilterServiceDto filter, CancellationToken ct = default )
     {
-        IReadOnlyList<Property> allProperties = await _propertyRepository.GetAll( ct );
-
-        if ( !string.IsNullOrWhiteSpace( filter.City ) )
-        {
-            allProperties = allProperties
-                .Where( p => p.City.Contains( filter.City, StringComparison.OrdinalIgnoreCase ) )
-                .ToList();
-        }
+        IReadOnlyList<Property> allProperties = await _propertyRepository.GetAll( filter.City, ct );
 
         List<SearchResultServiceDto> results = new List<SearchResultServiceDto>();
 
         foreach ( Property property in allProperties )
         {
-            IReadOnlyList<RoomType> roomTypes = await _roomTypeRepository.GetByProperty( property.Id, ct );
-
-            if ( filter.Guests.HasValue )
-            {
-                roomTypes = roomTypes
-                    .Where( r => r.MinPersonCount <= filter.Guests && r.MaxPersonCount >= filter.Guests )
-                    .ToList();
-            }
-
-            if ( filter.MaxPrice.HasValue )
-            {
-                roomTypes = roomTypes
-                    .Where( r => r.DailyPrice <= filter.MaxPrice )
-                    .ToList();
-            }
+            IReadOnlyList<RoomType> roomTypes = await _roomTypeRepository
+                .GetByProperty(property.Id, filter.Guests, filter.MaxPrice, ct );
 
             foreach ( RoomType roomType in roomTypes )
             {
