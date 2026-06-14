@@ -1,5 +1,4 @@
 using Domain.Dtos.Reservation;
-using Domain.Dtos.Search;
 using Domain.Entities;
 using Domain.Exceptions;
 using Domain.Interfaces.Repositories;
@@ -110,45 +109,5 @@ public class ReservationService : IReservationService
         existing.IsCanceled = true;
 
         await _reservationRepository.UpdateAsync( existing, ct );
-    }
-
-    public async Task<IReadOnlyList<SearchResultServiceDto>> SearchAsync( SearchFilterServiceDto filter, CancellationToken ct = default )
-    {
-        IReadOnlyList<Property> allProperties = await _propertyRepository.GetAllAsync( filter.City, ct );
-
-        List<SearchResultServiceDto> results = [];
-
-        foreach ( Property property in allProperties )
-        {
-            IReadOnlyList<RoomType> roomTypes = await _roomTypeRepository
-                .GetByPropertyAsync(property.Id, filter.Guests, filter.MaxPrice, ct );
-
-            foreach ( RoomType roomType in roomTypes )
-            {
-                if ( filter.ArrivalDate.HasValue && filter.DepartureDate.HasValue )
-                {
-                    bool hasOverlap = await _reservationRepository.HasOverlapAsync(
-                        roomType.Id,
-                        filter.ArrivalDate.Value,
-                        filter.DepartureDate.Value,
-                        ct );
-
-                    if ( hasOverlap )
-                    {
-                        continue;
-                    }
-                }
-
-                results.Add( new SearchResultServiceDto
-                {
-                    Property = property,
-                    RoomType = roomType,
-                    DailyPrice = roomType.DailyPrice,
-                    Currency = roomType.Currency
-                } );
-            }
-        }
-
-        return results;
     }
 }

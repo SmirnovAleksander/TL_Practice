@@ -1,4 +1,3 @@
-
 using Domain.Dtos.Property;
 using Domain.Entities;
 using Domain.Exceptions;
@@ -18,7 +17,7 @@ public class PropertyService : IPropertyService
 
     public async Task<IReadOnlyList<Property>> GetAllAsync( CancellationToken ct = default )
     {
-        return await _propertyRepository.GetAllAsync( null, ct );
+        return await _propertyRepository.GetAllAsync( ct: ct );
     }
 
     public async Task<Property> GetByIdAsync( Guid id, CancellationToken ct = default )

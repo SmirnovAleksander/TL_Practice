@@ -11,11 +11,11 @@ namespace Api.Controllers;
 [ApiController]
 public class SearchController : ControllerBase
 {
-    private readonly IReservationService _reservationService;
+    private readonly ISearchService _searchService;
 
-    public SearchController( IReservationService reservationService )
+    public SearchController( ISearchService searchService )
     {
-        _reservationService = reservationService;
+        _searchService = searchService;
     }
 
     [HttpGet]
@@ -36,7 +36,7 @@ public class SearchController : ControllerBase
             MaxPrice = maxPrice
         };
 
-        IReadOnlyList<SearchResultServiceDto> results = await _reservationService.SearchAsync( filter, ct );
+        IReadOnlyList<SearchResultServiceDto> results = await _searchService.SearchAsync( filter, ct );
         List<SearchResultDto> searchResults = results.Select( r => r.ToSearchResultDto() ).ToList();
 
         return Ok( searchResults );

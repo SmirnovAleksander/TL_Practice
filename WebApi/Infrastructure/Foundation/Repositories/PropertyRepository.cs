@@ -17,14 +17,14 @@ public class PropertyRepository : IPropertyRepository
 
     public async Task<IReadOnlyList<Property>> GetAllAsync( string? city = null, CancellationToken ct = default )
     {
-        IQueryable<Property> query = _dbContext.Properties.AsQueryable().PropertyFilter( city );
-
-        return await query.ToListAsync( ct );
+        return await _dbContext.Properties
+            .ApplyFilter( city )
+            .ToListAsync( ct );
     }
 
     public async Task<Property?> GetByIdAsync( Guid id, CancellationToken ct = default )
     {
-        return await _dbContext.Properties.FindAsync( id, ct );
+        return await _dbContext.Properties.FirstOrDefaultAsync( p => p.Id == id, ct );
     }
 
     public async Task<Property> CreateAsync( Property property, CancellationToken ct = default )

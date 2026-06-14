@@ -31,14 +31,14 @@ public class ReservationRepository : IReservationRepository
             GuestName = guestName
         };
 
-        IQueryable<Reservation> query = _dbContext.Reservations.AsQueryable().ReservationFilter( filter );
-
-        return await query.ToListAsync( ct );
+        return await _dbContext.Reservations
+            .ApplyFilter( filter )
+            .ToListAsync( ct );
     }
 
     public async Task<Reservation?> GetByIdAsync( Guid id, CancellationToken ct = default )
     {
-        return await _dbContext.Reservations.FindAsync( id, ct );
+        return await _dbContext.Reservations.FirstOrDefaultAsync( r => r.Id == id, ct );
     }
 
     public async Task<Reservation> CreateAsync( Reservation reservation, CancellationToken ct = default )

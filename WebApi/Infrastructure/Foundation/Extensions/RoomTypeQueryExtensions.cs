@@ -4,7 +4,7 @@ namespace Infrastructure.Foundation.Extensions;
 
 public static class RoomTypeQueryExtensions
 {
-    public static IQueryable<RoomType> RoomTypeFilter( this IQueryable<RoomType> query, int? guests, decimal? maxPrice )
+    public static IQueryable<RoomType> ApplyFilter( this IQueryable<RoomType> query, int? guests, decimal? maxPrice )
     {
         if ( guests.HasValue )
         {

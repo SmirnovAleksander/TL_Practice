@@ -5,7 +5,7 @@ namespace Infrastructure.Foundation.Extensions;
 
 public static class ReservationQueryExtensions
 {
-    public static IQueryable<Reservation> ReservationFilter( this IQueryable<Reservation> query, ReservationFilterServiceDto filter )
+    public static IQueryable<Reservation> ApplyFilter( this IQueryable<Reservation> query, ReservationFilterServiceDto filter )
     {
         if ( filter.PropertyId.HasValue )
         {

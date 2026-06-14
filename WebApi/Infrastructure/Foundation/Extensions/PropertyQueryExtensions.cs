@@ -4,7 +4,7 @@ namespace Infrastructure.Foundation.Extensions;
 
 public static class PropertyQueryExtensions
 {
-    public static IQueryable<Property> PropertyFilter( this IQueryable<Property> query, string? city )
+    public static IQueryable<Property> ApplyFilter( this IQueryable<Property> query, string? city )
     {
         if ( !string.IsNullOrWhiteSpace( city ) )
         {

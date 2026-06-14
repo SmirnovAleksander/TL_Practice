@@ -21,15 +21,15 @@ public class RoomTypeRepository : IRoomTypeRepository
         decimal? maxPrice = null,
         CancellationToken ct = default )
     {
-        IQueryable<RoomType> query = _dbContext.RoomTypes
-            .Where( rt => rt.PropertyId == propertyId ).RoomTypeFilter( guests, maxPrice );
-
-        return await query.ToListAsync( ct );
+        return await _dbContext.RoomTypes
+            .Where( rt => rt.PropertyId == propertyId )
+            .ApplyFilter( guests, maxPrice )
+            .ToListAsync( ct );
     }
 
     public async Task<RoomType?> GetByIdAsync( Guid id, CancellationToken ct = default )
     {
-        return await _dbContext.RoomTypes.FindAsync( id, ct );
+        return await _dbContext.RoomTypes.FirstOrDefaultAsync( r => r.Id == id, ct );
     }
 
     public async Task<RoomType> CreateAsync( RoomType roomType, CancellationToken ct = default )
