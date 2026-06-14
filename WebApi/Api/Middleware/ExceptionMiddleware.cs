@@ -1,4 +1,3 @@
-using System.Text.Json;
 using Domain.Exceptions;
 
 namespace Api.Middleware;
@@ -35,7 +34,6 @@ public class ExceptionMiddleware
     private static async Task WriteErrorResponse(HttpContext context, int statusCode, string message)
     {
         context.Response.StatusCode = statusCode;
-        context.Response.ContentType = "application/json";
-        await context.Response.WriteAsync(JsonSerializer.Serialize(new { error = message }));
+        await context.Response.WriteAsJsonAsync(new { error = message });
     }
 }

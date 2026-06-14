@@ -18,12 +18,12 @@ public class PropertyService : IPropertyService
 
     public async Task<IReadOnlyList<Property>> GetAllAsync( CancellationToken ct = default )
     {
-        return await _propertyRepository.GetAll( null, ct );
+        return await _propertyRepository.GetAllAsync( null, ct );
     }
 
     public async Task<Property> GetByIdAsync( Guid id, CancellationToken ct = default )
     {
-        Property? property = await _propertyRepository.GetById( id, ct );
+        Property? property = await _propertyRepository.GetByIdAsync( id, ct );
         if ( property == null )
         {
             throw new NotFoundException( "Property", id );
@@ -54,12 +54,12 @@ public class PropertyService : IPropertyService
             Longitude = dto.Longitude
         };
 
-        return await _propertyRepository.Create( property, ct );
+        return await _propertyRepository.CreateAsync( property, ct );
     }
 
     public async Task<Property> UpdateAsync( UpdatePropertyServiceDto dto, CancellationToken ct = default )
     {
-        Property? existing = await _propertyRepository.GetById( dto.Id, ct );
+        Property? existing = await _propertyRepository.GetByIdAsync( dto.Id, ct );
         if ( existing == null )
         {
             throw new NotFoundException( "Property", dto.Id );
@@ -77,17 +77,17 @@ public class PropertyService : IPropertyService
         existing.Latitude = dto.Latitude;
         existing.Longitude = dto.Longitude;
 
-        return await _propertyRepository.Update( existing, ct );
+        return await _propertyRepository.UpdateAsync( existing, ct );
     }
 
     public async Task DeleteAsync( Guid id, CancellationToken ct = default )
     {
-        Property? existing = await _propertyRepository.GetById( id, ct );
+        Property? existing = await _propertyRepository.GetByIdAsync( id, ct );
         if ( existing == null )
         {
             throw new NotFoundException( "Property", id );
         }
 
-        await _propertyRepository.Delete( existing, ct );
+        await _propertyRepository.DeleteAsync( existing, ct );
     }
 }

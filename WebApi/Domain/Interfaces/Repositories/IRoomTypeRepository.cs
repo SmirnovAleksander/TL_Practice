@@ -4,9 +4,9 @@ namespace Domain.Interfaces.Repositories;
 
 public interface IRoomTypeRepository
 {
-    Task<IReadOnlyList<RoomType>> GetByProperty( Guid propertyId, int? guests = null, decimal? maxPrice = null, CancellationToken ct = default );
-    Task<RoomType?> GetById( Guid id, CancellationToken ct = default );
-    Task<RoomType> Create( RoomType roomType, CancellationToken ct = default );
-    Task<RoomType> Update( RoomType roomType, CancellationToken ct = default );
-    Task Delete( RoomType roomType, CancellationToken ct = default );
+    Task<IReadOnlyList<RoomType>> GetByPropertyAsync( Guid propertyId, int? guests = null, decimal? maxPrice = null, CancellationToken ct = default );
+    Task<RoomType?> GetByIdAsync( Guid id, CancellationToken ct = default );
+    Task<RoomType> CreateAsync( RoomType roomType, CancellationToken ct = default );
+    Task<RoomType> UpdateAsync( RoomType roomType, CancellationToken ct = default );
+    Task DeleteAsync( RoomType roomType, CancellationToken ct = default );
 }

@@ -4,16 +4,16 @@ namespace Domain.Interfaces.Repositories;
 
 public interface IReservationRepository
 {
-    Task<IReadOnlyList<Reservation>> GetAll(
+    Task<IReadOnlyList<Reservation>> GetAllAsync(
         Guid? propertyId,
         DateOnly? arrivalDate,
         DateOnly? departureDate,
         string? guestName,
         CancellationToken ct = default );
-    Task<Reservation?> GetById( Guid id, CancellationToken ct = default );
-    Task<Reservation> Create( Reservation reservation, CancellationToken ct = default );
-    Task<Reservation> Update( Reservation reservation, CancellationToken ct = default );
-    Task<bool> HasOverlap(
+    Task<Reservation?> GetByIdAsync( Guid id, CancellationToken ct = default );
+    Task<Reservation> CreateAsync( Reservation reservation, CancellationToken ct = default );
+    Task<Reservation> UpdateAsync( Reservation reservation, CancellationToken ct = default );
+    Task<bool> HasOverlapAsync(
         Guid roomTypeId,
         DateOnly arrivalDate,
         DateOnly departureDate,

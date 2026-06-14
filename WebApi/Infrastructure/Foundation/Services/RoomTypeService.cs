@@ -19,18 +19,18 @@ public class RoomTypeService : IRoomTypeService
 
     public async Task<IReadOnlyList<RoomType>> GetByPropertyAsync( Guid propertyId, CancellationToken ct = default )
     {
-        Property? property = await _propertyRepository.GetById( propertyId, ct );
+        Property? property = await _propertyRepository.GetByIdAsync( propertyId, ct );
         if ( property == null )
         {
             throw new NotFoundException( "Property", propertyId );
         }
 
-        return await _roomTypeRepository.GetByProperty( propertyId, null, null, ct );
+        return await _roomTypeRepository.GetByPropertyAsync( propertyId, null, null, ct );
     }
 
     public async Task<RoomType> GetByIdAsync( Guid id, CancellationToken ct = default )
     {
-        RoomType? roomType = await _roomTypeRepository.GetById( id, ct );
+        RoomType? roomType = await _roomTypeRepository.GetByIdAsync( id, ct );
         if ( roomType == null )
         {
             throw new NotFoundException( "RoomType", id );
@@ -41,7 +41,7 @@ public class RoomTypeService : IRoomTypeService
 
     public async Task<RoomType> CreateAsync( CreateRoomTypeServiceDto dto, CancellationToken ct = default )
     {
-        Property? property = await _propertyRepository.GetById( dto.PropertyId, ct );
+        Property? property = await _propertyRepository.GetByIdAsync( dto.PropertyId, ct );
         if ( property == null )
         {
             throw new NotFoundException( "Property", dto.PropertyId );
@@ -79,12 +79,12 @@ public class RoomTypeService : IRoomTypeService
             Amenities = dto.Amenities
         };
 
-        return await _roomTypeRepository.Create( roomType, ct );
+        return await _roomTypeRepository.CreateAsync( roomType, ct );
     }
 
     public async Task<RoomType> UpdateAsync( UpdateRoomTypeServiceDto dto, CancellationToken ct = default )
     {
-        RoomType? existing = await _roomTypeRepository.GetById( dto.Id, ct );
+        RoomType? existing = await _roomTypeRepository.GetByIdAsync( dto.Id, ct );
         if ( existing == null )
         {
             throw new NotFoundException( "RoomType", dto.Id );
@@ -108,17 +108,17 @@ public class RoomTypeService : IRoomTypeService
         existing.Services = dto.Services;
         existing.Amenities = dto.Amenities;
 
-        return await _roomTypeRepository.Update( existing, ct );
+        return await _roomTypeRepository.UpdateAsync( existing, ct );
     }
 
     public async Task DeleteAsync( Guid id, CancellationToken ct = default )
     {
-        RoomType? existing = await _roomTypeRepository.GetById( id, ct );
+        RoomType? existing = await _roomTypeRepository.GetByIdAsync( id, ct );
         if ( existing == null )
         {
             throw new NotFoundException( "RoomType", id );
         }
 
-        await _roomTypeRepository.Delete( existing, ct );
+        await _roomTypeRepository.DeleteAsync( existing, ct );
     }
 }

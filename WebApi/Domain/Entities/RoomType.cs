@@ -11,6 +11,6 @@ public class RoomType
     public Currency Currency { get; set; }
     public int MinPersonCount { get; set; }
     public int MaxPersonCount { get; set; }
-    public List<string> Services { get; set; } = new List<string>();
-    public List<string> Amenities { get; set; } = new List<string>();
+    public List<string> Services { get; set; } = [];
+    public List<string> Amenities { get; set; } = [];
 }

@@ -25,7 +25,7 @@ public class ReservationService : IReservationService
 
     public async Task<IReadOnlyList<Reservation>> GetAllAsync( ReservationFilterServiceDto filter, CancellationToken ct = default )
     {
-        return await _reservationRepository.GetAll(
+        return await _reservationRepository.GetAllAsync(
             filter.PropertyId,
             filter.ArrivalDate,
             filter.DepartureDate,
@@ -35,7 +35,7 @@ public class ReservationService : IReservationService
 
     public async Task<Reservation> GetByIdAsync( Guid id, CancellationToken ct = default )
     {
-        Reservation? reservation = await _reservationRepository.GetById( id, ct );
+        Reservation? reservation = await _reservationRepository.GetByIdAsync( id, ct );
         if ( reservation == null )
         {
             throw new NotFoundException( "Reservation", id );
@@ -46,13 +46,13 @@ public class ReservationService : IReservationService
 
     public async Task<Reservation> CreateAsync( CreateReservationServiceDto dto, CancellationToken ct = default )
     {
-        Property? property = await _propertyRepository.GetById( dto.PropertyId, ct );
+        Property? property = await _propertyRepository.GetByIdAsync( dto.PropertyId, ct );
         if ( property == null )
         {
             throw new NotFoundException( "Property", dto.PropertyId );
         }
 
-        RoomType? roomType = await _roomTypeRepository.GetById( dto.RoomTypeId, ct );
+        RoomType? roomType = await _roomTypeRepository.GetByIdAsync( dto.RoomTypeId, ct );
         if ( roomType == null )
         {
             throw new NotFoundException( "RoomType", dto.RoomTypeId );
@@ -68,7 +68,7 @@ public class ReservationService : IReservationService
             throw new ValidationDomainException( $"Guest count must be between {roomType.MinPersonCount} and {roomType.MaxPersonCount}" );
         }
 
-        bool hasOverlap = await _reservationRepository.HasOverlap(
+        bool hasOverlap = await _reservationRepository.HasOverlapAsync(
             dto.RoomTypeId,
             dto.ArrivalDate,
             dto.DepartureDate,
@@ -96,12 +96,12 @@ public class ReservationService : IReservationService
             IsCanceled = false
         };
 
-        return await _reservationRepository.Create( reservation, ct );
+        return await _reservationRepository.CreateAsync( reservation, ct );
     }
 
     public async Task CancelAsync( Guid id, CancellationToken ct = default )
     {
-        Reservation? existing = await _reservationRepository.GetById( id, ct );
+        Reservation? existing = await _reservationRepository.GetByIdAsync( id, ct );
         if ( existing == null )
         {
             throw new NotFoundException( "Reservation", id );
@@ -109,25 +109,25 @@ public class ReservationService : IReservationService
 
         existing.IsCanceled = true;
 
-        await _reservationRepository.Update( existing, ct );
+        await _reservationRepository.UpdateAsync( existing, ct );
     }
 
     public async Task<IReadOnlyList<SearchResultServiceDto>> SearchAsync( SearchFilterServiceDto filter, CancellationToken ct = default )
     {
-        IReadOnlyList<Property> allProperties = await _propertyRepository.GetAll( filter.City, ct );
+        IReadOnlyList<Property> allProperties = await _propertyRepository.GetAllAsync( filter.City, ct );
 
-        List<SearchResultServiceDto> results = new List<SearchResultServiceDto>();
+        List<SearchResultServiceDto> results = [];
 
         foreach ( Property property in allProperties )
         {
             IReadOnlyList<RoomType> roomTypes = await _roomTypeRepository
-                .GetByProperty(property.Id, filter.Guests, filter.MaxPrice, ct );
+                .GetByPropertyAsync(property.Id, filter.Guests, filter.MaxPrice, ct );
 
             foreach ( RoomType roomType in roomTypes )
             {
                 if ( filter.ArrivalDate.HasValue && filter.DepartureDate.HasValue )
                 {
-                    bool hasOverlap = await _reservationRepository.HasOverlap(
+                    bool hasOverlap = await _reservationRepository.HasOverlapAsync(
                         roomType.Id,
                         filter.ArrivalDate.Value,
                         filter.DepartureDate.Value,

@@ -16,7 +16,7 @@ public class ReservationRepository : IReservationRepository
         _dbContext = dbContext;
     }
 
-    public async Task<IReadOnlyList<Reservation>> GetAll(
+    public async Task<IReadOnlyList<Reservation>> GetAllAsync(
         Guid? propertyId,
         DateOnly? arrivalDate,
         DateOnly? departureDate,
@@ -36,12 +36,12 @@ public class ReservationRepository : IReservationRepository
         return await query.ToListAsync( ct );
     }
 
-    public async Task<Reservation?> GetById( Guid id, CancellationToken ct = default )
+    public async Task<Reservation?> GetByIdAsync( Guid id, CancellationToken ct = default )
     {
         return await _dbContext.Reservations.FindAsync( id, ct );
     }
 
-    public async Task<Reservation> Create( Reservation reservation, CancellationToken ct = default )
+    public async Task<Reservation> CreateAsync( Reservation reservation, CancellationToken ct = default )
     {
         await _dbContext.Reservations.AddAsync( reservation, ct );
         await _dbContext.SaveChangesAsync( ct );
@@ -49,7 +49,7 @@ public class ReservationRepository : IReservationRepository
         return reservation;
     }
 
-    public async Task<Reservation> Update( Reservation reservation, CancellationToken ct = default )
+    public async Task<Reservation> UpdateAsync( Reservation reservation, CancellationToken ct = default )
     {
         _dbContext.Reservations.Update( reservation );
         await _dbContext.SaveChangesAsync( ct );
@@ -57,7 +57,7 @@ public class ReservationRepository : IReservationRepository
         return reservation;
     }
 
-    public async Task<bool> HasOverlap(
+    public async Task<bool> HasOverlapAsync(
         Guid roomTypeId,
         DateOnly arrivalDate,
         DateOnly departureDate,
