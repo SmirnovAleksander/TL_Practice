@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useDataReducer } from "./useDataReducer";
 import type { Currency, PriceChange } from "../models";
 import { fetchCurrencies, fetchPriceChanges } from "../api";
@@ -11,7 +11,7 @@ export const useConverter = () => {
     const [from, setFrom] = useState('');
     const [to, setTo] = useState('');
     const [amount, setAmount] = useState('1');
-    const [result, setResult] = useState('');
+    const [period, setPeriod] = useState(3);
 
     useEffect(() => {
         const load = async () => {
@@ -46,13 +46,12 @@ export const useConverter = () => {
     useEffect(() => {
         if (!from || !to) return;
 
-        const load = async () => {
-            pricesDispatch({ type: 'LOADING' });
+        pricesDispatch({ type: 'LOADING' });
 
-            const oneMinuteMs = 60000;
-            const fromDateTime = new Date(Date.now() - oneMinuteMs).toISOString();
-
+        const fetchData = async () => {
             try {
+                const fromDateTime = new Date(Date.now() - period * 60 * 1000).toISOString()
+
                 const dtos = await fetchPriceChanges(from, to, fromDateTime);
                 pricesDispatch({
                     type: "SUCCESS",
@@ -66,8 +65,14 @@ export const useConverter = () => {
             }
         };
 
-        load();
-    }, [ from, to, pricesDispatch ])
+        fetchData();
+        const interval = setInterval(fetchData, 10000);
+
+        return () => {
+            clearInterval(interval);
+        };
+
+    }, [ from, to, period, pricesDispatch ])
 
     const latestPriceChange = pricesState.data?.[pricesState.data.length - 1];
     const exchangeRate = latestPriceChange?.price ?? 0;
@@ -76,17 +81,12 @@ export const useConverter = () => {
     const fromCurrency = currenciesState.data?.find(c => c.code === from);
     const toCurrency = currenciesState.data?.find(c => c.code === to);
 
-    useEffect(() => {
-        const recalculateResult = (newAmount: string) => {
-            if (exchangeRate && newAmount && !isNaN(Number(newAmount))) {
-                setResult((Number(newAmount) * exchangeRate).toFixed(2))
-            } else {
-                setResult('0');
-            }
-        };
-
-        recalculateResult( amount );
-    }, [ amount, exchangeRate ])
+    const result = useMemo(() => {
+        if (exchangeRate && amount && !isNaN(Number(amount))) {
+            return (Number(amount) * exchangeRate).toFixed(2);
+        }
+        return '0';
+    }, [amount, exchangeRate]);
 
     const findAlternativeCode = (newCode: string) =>
         currenciesState.data?.find((c) => c.code !== newCode)?.code ?? newCode;
@@ -117,8 +117,11 @@ export const useConverter = () => {
         setFrom(to);
         setTo(from);
         setAmount(result);
-        setResult(amount);
     }
+
+    const handlePeriodChange = (newPeriod: number) => {
+        setPeriod(newPeriod);
+    };
 
     return {
         from,
@@ -127,16 +130,17 @@ export const useConverter = () => {
         result,
         exchangeRate,
         rateDate,
+        period,
         fromCurrency,
         toCurrency,
         currenciesCodes,
         currenciesError: currenciesState.error,
         currenciesLoading: currenciesState.isLoading,
-        pricesError: pricesState.error,
-        pricesLoading: pricesState.isLoading,
+        pricesState,
         handleFromChange,
         handleToChange,
         handleAmountChange,
-        handleSwap
+        handleSwap,
+        handlePeriodChange
     };
 }

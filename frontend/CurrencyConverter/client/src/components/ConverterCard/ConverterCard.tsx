@@ -5,6 +5,7 @@ import styles from './ConverterCard.module.scss';
 import { useConverter } from "../../hooks/useConverter";
 import { Toast } from "../Toast";
 import { StatusMessage } from "../StatusMessage";
+import { PriceGraph } from "../PriceGraph/PriceGraph";
 
 export const ConverterCard = () => {
     const {
@@ -14,16 +15,18 @@ export const ConverterCard = () => {
         result,
         exchangeRate,
         rateDate,
+        period,
         fromCurrency,
         toCurrency,
         currenciesCodes,
         currenciesLoading,
         currenciesError,
-        pricesError,
+        pricesState,
         handleFromChange,
         handleToChange,
         handleAmountChange,
-        handleSwap
+        handleSwap,
+        handlePeriodChange,
     } = useConverter();
 
     if (currenciesLoading) {
@@ -52,11 +55,16 @@ export const ConverterCard = () => {
                 handleToChange={handleToChange}
                 handleSwap={handleSwap}
             />
+            <PriceGraph
+                data={pricesState.data}
+                isLoading={pricesState.isLoading}
+                error={pricesState.error}
+            />
             <MoreAboutGroup
                 fromCurrency={fromCurrency}
                 toCurrency={toCurrency}
             />
-            <Toast message={pricesError} />
+            {/* <Toast message={pricesError} /> */}
         </div>
     );
 };
