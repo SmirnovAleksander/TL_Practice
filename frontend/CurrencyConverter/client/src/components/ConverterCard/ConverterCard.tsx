@@ -6,6 +6,7 @@ import { useConverter } from "../../hooks/useConverter";
 import { Toast } from "../Toast";
 import { StatusMessage } from "../StatusMessage";
 import { PriceGraph } from "../PriceGraph/PriceGraph";
+import { PeriodSwitcher } from "../PeriodSwitcher";
 
 export const ConverterCard = () => {
     const {
@@ -59,6 +60,10 @@ export const ConverterCard = () => {
                 data={pricesState.data}
                 isLoading={pricesState.isLoading}
                 error={pricesState.error}
+            />
+            <PeriodSwitcher
+                period={period}
+                handlePeriodChange={handlePeriodChange}
             />
             <MoreAboutGroup
                 fromCurrency={fromCurrency}

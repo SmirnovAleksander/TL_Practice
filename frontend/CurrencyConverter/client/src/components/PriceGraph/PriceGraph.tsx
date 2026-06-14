@@ -12,7 +12,7 @@ type PriceGraphProps = {
 export const PriceGraph = ({ data, isLoading, error }: PriceGraphProps) => {
     const formatDateTime = (iso: string) => {
         const dt = new Date(iso);
-        return dt.toLocaleTimeString();
+        return dt.toLocaleTimeString('ru-RU', { minute: '2-digit', second: '2-digit' });
     };
 
     if (isLoading && !data) {
