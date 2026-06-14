@@ -1,11 +1,11 @@
-export type Currency = {
+export type CurrencyDto = {
     code: string;
-    description: string;
     name: string;
+    description: string;
     symbol: string;
 };
 
-export type PriceChange = {
+export type PriceChangeDto = {
     purchasedCurrencyCode: string;
     paymentCurrencyCode: string;
     price: number;

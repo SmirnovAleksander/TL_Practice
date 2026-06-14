@@ -13,7 +13,7 @@ export const MoreAboutGroup = ({
     fromCurrency,
     toCurrency
 }: MoreAboutGroupProps) => {
-    const [isOpen, setIsOpen] = useState<boolean>(true);
+    const [isOpen, setIsOpen] = useState<boolean>(false);
     const label = (fromCurrency && toCurrency) ? `${fromCurrency.code}/${toCurrency.code}: about` : ''
     
     return (
