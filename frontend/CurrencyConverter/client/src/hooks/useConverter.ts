@@ -19,10 +19,17 @@ export const useConverter = () => {
 
             try {
                 const dtos = await fetchCurrencies();
+                const currencies = dtos.map(mapCurrencyDtoToCurrency);
+
                 currenciesDispatch({
                     type: "SUCCESS",
-                    payload: dtos.map(mapCurrencyDtoToCurrency),
+                    payload: currencies,
                 });
+
+                if (currencies.length >= 2) {
+                    setFrom(currencies[0].code);
+                    setTo(currencies[1].code);
+                }
             } catch (e) {
                 currenciesDispatch({
                     type: 'ERROR',
@@ -32,14 +39,7 @@ export const useConverter = () => {
         };
 
         load();
-    }, [])
-
-    useEffect(() => {
-        if (currenciesState.data && currenciesState.data.length >= 2) {
-            setFrom(currenciesState.data[0].code);
-            setTo(currenciesState.data[1].code);
-        }
-    }, [currenciesState.data]);
+    }, [currenciesDispatch])
 
     const currenciesCodes = currenciesState.data?.map(c => c.code) ?? [];
 
@@ -49,8 +49,8 @@ export const useConverter = () => {
         const load = async () => {
             pricesDispatch({ type: 'LOADING' });
 
-            const fromDateTime = new Date(Date.now() - 1 * 60 * 1000).toISOString();
-            console.log(fromDateTime);
+            const oneMinuteMs = 60000;
+            const fromDateTime = new Date(Date.now() - oneMinuteMs).toISOString();
 
             try {
                 const dtos = await fetchPriceChanges(from, to, fromDateTime);
@@ -67,7 +67,7 @@ export const useConverter = () => {
         };
 
         load();
-    }, [ from, to ])
+    }, [ from, to, pricesDispatch ])
 
     const latestPriceChange = pricesState.data?.[pricesState.data.length - 1];
     const exchangeRate = latestPriceChange?.price ?? 0;
@@ -76,15 +76,15 @@ export const useConverter = () => {
     const fromCurrency = currenciesState.data?.find(c => c.code === from);
     const toCurrency = currenciesState.data?.find(c => c.code === to);
 
-    const recalculateResult = (newAmount: string) => {
-        if (exchangeRate && newAmount && !isNaN(Number(newAmount))) {
-            setResult((Number(newAmount) * exchangeRate).toFixed(2))
-        } else {
-            setResult('0');
-        }
-    };
-
     useEffect(() => {
+        const recalculateResult = (newAmount: string) => {
+            if (exchangeRate && newAmount && !isNaN(Number(newAmount))) {
+                setResult((Number(newAmount) * exchangeRate).toFixed(2))
+            } else {
+                setResult('0');
+            }
+        };
+
         recalculateResult( amount );
     }, [ amount, exchangeRate ])
 

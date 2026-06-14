@@ -6,12 +6,12 @@ export type DataState<T> = {
     error: string | null;
 };
 
-type DataAction<T> =
+export type DataAction<T> =
     | { type: 'LOADING' }
     | { type: 'SUCCESS'; payload: T }
     | { type: 'ERROR'; payload: string };
 
-const createDataReducer = <T>() => (
+export const createDataReducer = <T>() => (
     state: DataState<T>,
     action: DataAction<T>,
 ): DataState<T> => {
