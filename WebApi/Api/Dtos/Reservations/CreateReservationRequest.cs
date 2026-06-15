@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Api.Dtos.Reservation;
+namespace Api.Dto.Reservation;
 
-public class CreateReservationDto
+public class CreateReservationRequest
 {
     [Required( ErrorMessage = "PropertyId is required" )]
     public Guid PropertyId { get; init; }

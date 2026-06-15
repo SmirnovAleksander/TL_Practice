@@ -1,8 +1,8 @@
-using Api.Dtos.Reservation;
+using Api.Dto.Reservation;
 using Api.Mappers.Entity;
-using Domain.Dtos.Reservation;
-using Domain.Dtos.Search;
-using Domain.Interfaces.Services;
+using Infrastructure.Dto.Reservation;
+using Infrastructure.Dto.Search;
+using Infrastructure.Interfaces.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
@@ -27,7 +27,7 @@ public class SearchController : ControllerBase
         [FromQuery] decimal? maxPrice,
         CancellationToken ct )
     {
-        SearchFilterServiceDto filter = new SearchFilterServiceDto
+        SearchFilterDto filter = new SearchFilterDto
         {
             City = city,
             ArrivalDate = arrivalDate,
@@ -36,8 +36,8 @@ public class SearchController : ControllerBase
             MaxPrice = maxPrice
         };
 
-        IReadOnlyList<SearchResultServiceDto> results = await _searchService.SearchAsync( filter, ct );
-        List<SearchResultDto> searchResults = results.Select( r => r.ToSearchResultDto() ).ToList();
+        IReadOnlyList<SearchResultDto> results = await _searchService.SearchAsync( filter, ct );
+        List<SearchResultResponse> searchResults = results.Select( r => r.ToSearchResultDto() ).ToList();
 
         return Ok( searchResults );
     }

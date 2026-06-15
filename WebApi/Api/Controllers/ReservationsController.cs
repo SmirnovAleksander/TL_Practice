@@ -1,9 +1,9 @@
-using Api.Dtos.Reservation;
+using Api.Dto.Reservation;
 using Api.Mappers.Entity;
 using Api.Mappers.Service;
-using Domain.Dtos.Reservation;
+using Infrastructure.Dto.Reservation;
 using Domain.Entities;
-using Domain.Interfaces.Services;
+using Infrastructure.Interfaces.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
@@ -27,7 +27,7 @@ public class ReservationsController : ControllerBase
         [FromQuery] string? guestName,
          CancellationToken ct )
     {
-        ReservationFilterServiceDto filter = new ReservationFilterServiceDto
+        ReservationFilterDto filter = new ReservationFilterDto
         {
             PropertyId = propertyId,
             ArrivalDate = arrivalDate,
@@ -36,7 +36,7 @@ public class ReservationsController : ControllerBase
         };
 
         IReadOnlyList<Reservation> reservations = await _reservationService.GetAllAsync( filter, ct );
-        List<ReservationDto> reservationDtos = reservations.Select( r => r.ToReservationDto() ).ToList();
+        List<ReservationResponse> reservationDtos = reservations.Select( r => r.ToReservationDto() ).ToList();
 
         return Ok( reservationDtos );
     }
@@ -50,9 +50,9 @@ public class ReservationsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create( [FromBody] CreateReservationDto createDto, CancellationToken ct )
+    public async Task<IActionResult> Create( [FromBody] CreateReservationRequest request, CancellationToken ct )
     {
-        Reservation created = await _reservationService.CreateAsync( createDto.ToServiceDto(), ct );
+        Reservation created = await _reservationService.CreateAsync( request.ToDto(), ct );
 
         return CreatedAtAction( nameof( GetById ), new { id = created.Id }, created.ToReservationDto() );
     }

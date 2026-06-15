@@ -1,9 +1,9 @@
-using Api.Dtos.Property;
-using Api.Dtos.RoomType;
+using Api.Dto.Property;
+using Api.Dto.RoomType;
 using Api.Mappers.Entity;
 using Api.Mappers.Service;
 using Domain.Entities;
-using Domain.Interfaces.Services;
+using Infrastructure.Interfaces.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
@@ -25,7 +25,7 @@ public class PropertiesController : ControllerBase
     public async Task<IActionResult> GetAll( CancellationToken ct )
     {
         IReadOnlyList<Property> properties = await _propertyService.GetAllAsync( ct );
-        List<PropertyDto> propertyDtos = properties.Select( p => p.ToPropertyDto() ).ToList();
+        List<PropertyResponse> propertyDtos = properties.Select( p => p.ToPropertyDto() ).ToList();
 
         return Ok( propertyDtos );
     }
@@ -42,23 +42,23 @@ public class PropertiesController : ControllerBase
     public async Task<IActionResult> GetRoomTypes( [FromRoute] Guid propertyId, CancellationToken ct )
     {
         IReadOnlyList<RoomType> roomTypes = await _roomTypeService.GetByPropertyAsync( propertyId, ct );
-        List<RoomTypeDto> roomTypeDtos = roomTypes.Select( r => r.ToRoomTypeDto() ).ToList();
+        List<RoomTypeResponse> roomTypeDtos = roomTypes.Select( r => r.ToRoomTypeDto() ).ToList();
 
         return Ok( roomTypeDtos );
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create( [FromBody] CreatePropertyDto createDto, CancellationToken ct )
+    public async Task<IActionResult> Create( [FromBody] CreatePropertyRequest createDto, CancellationToken ct )
     {
-        Property property = await _propertyService.CreateAsync( createDto.ToServiceDto(), ct );
+        Property property = await _propertyService.CreateAsync( createDto.ToDto(), ct );
 
         return CreatedAtAction( nameof( GetById ), new { id = property.Id }, property.ToPropertyDto() );
     }
 
     [HttpPut( "{id:guid}" )]
-    public async Task<IActionResult> Update( [FromRoute] Guid id, [FromBody] UpdatePropertyDto updateDto, CancellationToken ct )
+    public async Task<IActionResult> Update( [FromRoute] Guid id, [FromBody] UpdatePropertyRequest updateDto, CancellationToken ct )
     {
-        Property updated = await _propertyService.UpdateAsync( updateDto.ToServiceDto( id ), ct );
+        Property updated = await _propertyService.UpdateAsync( updateDto.ToDto( id ), ct );
 
         return Ok( updated.ToPropertyDto() );
     }

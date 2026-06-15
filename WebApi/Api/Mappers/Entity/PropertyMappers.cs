@@ -1,13 +1,13 @@
-using Api.Dtos.Property;
+using Api.Dto.Property;
 using Domain.Entities;
 
 namespace Api.Mappers.Entity;
 
 public static class PropertyMappers
 {
-    public static PropertyDto ToPropertyDto( this Property property )
+    public static PropertyResponse ToPropertyDto( this Property property )
     {
-        return new PropertyDto
+        return new PropertyResponse
         {
             Id = property.Id,
             Name = property.Name,

@@ -1,15 +1,15 @@
-using Api.Dtos.RoomType;
-using Domain.Dtos.RoomType;
+using Api.Dto.RoomType;
+using Infrastructure.Dto.RoomType;
 
 namespace Api.Mappers.Service;
 
 public static class RoomTypeServiceMappers
 {
-    public static CreateRoomTypeServiceDto ToServiceDto( this CreateRoomTypeDto dto, Guid propertyId )
+    public static CreateRoomTypeDto ToDto( this CreateRoomTypeRequest dto )
     {
-        return new CreateRoomTypeServiceDto
+        return new CreateRoomTypeDto
         {
-            PropertyId = propertyId,
+            PropertyId = dto.PropertyId,
             Name = dto.Name,
             DailyPrice = dto.DailyPrice,
             Currency = dto.Currency,
@@ -20,9 +20,9 @@ public static class RoomTypeServiceMappers
         };
     }
 
-    public static UpdateRoomTypeServiceDto ToServiceDto( this UpdateRoomTypeDto dto, Guid id )
+    public static UpdateRoomTypeDto ToDto( this UpdateRoomTypeRequest dto, Guid id )
     {
-        return new UpdateRoomTypeServiceDto
+        return new UpdateRoomTypeDto
         {
             Id = id,
             Name = dto.Name,

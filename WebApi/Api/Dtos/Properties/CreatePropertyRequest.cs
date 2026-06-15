@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Api.Dtos.Property;
+namespace Api.Dto.Property;
 
-public class UpdatePropertyDto
+public class CreatePropertyRequest
 {
     [Required( ErrorMessage = "Name is required" )]
     [MaxLength( 200, ErrorMessage = "Name can not be over 200 symbols" )]

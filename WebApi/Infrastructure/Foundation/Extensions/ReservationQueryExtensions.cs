@@ -1,11 +1,11 @@
-using Domain.Dtos.Reservation;
+using Infrastructure.Dto.Reservation;
 using Domain.Entities;
 
 namespace Infrastructure.Foundation.Extensions;
 
 public static class ReservationQueryExtensions
 {
-    public static IQueryable<Reservation> ApplyFilter( this IQueryable<Reservation> query, ReservationFilterServiceDto filter )
+    public static IQueryable<Reservation> ApplyFilter( this IQueryable<Reservation> query, ReservationFilterDto filter )
     {
         if ( filter.PropertyId.HasValue )
         {

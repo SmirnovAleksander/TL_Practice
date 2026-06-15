@@ -1,8 +1,8 @@
-using Domain.Dtos.Property;
+using Infrastructure.Dto.Property;
 using Domain.Entities;
 using Domain.Exceptions;
 using Domain.Interfaces.Repositories;
-using Domain.Interfaces.Services;
+using Infrastructure.Interfaces.Services;
 
 namespace Infrastructure.Foundation.Services;
 
@@ -15,33 +15,19 @@ public class PropertyService : IPropertyService
         _propertyRepository = propertyRepository;
     }
 
-    public async Task<IReadOnlyList<Property>> GetAllAsync( CancellationToken ct = default )
+    public async Task<IReadOnlyList<Property>> GetAllAsync( CancellationToken ct )
     {
         return await _propertyRepository.GetAllAsync( ct: ct );
     }
 
-    public async Task<Property> GetByIdAsync( Guid id, CancellationToken ct = default )
+    public async Task<Property> GetByIdAsync( Guid id, CancellationToken ct )
     {
-        Property? property = await _propertyRepository.GetByIdAsync( id, ct );
-        if ( property == null )
-        {
-            throw new NotFoundException( "Property", id );
-        }
-
-        return property;
+        return await GetExistingPropertyAsync( id, ct );
     }
 
-    public async Task<Property> CreateAsync( CreatePropertyServiceDto dto, CancellationToken ct = default )
+    public async Task<Property> CreateAsync( CreatePropertyDto dto, CancellationToken ct )
     {
-        if ( string.IsNullOrWhiteSpace( dto.Name ) )
-        {
-            throw new ValidationDomainException( "Property name is required" );
-        }
-
-        if ( string.IsNullOrWhiteSpace( dto.City ) )
-        {
-            throw new ValidationDomainException( "City is required" );
-        }
+        ValidatePropertyData( dto.Name, dto.City );
 
         Property property = new Property
         {
@@ -56,18 +42,10 @@ public class PropertyService : IPropertyService
         return await _propertyRepository.CreateAsync( property, ct );
     }
 
-    public async Task<Property> UpdateAsync( UpdatePropertyServiceDto dto, CancellationToken ct = default )
+    public async Task<Property> UpdateAsync( UpdatePropertyDto dto, CancellationToken ct )
     {
-        Property? existing = await _propertyRepository.GetByIdAsync( dto.Id, ct );
-        if ( existing == null )
-        {
-            throw new NotFoundException( "Property", dto.Id );
-        }
-
-        if ( string.IsNullOrWhiteSpace( dto.Name ) )
-        {
-            throw new ValidationDomainException( "Property name is required" );
-        }
+        Property existing = await GetExistingPropertyAsync( dto.Id, ct );
+        ValidatePropertyData( dto.Name, dto.City );
 
         existing.Name = dto.Name;
         existing.Country = dto.Country;
@@ -79,14 +57,33 @@ public class PropertyService : IPropertyService
         return await _propertyRepository.UpdateAsync( existing, ct );
     }
 
-    public async Task DeleteAsync( Guid id, CancellationToken ct = default )
+    public async Task DeleteAsync( Guid id, CancellationToken ct )
+    {
+        Property existing = await GetExistingPropertyAsync( id, ct );
+        await _propertyRepository.DeleteAsync( existing, ct );
+    }
+
+    private async Task<Property> GetExistingPropertyAsync( Guid id, CancellationToken ct )
     {
         Property? existing = await _propertyRepository.GetByIdAsync( id, ct );
         if ( existing == null )
         {
-            throw new NotFoundException( "Property", id );
+            throw new NotFoundException( nameof( Property ), id );
         }
 
-        await _propertyRepository.DeleteAsync( existing, ct );
+        return existing;
+    }
+
+    private static void ValidatePropertyData( string name, string city )
+    {
+        if ( string.IsNullOrWhiteSpace( name ) )
+        {
+            throw new ValidationException( "Property name is required" );
+        }
+
+        if ( string.IsNullOrWhiteSpace( city ) )
+        {
+            throw new ValidationException( "City is required" );
+        }
     }
 }

@@ -15,19 +15,19 @@ public class PropertyRepository : IPropertyRepository
         _dbContext = dbContext;
     }
 
-    public async Task<IReadOnlyList<Property>> GetAllAsync( string? city = null, CancellationToken ct = default )
+    public async Task<IReadOnlyList<Property>> GetAllAsync( CancellationToken ct, string? city = null )
     {
         return await _dbContext.Properties
             .ApplyFilter( city )
             .ToListAsync( ct );
     }
 
-    public async Task<Property?> GetByIdAsync( Guid id, CancellationToken ct = default )
+    public async Task<Property?> GetByIdAsync( Guid id, CancellationToken ct )
     {
         return await _dbContext.Properties.FirstOrDefaultAsync( p => p.Id == id, ct );
     }
 
-    public async Task<Property> CreateAsync( Property property, CancellationToken ct = default )
+    public async Task<Property> CreateAsync( Property property, CancellationToken ct )
     {
         await _dbContext.Properties.AddAsync( property, ct );
         await _dbContext.SaveChangesAsync( ct );
@@ -35,7 +35,7 @@ public class PropertyRepository : IPropertyRepository
         return property;
     }
 
-    public async Task<Property> UpdateAsync( Property property, CancellationToken ct = default )
+    public async Task<Property> UpdateAsync( Property property, CancellationToken ct )
     {
         _dbContext.Properties.Update( property );
         await _dbContext.SaveChangesAsync( ct );
@@ -43,7 +43,7 @@ public class PropertyRepository : IPropertyRepository
         return property;
     }
 
-    public async Task DeleteAsync( Property property, CancellationToken ct = default )
+    public async Task DeleteAsync( Property property, CancellationToken ct )
     {
         _dbContext.Properties.Remove( property );
         await _dbContext.SaveChangesAsync( ct );

@@ -1,8 +1,8 @@
-using Domain.Dtos.Reservation;
-using Domain.Dtos.Search;
+using Infrastructure.Dto.Reservation;
+using Infrastructure.Dto.Search;
 using Domain.Entities;
 using Domain.Interfaces.Repositories;
-using Domain.Interfaces.Services;
+using Infrastructure.Interfaces.Services;
 
 namespace Infrastructure.Foundation.Services;
 
@@ -22,16 +22,16 @@ public class SearchService : ISearchService
         _reservationRepository = reservationRepository;
     }
 
-    public async Task<IReadOnlyList<SearchResultServiceDto>> SearchAsync( SearchFilterServiceDto filter, CancellationToken ct = default )
+    public async Task<IReadOnlyList<SearchResultDto>> SearchAsync( SearchFilterDto filter, CancellationToken ct )
     {
-        IReadOnlyList<Property> allProperties = await _propertyRepository.GetAllAsync( filter.City, ct );
+        IReadOnlyList<Property> allProperties = await _propertyRepository.GetAllAsync( ct, filter.City );
 
-        List<SearchResultServiceDto> results = [];
+        List<SearchResultDto> results = [];
 
         foreach ( Property property in allProperties )
         {
             IReadOnlyList<RoomType> roomTypes = await _roomTypeRepository
-                .GetByPropertyAsync( property.Id, filter.Guests, filter.MaxPrice, ct );
+                .GetByPropertyAsync( property.Id, ct, filter.Guests, filter.MaxPrice );
 
             foreach ( RoomType roomType in roomTypes )
             {
@@ -49,7 +49,7 @@ public class SearchService : ISearchService
                     }
                 }
 
-                results.Add( new SearchResultServiceDto
+                results.Add( new SearchResultDto
                 {
                     Property = property,
                     RoomType = roomType,

@@ -1,8 +1,8 @@
 using Domain.Enums;
 
-namespace Api.Dtos.RoomType;
+namespace Api.Dto.RoomType;
 
-public class RoomTypeDto
+public class RoomTypeResponse
 {
     public Guid Id { get; init; }
     public Guid PropertyId { get; init; }

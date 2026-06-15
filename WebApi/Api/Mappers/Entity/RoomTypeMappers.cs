@@ -1,13 +1,13 @@
-using Api.Dtos.RoomType;
+using Api.Dto.RoomType;
 using Domain.Entities;
 
 namespace Api.Mappers.Entity;
 
 public static class RoomTypeMappers
 {
-    public static RoomTypeDto ToRoomTypeDto( this RoomType roomType )
+    public static RoomTypeResponse ToRoomTypeDto( this RoomType roomType )
     {
-        return new RoomTypeDto
+        return new RoomTypeResponse
         {
             Id = roomType.Id,
             PropertyId = roomType.PropertyId,

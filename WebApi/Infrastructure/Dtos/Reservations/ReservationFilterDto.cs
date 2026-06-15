@@ -1,6 +1,6 @@
-namespace Domain.Dtos.Reservation;
+namespace Infrastructure.Dto.Reservation;
 
-public class ReservationFilterServiceDto
+public class ReservationFilterDto
 {
     public Guid? PropertyId { get; init; }
     public DateOnly? ArrivalDate { get; init; }

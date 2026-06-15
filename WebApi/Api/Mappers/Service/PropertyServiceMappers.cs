@@ -1,13 +1,13 @@
-using Api.Dtos.Property;
-using Domain.Dtos.Property;
+using Api.Dto.Property;
+using Infrastructure.Dto.Property;
 
 namespace Api.Mappers.Service;
 
 public static class PropertyServiceMappers
 {
-    public static CreatePropertyServiceDto ToServiceDto( this CreatePropertyDto dto )
+    public static CreatePropertyDto ToDto( this CreatePropertyRequest dto )
     {
-        return new CreatePropertyServiceDto
+        return new CreatePropertyDto
         {
             Name = dto.Name,
             Country = dto.Country,
@@ -18,9 +18,9 @@ public static class PropertyServiceMappers
         };
     }
 
-    public static UpdatePropertyServiceDto ToServiceDto( this UpdatePropertyDto dto, Guid id )
+    public static UpdatePropertyDto ToDto( this UpdatePropertyRequest dto, Guid id )
     {
-        return new UpdatePropertyServiceDto
+        return new UpdatePropertyDto
         {
             Id = id,
             Name = dto.Name,

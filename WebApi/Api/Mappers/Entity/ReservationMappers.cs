@@ -1,13 +1,13 @@
-using Api.Dtos.Reservation;
+using Api.Dto.Reservation;
 using Domain.Entities;
 
 namespace Api.Mappers.Entity;
 
 public static class ReservationMappers
 {
-    public static ReservationDto ToReservationDto( this Reservation reservation )
+    public static ReservationResponse ToReservationDto( this Reservation reservation )
     {
-        return new ReservationDto
+        return new ReservationResponse
         {
             Id = reservation.Id,
             PropertyId = reservation.PropertyId,

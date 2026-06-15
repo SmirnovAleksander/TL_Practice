@@ -1,6 +1,6 @@
-namespace Domain.Dtos.Property;
+namespace Api.Dto.Property;
 
-public class UpdatePropertyServiceDto
+public class PropertyResponse
 {
     public Guid Id { get; init; }
     public string Name { get; init; } = string.Empty;

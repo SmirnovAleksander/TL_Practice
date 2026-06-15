@@ -1,10 +1,13 @@
 using System.ComponentModel.DataAnnotations;
 using Domain.Enums;
 
-namespace Api.Dtos.RoomType;
+namespace Api.Dto.RoomType;
 
-public class CreateRoomTypeDto
+public class CreateRoomTypeRequest
 {
+    [Required( ErrorMessage = "PropertyId is required" )]
+    public Guid PropertyId { get; init; }
+
     [Required( ErrorMessage = "Name is required" )]
     [MaxLength( 100, ErrorMessage = "Name can not be over 100 symbols" )]
     public string Name { get; init; } = string.Empty;

@@ -6,34 +6,34 @@ public class ExceptionMiddleware
 {
     private readonly RequestDelegate _next;
 
-    public ExceptionMiddleware(RequestDelegate next)
+    public ExceptionMiddleware( RequestDelegate next )
     {
         _next = next;
     }
 
-    public async Task InvokeAsync(HttpContext context)
+    public async Task InvokeAsync( HttpContext context )
     {
         try
         {
-            await _next(context);
+            await _next( context );
         }
-        catch (NotFoundException ex)
+        catch ( NotFoundException ex )
         {
-            await WriteErrorResponse(context, 404, ex.Message);
+            await WriteErrorResponse( context, 404, ex.Message );
         }
-        catch (ValidationDomainException ex)
+        catch ( ValidationException ex )
         {
-            await WriteErrorResponse(context, 400, ex.Message);
+            await WriteErrorResponse( context, 400, ex.Message );
         }
-        catch (Exception)
+        catch ( Exception )
         {
-            await WriteErrorResponse(context, 500, "Internal server error");
+            await WriteErrorResponse( context, 500, "Internal server error" );
         }
     }
 
-    private static async Task WriteErrorResponse(HttpContext context, int statusCode, string message)
+    private static async Task WriteErrorResponse( HttpContext context, int statusCode, string message )
     {
         context.Response.StatusCode = statusCode;
-        await context.Response.WriteAsJsonAsync(new { error = message });
+        await context.Response.WriteAsJsonAsync( new { error = message } );
     }
 }

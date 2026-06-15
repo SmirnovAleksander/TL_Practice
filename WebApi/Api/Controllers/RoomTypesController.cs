@@ -1,8 +1,8 @@
-using Api.Dtos.RoomType;
+using Api.Dto.RoomType;
 using Api.Mappers.Entity;
 using Api.Mappers.Service;
 using Domain.Entities;
-using Domain.Interfaces.Services;
+using Infrastructure.Interfaces.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
@@ -26,18 +26,18 @@ public class RoomTypesController : ControllerBase
         return Ok( roomType.ToRoomTypeDto() );
     }
 
-    [HttpPost( "properties/{propertyId:guid}/roomtypes" )]
-    public async Task<IActionResult> Create( [FromRoute] Guid propertyId, [FromBody] CreateRoomTypeDto createDto, CancellationToken ct )
+    [HttpPost]
+    public async Task<IActionResult> Create( [FromBody] CreateRoomTypeRequest request, CancellationToken ct )
     {
-        RoomType created = await _roomTypeService.CreateAsync( createDto.ToServiceDto( propertyId ), ct );
+        RoomType created = await _roomTypeService.CreateAsync( request.ToDto(), ct );
 
         return CreatedAtAction( nameof( GetById ), new { id = created.Id }, created.ToRoomTypeDto() );
     }
 
     [HttpPut( "{id:guid}" )]
-    public async Task<IActionResult> Update( [FromRoute] Guid id, [FromBody] UpdateRoomTypeDto updateDto, CancellationToken ct )
+    public async Task<IActionResult> Update( [FromRoute] Guid id, [FromBody] UpdateRoomTypeRequest request, CancellationToken ct )
     {
-        RoomType updated = await _roomTypeService.UpdateAsync( updateDto.ToServiceDto( id ), ct );
+        RoomType updated = await _roomTypeService.UpdateAsync( request.ToDto( id ), ct );
 
         return Ok( updated.ToRoomTypeDto() );
     }

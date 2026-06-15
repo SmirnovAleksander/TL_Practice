@@ -1,13 +1,13 @@
-using Api.Dtos.Reservation;
-using Domain.Dtos.Search;
+using Api.Dto.Reservation;
+using Infrastructure.Dto.Search;
 
 namespace Api.Mappers.Entity;
 
 public static class SearchResultMappers
 {
-    public static SearchResultDto ToSearchResultDto( this SearchResultServiceDto dto )
+    public static SearchResultResponse ToSearchResultDto( this SearchResultDto dto )
     {
-        return new SearchResultDto
+        return new SearchResultResponse
         {
             Property = dto.Property.ToPropertyDto(),
             RoomType = dto.RoomType.ToRoomTypeDto(),

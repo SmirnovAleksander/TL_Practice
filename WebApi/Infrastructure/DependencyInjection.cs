@@ -1,5 +1,5 @@
 using Domain.Interfaces.Repositories;
-using Domain.Interfaces.Services;
+using Infrastructure.Interfaces.Services;
 using Infrastructure.Foundation.Data;
 using Infrastructure.Foundation.Repositories;
 using Infrastructure.Foundation.Services;

@@ -1,6 +1,6 @@
-namespace Domain.Dtos.Reservation;
+namespace Infrastructure.Dto.Reservation;
 
-public class SearchFilterServiceDto
+public class SearchFilterDto
 {
     public string? City { get; init; }
     public DateOnly? ArrivalDate { get; init; }

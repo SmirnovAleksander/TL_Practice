@@ -17,9 +17,9 @@ public class RoomTypeRepository : IRoomTypeRepository
 
     public async Task<IReadOnlyList<RoomType>> GetByPropertyAsync(
         Guid propertyId,
+        CancellationToken ct,
         int? guests = null,
-        decimal? maxPrice = null,
-        CancellationToken ct = default )
+        decimal? maxPrice = null )
     {
         return await _dbContext.RoomTypes
             .Where( rt => rt.PropertyId == propertyId )
@@ -27,12 +27,12 @@ public class RoomTypeRepository : IRoomTypeRepository
             .ToListAsync( ct );
     }
 
-    public async Task<RoomType?> GetByIdAsync( Guid id, CancellationToken ct = default )
+    public async Task<RoomType?> GetByIdAsync( Guid id, CancellationToken ct )
     {
         return await _dbContext.RoomTypes.FirstOrDefaultAsync( r => r.Id == id, ct );
     }
 
-    public async Task<RoomType> CreateAsync( RoomType roomType, CancellationToken ct = default )
+    public async Task<RoomType> CreateAsync( RoomType roomType, CancellationToken ct )
     {
         await _dbContext.RoomTypes.AddAsync( roomType, ct );
         await _dbContext.SaveChangesAsync( ct );
@@ -40,7 +40,7 @@ public class RoomTypeRepository : IRoomTypeRepository
         return roomType;
     }
 
-    public async Task<RoomType> UpdateAsync( RoomType roomType, CancellationToken ct = default )
+    public async Task<RoomType> UpdateAsync( RoomType roomType, CancellationToken ct )
     {
         _dbContext.RoomTypes.Update( roomType );
         await _dbContext.SaveChangesAsync( ct );
@@ -48,7 +48,7 @@ public class RoomTypeRepository : IRoomTypeRepository
         return roomType;
     }
 
-    public async Task DeleteAsync( RoomType roomType, CancellationToken ct = default )
+    public async Task DeleteAsync( RoomType roomType, CancellationToken ct )
     {
         _dbContext.RoomTypes.Remove( roomType );
         await _dbContext.SaveChangesAsync( ct );

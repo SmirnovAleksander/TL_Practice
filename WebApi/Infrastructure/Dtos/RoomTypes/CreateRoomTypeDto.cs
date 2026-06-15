@@ -1,10 +1,10 @@
 using Domain.Enums;
 
-namespace Domain.Dtos.RoomType;
+namespace Infrastructure.Dto.RoomType;
 
-public class UpdateRoomTypeServiceDto
+public class CreateRoomTypeDto
 {
-    public Guid Id { get; init; }
+    public Guid PropertyId { get; init; }
     public string Name { get; init; } = string.Empty;
     public decimal DailyPrice { get; init; }
     public Currency Currency { get; init; }

@@ -1,13 +1,13 @@
-using Api.Dtos.Reservation;
-using Domain.Dtos.Reservation;
+using Api.Dto.Reservation;
+using Infrastructure.Dto.Reservation;
 
 namespace Api.Mappers.Service;
 
 public static class ReservationServiceMappers
 {
-    public static CreateReservationServiceDto ToServiceDto( this CreateReservationDto dto )
+    public static CreateReservationDto ToDto( this CreateReservationRequest dto )
     {
-        return new CreateReservationServiceDto
+        return new CreateReservationDto
         {
             PropertyId = dto.PropertyId,
             RoomTypeId = dto.RoomTypeId,

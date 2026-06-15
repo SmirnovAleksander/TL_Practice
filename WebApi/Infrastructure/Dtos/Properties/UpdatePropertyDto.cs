@@ -1,7 +1,8 @@
-namespace Domain.Dtos.Property;
+namespace Infrastructure.Dto.Property;
 
-public class CreatePropertyServiceDto
+public class UpdatePropertyDto
 {
+    public Guid Id { get; init; }
     public string Name { get; init; } = string.Empty;
     public string Country { get; init; } = string.Empty;
     public string City { get; init; } = string.Empty;

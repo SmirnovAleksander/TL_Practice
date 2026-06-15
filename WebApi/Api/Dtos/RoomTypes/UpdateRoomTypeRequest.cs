@@ -1,9 +1,9 @@
 using System.ComponentModel.DataAnnotations;
 using Domain.Enums;
 
-namespace Api.Dtos.RoomType;
+namespace Api.Dto.RoomType;
 
-public class UpdateRoomTypeDto
+public class UpdateRoomTypeRequest
 {
     [Required( ErrorMessage = "Name is required" )]
     [MaxLength( 100, ErrorMessage = "Name can not be over 100 symbols" )]

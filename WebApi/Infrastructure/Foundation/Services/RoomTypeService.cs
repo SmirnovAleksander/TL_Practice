@@ -1,8 +1,8 @@
-using Domain.Dtos.RoomType;
+using Infrastructure.Dto.RoomType;
 using Domain.Entities;
 using Domain.Exceptions;
 using Domain.Interfaces.Repositories;
-using Domain.Interfaces.Services;
+using Infrastructure.Interfaces.Services;
 
 namespace Infrastructure.Foundation.Services;
 
@@ -17,55 +17,41 @@ public class RoomTypeService : IRoomTypeService
         _propertyRepository = propertyRepository;
     }
 
-    public async Task<IReadOnlyList<RoomType>> GetByPropertyAsync( Guid propertyId, CancellationToken ct = default )
+    public async Task<IReadOnlyList<RoomType>> GetByPropertyAsync( Guid propertyId, CancellationToken ct )
     {
         Property? property = await _propertyRepository.GetByIdAsync( propertyId, ct );
         if ( property == null )
         {
-            throw new NotFoundException( "Property", propertyId );
+            throw new NotFoundException( nameof( Property ), propertyId );
         }
 
         return await _roomTypeRepository.GetByPropertyAsync( propertyId, guests: null, maxPrice: null, ct: ct );
     }
 
-    public async Task<RoomType> GetByIdAsync( Guid id, CancellationToken ct = default )
+    public async Task<RoomType> GetByIdAsync( Guid id, CancellationToken ct )
     {
         RoomType? roomType = await _roomTypeRepository.GetByIdAsync( id, ct );
         if ( roomType == null )
         {
-            throw new NotFoundException( "RoomType", id );
+            throw new NotFoundException( nameof( RoomType ), id );
         }
 
         return roomType;
     }
 
-    public async Task<RoomType> CreateAsync( CreateRoomTypeServiceDto dto, CancellationToken ct = default )
+    public async Task<RoomType> CreateAsync( CreateRoomTypeDto dto, CancellationToken ct )
     {
         Property? property = await _propertyRepository.GetByIdAsync( dto.PropertyId, ct );
         if ( property == null )
         {
-            throw new NotFoundException( "Property", dto.PropertyId );
+            throw new NotFoundException( nameof( Property ), dto.PropertyId );
         }
 
-        if ( string.IsNullOrWhiteSpace( dto.Name ) )
-        {
-            throw new ValidationDomainException( "RoomType name is required" );
-        }
-
-        if ( dto.DailyPrice <= 0 )
-        {
-            throw new ValidationDomainException( "DailyPrice must be greater than 0" );
-        }
-
-        if ( dto.MinPersonCount <= 0 )
-        {
-            throw new ValidationDomainException( "MinPersonCount must be greater than 0" );
-        }
-
-        if ( dto.MaxPersonCount < dto.MinPersonCount )
-        {
-            throw new ValidationDomainException( "MaxPersonCount must be >= MinPersonCount" );
-        }
+        ValidateRoomTypeData(
+            dto.Name,
+            dto.DailyPrice,
+            dto.MinPersonCount,
+            dto.MaxPersonCount );
 
         RoomType roomType = new RoomType
         {
@@ -82,23 +68,19 @@ public class RoomTypeService : IRoomTypeService
         return await _roomTypeRepository.CreateAsync( roomType, ct );
     }
 
-    public async Task<RoomType> UpdateAsync( UpdateRoomTypeServiceDto dto, CancellationToken ct = default )
+    public async Task<RoomType> UpdateAsync( UpdateRoomTypeDto dto, CancellationToken ct )
     {
         RoomType? existing = await _roomTypeRepository.GetByIdAsync( dto.Id, ct );
         if ( existing == null )
         {
-            throw new NotFoundException( "RoomType", dto.Id );
+            throw new NotFoundException( nameof( RoomType ), dto.Id );
         }
 
-        if ( string.IsNullOrWhiteSpace( dto.Name ) )
-        {
-            throw new ValidationDomainException( "RoomType name is required" );
-        }
-
-        if ( dto.DailyPrice <= 0 )
-        {
-            throw new ValidationDomainException( "DailyPrice must be great than 0" );
-        }
+        ValidateRoomTypeData(
+            dto.Name,
+            dto.DailyPrice,
+            dto.MinPersonCount,
+            dto.MaxPersonCount );
 
         existing.Name = dto.Name;
         existing.DailyPrice = dto.DailyPrice;
@@ -111,14 +93,41 @@ public class RoomTypeService : IRoomTypeService
         return await _roomTypeRepository.UpdateAsync( existing, ct );
     }
 
-    public async Task DeleteAsync( Guid id, CancellationToken ct = default )
+    public async Task DeleteAsync( Guid id, CancellationToken ct )
     {
         RoomType? existing = await _roomTypeRepository.GetByIdAsync( id, ct );
         if ( existing == null )
         {
-            throw new NotFoundException( "RoomType", id );
+            throw new NotFoundException( nameof( RoomType ), id );
         }
 
         await _roomTypeRepository.DeleteAsync( existing, ct );
+    }
+
+    private static void ValidateRoomTypeData(
+        string name,
+        decimal dailyPrice,
+        int minPersonCount,
+        int maxPersonCount )
+    {
+        if ( string.IsNullOrWhiteSpace( name ) )
+        {
+            throw new ValidationException( "RoomType name is required" );
+        }
+
+        if ( dailyPrice <= 0 )
+        {
+            throw new ValidationException( "DailyPrice must be greater than 0" );
+        }
+
+        if ( minPersonCount <= 0 )
+        {
+            throw new ValidationException( "MinPersonCount must be greater than 0" );
+        }
+
+        if ( maxPersonCount < minPersonCount )
+        {
+            throw new ValidationException( "MaxPersonCount must be >= MinPersonCount" );
+        }
     }
 }

@@ -1,4 +1,4 @@
-using Domain.Dtos.Reservation;
+using Infrastructure.Dto.Reservation;
 using Domain.Entities;
 using Domain.Interfaces.Repositories;
 using Infrastructure.Foundation.Data;
@@ -21,9 +21,9 @@ public class ReservationRepository : IReservationRepository
         DateOnly? arrivalDate,
         DateOnly? departureDate,
         string? guestName,
-        CancellationToken ct = default )
+        CancellationToken ct )
     {
-        ReservationFilterServiceDto filter = new ReservationFilterServiceDto
+        ReservationFilterDto filter = new ReservationFilterDto
         {
             PropertyId = propertyId,
             ArrivalDate = arrivalDate,
@@ -36,12 +36,12 @@ public class ReservationRepository : IReservationRepository
             .ToListAsync( ct );
     }
 
-    public async Task<Reservation?> GetByIdAsync( Guid id, CancellationToken ct = default )
+    public async Task<Reservation?> GetByIdAsync( Guid id, CancellationToken ct )
     {
         return await _dbContext.Reservations.FirstOrDefaultAsync( r => r.Id == id, ct );
     }
 
-    public async Task<Reservation> CreateAsync( Reservation reservation, CancellationToken ct = default )
+    public async Task<Reservation> CreateAsync( Reservation reservation, CancellationToken ct )
     {
         await _dbContext.Reservations.AddAsync( reservation, ct );
         await _dbContext.SaveChangesAsync( ct );
@@ -49,7 +49,7 @@ public class ReservationRepository : IReservationRepository
         return reservation;
     }
 
-    public async Task<Reservation> UpdateAsync( Reservation reservation, CancellationToken ct = default )
+    public async Task<Reservation> UpdateAsync( Reservation reservation, CancellationToken ct )
     {
         _dbContext.Reservations.Update( reservation );
         await _dbContext.SaveChangesAsync( ct );
@@ -61,7 +61,7 @@ public class ReservationRepository : IReservationRepository
         Guid roomTypeId,
         DateOnly arrivalDate,
         DateOnly departureDate,
-        CancellationToken ct = default )
+        CancellationToken ct )
     {
         return await _dbContext.Reservations.AnyAsync( r =>
             r.RoomTypeId == roomTypeId &&
