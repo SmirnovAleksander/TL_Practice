@@ -11,6 +11,9 @@ internal class ReservationConfiguration : IEntityTypeConfiguration<Reservation>
         builder.ToTable( nameof( Reservation ) );
         builder.HasKey( r => r.Id );
 
+        builder.Property( r => r.Id )
+            .HasColumnName( "reservation_id" );
+
         builder.Property( r => r.GuestName )
             .HasMaxLength( 200 )
             .IsRequired();

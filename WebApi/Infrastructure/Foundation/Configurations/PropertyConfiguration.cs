@@ -11,6 +11,9 @@ internal class PropertyConfiguration : IEntityTypeConfiguration<Property>
         builder.ToTable( nameof( Property ) );
         builder.HasKey( p => p.Id );
 
+        builder.Property( p => p.Id )
+            .HasColumnName( "property_id" );
+
         builder.Property( p => p.Name )
             .HasMaxLength( 200 )
             .IsRequired();
