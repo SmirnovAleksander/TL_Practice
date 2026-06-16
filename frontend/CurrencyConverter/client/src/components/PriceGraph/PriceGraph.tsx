@@ -16,15 +16,27 @@ export const PriceGraph = ({ data, isLoading, error }: PriceGraphProps) => {
     };
 
     if (isLoading && !data) {
-        return <div className={styles.chart}><div className={styles.loading}>Loading chart...</div></div>;
+        return (
+            <div className={styles.chart}>
+                <div className={styles.loading}>Loading chart...</div>
+            </div>
+        );
     }
 
     if (error && !data) {
-        return <div className={styles.chart}><div className={styles.error}>{error}</div></div>;
+        return (
+            <div className={styles.chart}>
+                <div className={styles.error}>{error}</div>
+            </div>
+        );
     }
 
     if (data && data.length === 0) {
-        return <div className={styles.chart}><div className={styles.empty}>No data for selected period.</div></div>;
+        return (
+            <div className={styles.chart}>
+                <div className={styles.empty}>No data for selected period.</div>
+            </div>
+        );
     }
 
     if (!data) return null;
@@ -32,7 +44,7 @@ export const PriceGraph = ({ data, isLoading, error }: PriceGraphProps) => {
     return (
         <div className={styles.chart}>
             <LineChart
-                style={{ width: '100%', height: 200 }}
+                style={{ width: 400, height: 200 }}
                 data={data}
             >
                 <CartesianGrid strokeDasharray="3 3" />

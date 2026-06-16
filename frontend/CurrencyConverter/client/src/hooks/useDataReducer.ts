@@ -17,11 +17,11 @@ export const createDataReducer = <T>() => (
 ): DataState<T> => {
     switch (action.type) {
         case 'LOADING':
-            return { isLoading: true, data: null, error: null };
+            return { ...state, isLoading: true, error: null };
         case 'SUCCESS':
             return { isLoading: false, data: action.payload, error: null };
         case 'ERROR':
-            return { isLoading: false, data: null, error: action.payload };
+            return { ...state, isLoading: false, error: action.payload };
         default:
             return state;
     }

@@ -5,7 +5,7 @@ import styles from './ConverterCard.module.scss';
 import { useConverter } from "../../hooks/useConverter";
 import { Toast } from "../Toast";
 import { StatusMessage } from "../StatusMessage";
-import { PriceGraph } from "../PriceGraph/PriceGraph";
+import { PriceGraph } from "../PriceGraph";
 import { PeriodSwitcher } from "../PeriodSwitcher";
 
 export const ConverterCard = () => {
@@ -45,31 +45,35 @@ export const ConverterCard = () => {
                 toCurrency={toCurrency}
                 rateDate={rateDate}
             />
-            <CurrencyInputGroup
-                from={from}
-                to={to}
-                amount={amount}
-                result={result}
-                currenciesCodes={currenciesCodes}
-                handleAmountChange={handleAmountChange}
-                handleFromChange={handleFromChange}
-                handleToChange={handleToChange}
-                handleSwap={handleSwap}
-            />
-            <PriceGraph
-                data={pricesState.data}
-                isLoading={pricesState.isLoading}
-                error={pricesState.error}
-            />
-            <PeriodSwitcher
-                period={period}
-                handlePeriodChange={handlePeriodChange}
-            />
+            <div className={styles.layout}>
+                <CurrencyInputGroup
+                    from={from}
+                    to={to}
+                    amount={amount}
+                    result={result}
+                    currenciesCodes={currenciesCodes}
+                    handleAmountChange={handleAmountChange}
+                    handleFromChange={handleFromChange}
+                    handleToChange={handleToChange}
+                    handleSwap={handleSwap}
+                />
+                <div className={styles.right}>
+                    <PriceGraph
+                        data={pricesState.data}
+                        isLoading={pricesState.isLoading}
+                        error={pricesState.error}
+                    />
+                    <PeriodSwitcher
+                        period={period}
+                        handlePeriodChange={handlePeriodChange}
+                    />
+                </div>
+            </div>
             <MoreAboutGroup
                 fromCurrency={fromCurrency}
                 toCurrency={toCurrency}
             />
-            {/* <Toast message={pricesError} /> */}
+            <Toast message={pricesState.error} />
         </div>
     );
 };

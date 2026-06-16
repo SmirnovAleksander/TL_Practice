@@ -11,6 +11,7 @@ describe('CurrencyInput', () => {
         currencyCode="PLN"
         currenciesCodes={mockCodes}
         handelCurrencyChange={() => {}}
+        isEditable={true}
       />
     );
 

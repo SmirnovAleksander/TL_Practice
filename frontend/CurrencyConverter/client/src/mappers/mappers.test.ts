@@ -18,6 +18,7 @@ describe('mapCurrencyDtoToCurrency', () => {
         });
     });
 });
+
 describe('mapPriceChangeDtoToPriceChange', () => {
     it('маппит все поля PriceChangeDto в PriceChange', () => {
         const dto = {

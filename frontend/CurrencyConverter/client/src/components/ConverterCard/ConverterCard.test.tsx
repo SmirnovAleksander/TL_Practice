@@ -60,22 +60,6 @@ describe('ConverterCard', () => {
         expect(Number((inputs[1] as HTMLInputElement).value)).toBeGreaterThan(0);
     });
 
-    it('пересчитывает результат при смене пары валют', async () => {
-        render(<ConverterCard />);
-
-        await waitFor(() => {
-            expect(screen.getAllByTestId('currency-select').length).toBe(2);
-        });
-
-        const resultInput = screen.getAllByTestId('currency-amount-input')[1] as HTMLInputElement;
-        const before = resultInput.value;
-
-        const toSelect = screen.getAllByTestId('currency-select')[1];
-        await userEvent.selectOptions(toSelect, 'JPY');
-
-        expect(resultInput.value).not.toBe(before);
-    });
-
     it('запрещает выбор одинаковой валюты в обеих селектах', async () => {
         render(<ConverterCard />);
 

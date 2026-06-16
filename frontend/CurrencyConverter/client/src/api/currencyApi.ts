@@ -13,14 +13,16 @@ export const fetchCurrencies = async (): Promise<CurrencyDto[]> => {
 export const fetchPriceChanges = async (
     paymentCurrency: string,
     purchasedCurrency: string,
-    fromDateTime: string
+    fromDateTime: string,
+    signal?: AbortSignal
 ): Promise<PriceChangeDto[]> => {
     const { data } = await api.get('/prices', {
         params: {
             paymentCurrency,
             purchasedCurrency,
             fromDateTime
-        }
+        },
+        signal
     })
 
     return data;

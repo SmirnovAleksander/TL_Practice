@@ -14,11 +14,15 @@ export const useConverter = () => {
     const [period, setPeriod] = useState(3);
 
     useEffect(() => {
+        let ignore = false;
+
         const load = async () => {
             currenciesDispatch({ type: 'LOADING' });
 
             try {
                 const dtos = await fetchCurrencies();
+                if (ignore) return;
+
                 const currencies = dtos.map(mapCurrencyDtoToCurrency);
 
                 currenciesDispatch({
@@ -31,6 +35,7 @@ export const useConverter = () => {
                     setTo(currencies[1].code);
                 }
             } catch (e) {
+                if (ignore) return;
                 currenciesDispatch({
                     type: 'ERROR',
                     payload: (e as Error).message
@@ -39,6 +44,10 @@ export const useConverter = () => {
         };
 
         load();
+
+        return () => {
+            ignore = true;
+        };
     }, [currenciesDispatch])
 
     const currenciesCodes = currenciesState.data?.map(c => c.code) ?? [];
@@ -48,16 +57,22 @@ export const useConverter = () => {
 
         pricesDispatch({ type: 'LOADING' });
 
+        const abortController = new AbortController();
+
         const fetchData = async () => {
             try {
                 const fromDateTime = new Date(Date.now() - period * 60 * 1000).toISOString()
 
-                const dtos = await fetchPriceChanges(from, to, fromDateTime);
+                const dtos = await fetchPriceChanges(from, to, fromDateTime, abortController.signal);
+
+                if (abortController.signal.aborted) return;
+
                 pricesDispatch({
                     type: "SUCCESS",
                     payload: dtos.map(mapPriceChangeDtoToPriceChange),
                 });
             } catch (e) {
+                if (abortController.signal.aborted) return;
                 pricesDispatch({
                     type: 'ERROR',
                     payload: (e as Error).message
@@ -70,6 +85,7 @@ export const useConverter = () => {
 
         return () => {
             clearInterval(interval);
+            abortController.abort();
         };
 
     }, [ from, to, period, pricesDispatch ])
