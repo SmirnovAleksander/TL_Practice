@@ -4,21 +4,25 @@ import type { Currency, PriceChange } from "../models";
 import { fetchCurrencies, fetchPriceChanges } from "../api";
 import { mapCurrencyDtoToCurrency, mapPriceChangeDtoToPriceChange } from "../mappers";
 
+const ONE_MINUTE_MS = 60000;
+
 export const useConverter = () => {
     const { state: currenciesState, dispatch: currenciesDispatch } = useDataReducer<Currency[]>();
     const { state: pricesState, dispatch: pricesDispatch } = useDataReducer<PriceChange[]>();
 
-    const [from, setFrom] = useState('');
-    const [to, setTo] = useState('');
+    const [from, setFrom] = useState<Currency | null>(null);
+    const [to, setTo] = useState<Currency | null>(null);
     const [amount, setAmount] = useState('1');
     const [result, setResult] = useState('');
 
     useEffect(() => {
+        const abortController = new AbortController();
+
         const load = async () => {
             currenciesDispatch({ type: 'LOADING' });
 
             try {
-                const dtos = await fetchCurrencies();
+                const dtos = await fetchCurrencies(abortController.signal);
                 const currencies = dtos.map(mapCurrencyDtoToCurrency);
 
                 currenciesDispatch({
@@ -27,18 +31,24 @@ export const useConverter = () => {
                 });
 
                 if (currencies.length >= 2) {
-                    setFrom(currencies[0].code);
-                    setTo(currencies[1].code);
+                    setFrom(currencies[0]);
+                    setTo(currencies[1]);
                 }
             } catch (e) {
+                if (abortController.signal.aborted) return;
+
                 currenciesDispatch({
                     type: 'ERROR',
-                    payload: (e as Error).message
+                    payload: (e as Error).message || 'Unknown error'
                 });
             }
         };
 
         load();
+
+        return () => {
+            abortController.abort();
+        };
     }, [currenciesDispatch])
 
     const currenciesCodes = currenciesState.data?.map(c => c.code) ?? [];
@@ -46,35 +56,39 @@ export const useConverter = () => {
     useEffect(() => {
         if (!from || !to) return;
 
+        const abortController = new AbortController();
+
         const load = async () => {
             pricesDispatch({ type: 'LOADING' });
 
-            const oneMinuteMs = 60000;
-            const fromDateTime = new Date(Date.now() - oneMinuteMs).toISOString();
+            const fromDateTime = new Date(Date.now() - ONE_MINUTE_MS).toISOString();
 
             try {
-                const dtos = await fetchPriceChanges(from, to, fromDateTime);
+                const dtos = await fetchPriceChanges(from.code, to.code, fromDateTime, abortController.signal);
                 pricesDispatch({
                     type: "SUCCESS",
                     payload: dtos.map(mapPriceChangeDtoToPriceChange),
                 });
             } catch (e) {
+                if (abortController.signal.aborted) return;
+
                 pricesDispatch({
                     type: 'ERROR',
-                    payload: (e as Error).message
+                    payload: (e as Error).message || 'Unknown error'
                 });
             }
         };
 
         load();
+
+        return () => {
+            abortController.abort();
+        };
     }, [ from, to, pricesDispatch ])
 
     const latestPriceChange = pricesState.data?.[pricesState.data.length - 1];
     const exchangeRate = latestPriceChange?.price ?? 0;
     const rateDate = latestPriceChange?.dateTime ?? '';
-
-    const fromCurrency = currenciesState.data?.find(c => c.code === from);
-    const toCurrency = currenciesState.data?.find(c => c.code === to);
 
     useEffect(() => {
         const recalculateResult = (newAmount: string) => {
@@ -88,24 +102,30 @@ export const useConverter = () => {
         recalculateResult( amount );
     }, [ amount, exchangeRate ])
 
-    const findAlternativeCode = (newCode: string) =>
-        currenciesState.data?.find((c) => c.code !== newCode)?.code ?? newCode;
+    const findAlternativeCurrency = (newCode: string) =>
+        currenciesState.data?.find((c) => c.code !== newCode);
 
     const handleFromChange = (newCode: string) => {
-        setFrom(newCode);
+        const newCurrency = currenciesState.data?.find((c) => c.code === newCode);
+        if (!newCurrency) return;
 
-        if (newCode === to) {
-            const altCode = findAlternativeCode(newCode);
-            if (altCode) setTo(altCode);
+        setFrom(newCurrency);
+
+        if (newCurrency.code === to?.code) {
+            const alt = findAlternativeCurrency(newCurrency.code);
+            if (alt) setTo(alt);
         }
     };
 
     const handleToChange = (newCode: string) => {
-        setTo(newCode);
+        const newCurrency = currenciesState.data?.find((c) => c.code === newCode);
+        if (!newCurrency) return;
 
-        if (newCode === from) {
-            const altCode = findAlternativeCode(newCode);
-            if (altCode) setFrom(altCode);
+        setTo(newCurrency);
+
+        if (newCurrency.code === from?.code) {
+            const alt = findAlternativeCurrency(newCurrency.code);
+            if (alt) setFrom(alt);
         }
     };
 
@@ -121,14 +141,14 @@ export const useConverter = () => {
     }
 
     return {
-        from,
-        to,
+        from: from?.code ?? '',
+        to: to?.code ?? '',
         amount,
         result,
         exchangeRate,
         rateDate,
-        fromCurrency,
-        toCurrency,
+        fromCurrency: from,
+        toCurrency: to,
         currenciesCodes,
         currenciesError: currenciesState.error,
         currenciesLoading: currenciesState.isLoading,

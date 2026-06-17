@@ -3,8 +3,8 @@ import userEvent from '@testing-library/user-event';
 import { MoreAboutGroup } from '.';
 import { currencies } from '../../mocks';
 
-const mockPLN = currencies.find(c => c.code === 'PLN');
-const mockJPY = currencies.find(c => c.code === 'JPY');
+const mockPLN = currencies.find(c => c.code === 'PLN') ?? null;
+const mockJPY = currencies.find(c => c.code === 'JPY') ?? null;
 
 describe('MoreAboutGroup', () => {
   it('отображает кнопку с правильным названием', () => {

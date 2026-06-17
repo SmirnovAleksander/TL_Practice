@@ -25,7 +25,7 @@ export const CurrencyInput = ({
                 className={styles.amount}
                 type="text"
                 value={amount}
-                onChange={(e) => handleAmountChange(e.target.value)}
+                onChange={(e) => handleAmountChange?.(e.target.value)}
                 disabled={!isEditable}
             />
             <hr className={styles.divider} />
