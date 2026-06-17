@@ -1,4 +1,4 @@
-namespace Infrastructure.Dto.Reservation;
+namespace Infrastructure.Dto.Reservations;
 
 public class SearchFilterDto
 {

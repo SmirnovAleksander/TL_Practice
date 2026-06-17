@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Api.Dto.Reservation;
+namespace Api.Dto.Reservations;
 
 public class CreateReservationRequest
 {

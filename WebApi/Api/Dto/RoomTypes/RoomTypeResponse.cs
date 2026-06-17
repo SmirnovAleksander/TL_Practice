@@ -1,9 +1,10 @@
 using Domain.Enums;
 
-namespace Infrastructure.Dto.RoomType;
+namespace Api.Dto.RoomTypes;
 
-public class CreateRoomTypeDto
+public class RoomTypeResponse
 {
+    public Guid Id { get; init; }
     public Guid PropertyId { get; init; }
     public string Name { get; init; } = string.Empty;
     public decimal DailyPrice { get; init; }

@@ -1,5 +1,5 @@
-using Api.Dto.RoomType;
-using Infrastructure.Dto.RoomType;
+using Api.Dto.RoomTypes;
+using Infrastructure.Dto.RoomTypes;
 
 namespace Api.Mappers.Service;
 

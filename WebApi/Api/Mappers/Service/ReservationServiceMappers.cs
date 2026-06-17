@@ -1,5 +1,5 @@
-using Api.Dto.Reservation;
-using Infrastructure.Dto.Reservation;
+using Api.Dto.Reservations;
+using Infrastructure.Dto.Reservations;
 
 namespace Api.Mappers.Service;
 

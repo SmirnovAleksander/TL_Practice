@@ -1,5 +1,5 @@
-using Api.Dto.Reservation;
-using Infrastructure.Dto.Search;
+using Api.Dto.Reservations;
+using Infrastructure.Dto.Searches;
 
 namespace Api.Mappers.Entity;
 

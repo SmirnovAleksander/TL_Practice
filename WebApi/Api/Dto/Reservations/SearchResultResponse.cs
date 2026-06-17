@@ -1,8 +1,8 @@
-using Api.Dto.Property;
-using Api.Dto.RoomType;
+using Api.Dto.Properties;
+using Api.Dto.RoomTypes;
 using Domain.Enums;
 
-namespace Api.Dto.Reservation;
+namespace Api.Dto.Reservations;
 
 public class SearchResultResponse
 {

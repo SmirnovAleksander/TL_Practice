@@ -1,4 +1,4 @@
-using Infrastructure.Dto.Property;
+using Infrastructure.Dto.Properties;
 using Domain.Entities;
 using Domain.Exceptions;
 using Domain.Interfaces.Repositories;

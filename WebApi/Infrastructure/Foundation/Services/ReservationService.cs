@@ -1,4 +1,4 @@
-using Infrastructure.Dto.Reservation;
+using Infrastructure.Dto.Reservations;
 using Domain.Entities;
 using Domain.Exceptions;
 using Domain.Interfaces.Repositories;

@@ -1,4 +1,4 @@
-using Api.Dto.Reservation;
+using Api.Dto.Reservations;
 using Domain.Entities;
 
 namespace Api.Mappers.Entity;

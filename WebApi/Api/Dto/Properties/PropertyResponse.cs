@@ -1,4 +1,4 @@
-namespace Api.Dto.Property;
+namespace Api.Dto.Properties;
 
 public class PropertyResponse
 {

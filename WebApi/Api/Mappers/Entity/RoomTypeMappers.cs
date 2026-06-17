@@ -1,4 +1,4 @@
-using Api.Dto.RoomType;
+using Api.Dto.RoomTypes;
 using Domain.Entities;
 
 namespace Api.Mappers.Entity;

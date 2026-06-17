@@ -1,6 +1,6 @@
 using Domain.Enums;
 
-namespace Infrastructure.Dto.RoomType;
+namespace Infrastructure.Dto.RoomTypes;
 
 public class UpdateRoomTypeDto
 {

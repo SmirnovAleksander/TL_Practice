@@ -1,4 +1,4 @@
-using Api.Dto.Property;
+using Api.Dto.Properties;
 using Domain.Entities;
 
 namespace Api.Mappers.Entity;

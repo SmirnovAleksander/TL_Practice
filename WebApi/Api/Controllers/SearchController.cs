@@ -1,7 +1,7 @@
-using Api.Dto.Reservation;
+using Api.Dto.Reservations;
 using Api.Mappers.Entity;
-using Infrastructure.Dto.Reservation;
-using Infrastructure.Dto.Search;
+using Infrastructure.Dto.Reservations;
+using Infrastructure.Dto.Searches;
 using Infrastructure.Interfaces.Services;
 using Microsoft.AspNetCore.Mvc;
 

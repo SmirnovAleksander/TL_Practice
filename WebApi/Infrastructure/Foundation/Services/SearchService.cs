@@ -1,5 +1,5 @@
-using Infrastructure.Dto.Reservation;
-using Infrastructure.Dto.Search;
+using Infrastructure.Dto.Reservations;
+using Infrastructure.Dto.Searches;
 using Domain.Entities;
 using Domain.Interfaces.Repositories;
 using Infrastructure.Interfaces.Services;

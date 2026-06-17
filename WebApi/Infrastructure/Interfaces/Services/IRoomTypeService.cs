@@ -1,4 +1,4 @@
-using Infrastructure.Dto.RoomType;
+using Infrastructure.Dto.RoomTypes;
 using Domain.Entities;
 
 namespace Infrastructure.Interfaces.Services;

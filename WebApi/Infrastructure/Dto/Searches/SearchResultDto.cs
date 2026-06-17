@@ -1,6 +1,6 @@
 using Domain.Enums;
 
-namespace Infrastructure.Dto.Search;
+namespace Infrastructure.Dto.Searches;
 
 public class SearchResultDto
 {

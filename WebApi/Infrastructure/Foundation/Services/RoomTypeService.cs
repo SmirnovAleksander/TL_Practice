@@ -1,4 +1,4 @@
-using Infrastructure.Dto.RoomType;
+using Infrastructure.Dto.RoomTypes;
 using Domain.Entities;
 using Domain.Exceptions;
 using Domain.Interfaces.Repositories;
@@ -25,7 +25,7 @@ public class RoomTypeService : IRoomTypeService
             throw new NotFoundException( nameof( Property ), propertyId );
         }
 
-        return await _roomTypeRepository.GetByPropertyAsync( propertyId, guests: null, maxPrice: null, ct: ct );
+        return await _roomTypeRepository.GetByPropertyAsync( propertyId, ct );
     }
 
     public async Task<RoomType> GetByIdAsync( Guid id, CancellationToken ct )
@@ -41,17 +41,17 @@ public class RoomTypeService : IRoomTypeService
 
     public async Task<RoomType> CreateAsync( CreateRoomTypeDto dto, CancellationToken ct )
     {
-        Property? property = await _propertyRepository.GetByIdAsync( dto.PropertyId, ct );
-        if ( property == null )
-        {
-            throw new NotFoundException( nameof( Property ), dto.PropertyId );
-        }
-
         ValidateRoomTypeData(
             dto.Name,
             dto.DailyPrice,
             dto.MinPersonCount,
             dto.MaxPersonCount );
+
+        Property? property = await _propertyRepository.GetByIdAsync( dto.PropertyId, ct );
+        if ( property == null )
+        {
+            throw new NotFoundException( nameof( Property ), dto.PropertyId );
+        }
 
         RoomType roomType = new RoomType
         {

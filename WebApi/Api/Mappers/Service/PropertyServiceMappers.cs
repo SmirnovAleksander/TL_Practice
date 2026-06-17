@@ -1,5 +1,5 @@
-using Api.Dto.Property;
-using Infrastructure.Dto.Property;
+using Api.Dto.Properties;
+using Infrastructure.Dto.Properties;
 
 namespace Api.Mappers.Service;
 

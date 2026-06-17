@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using Domain.Enums;
 
-namespace Api.Dto.RoomType;
+namespace Api.Dto.RoomTypes;
 
 public class CreateRoomTypeRequest
 {
