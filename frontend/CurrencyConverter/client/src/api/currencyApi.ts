@@ -5,8 +5,8 @@ const api = axios.create({
     baseURL: 'http://localhost:5081'
 })
 
-export const fetchCurrencies = async (): Promise<CurrencyDto[]> => {
-    const { data } = await api.get('/Currency');
+export const fetchCurrencies = async (signal?: AbortSignal): Promise<CurrencyDto[]> => {
+    const { data } = await api.get('/Currency', { signal });
     return data;
 }
 

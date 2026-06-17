@@ -9,7 +9,9 @@ describe('mapCurrencyDtoToCurrency', () => {
             description: 'description',
             symbol: '$',
         };
+        
         const result = mapCurrencyDtoToCurrency(dto);
+
         expect(result).toEqual({
             code: 'USD',
             name: 'Dollar',
@@ -27,7 +29,9 @@ describe('mapPriceChangeDtoToPriceChange', () => {
             price: 1.0,
             dateTime: '2026-05-21',
         };
+        
         const result = mapPriceChangeDtoToPriceChange(dto);
+
         expect(result).toEqual({
             purchasedCurrencyCode: 'JPY',
             paymentCurrencyCode: 'CAD',

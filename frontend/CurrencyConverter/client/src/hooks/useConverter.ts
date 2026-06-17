@@ -8,21 +8,19 @@ export const useConverter = () => {
     const { state: currenciesState, dispatch: currenciesDispatch } = useDataReducer<Currency[]>();
     const { state: pricesState, dispatch: pricesDispatch } = useDataReducer<PriceChange[]>();
 
-    const [from, setFrom] = useState('');
-    const [to, setTo] = useState('');
+    const [from, setFrom] = useState<Currency | null>(null);
+    const [to, setTo] = useState<Currency | null>(null);
     const [amount, setAmount] = useState('1');
     const [period, setPeriod] = useState(3);
 
     useEffect(() => {
-        let ignore = false;
+        const abortController = new AbortController();
 
         const load = async () => {
             currenciesDispatch({ type: 'LOADING' });
 
             try {
-                const dtos = await fetchCurrencies();
-                if (ignore) return;
-
+                const dtos = await fetchCurrencies(abortController.signal);
                 const currencies = dtos.map(mapCurrencyDtoToCurrency);
 
                 currenciesDispatch({
@@ -31,14 +29,15 @@ export const useConverter = () => {
                 });
 
                 if (currencies.length >= 2) {
-                    setFrom(currencies[0].code);
-                    setTo(currencies[1].code);
+                    setFrom(currencies[0]);
+                    setTo(currencies[1]);
                 }
             } catch (e) {
-                if (ignore) return;
+                if (abortController.signal.aborted) return;
+
                 currenciesDispatch({
                     type: 'ERROR',
-                    payload: (e as Error).message
+                    payload: (e as Error).message || 'Unknown error'
                 });
             }
         };
@@ -46,7 +45,7 @@ export const useConverter = () => {
         load();
 
         return () => {
-            ignore = true;
+            abortController.abort();
         };
     }, [currenciesDispatch])
 
@@ -63,7 +62,7 @@ export const useConverter = () => {
             try {
                 const fromDateTime = new Date(Date.now() - period * 60 * 1000).toISOString()
 
-                const dtos = await fetchPriceChanges(from, to, fromDateTime, abortController.signal);
+                const dtos = await fetchPriceChanges(from.code, to.code, fromDateTime, abortController.signal);
 
                 if (abortController.signal.aborted) return;
 
@@ -75,7 +74,7 @@ export const useConverter = () => {
                 if (abortController.signal.aborted) return;
                 pricesDispatch({
                     type: 'ERROR',
-                    payload: (e as Error).message
+                    payload: (e as Error).message || 'Unknown error'
                 });
             }
         };
@@ -94,9 +93,6 @@ export const useConverter = () => {
     const exchangeRate = latestPriceChange?.price ?? 0;
     const rateDate = latestPriceChange?.dateTime ?? '';
 
-    const fromCurrency = currenciesState.data?.find(c => c.code === from);
-    const toCurrency = currenciesState.data?.find(c => c.code === to);
-
     const result = useMemo(() => {
         if (exchangeRate && amount && !isNaN(Number(amount))) {
             return (Number(amount) * exchangeRate).toFixed(2);
@@ -104,24 +100,30 @@ export const useConverter = () => {
         return '0';
     }, [amount, exchangeRate]);
 
-    const findAlternativeCode = (newCode: string) =>
-        currenciesState.data?.find((c) => c.code !== newCode)?.code ?? newCode;
+    const findAlternativeCurrency = (newCode: string) =>
+        currenciesState.data?.find((c) => c.code !== newCode);
 
     const handleFromChange = (newCode: string) => {
-        setFrom(newCode);
+        const newCurrency = currenciesState.data?.find((c) => c.code === newCode);
+        if (!newCurrency) return;
 
-        if (newCode === to) {
-            const altCode = findAlternativeCode(newCode);
-            if (altCode) setTo(altCode);
+        setFrom(newCurrency);
+
+        if (newCurrency.code === to?.code) {
+            const alt = findAlternativeCurrency(newCurrency.code);
+            if (alt) setTo(alt);
         }
     };
 
     const handleToChange = (newCode: string) => {
-        setTo(newCode);
+        const newCurrency = currenciesState.data?.find((c) => c.code === newCode);
+        if (!newCurrency) return;
 
-        if (newCode === from) {
-            const altCode = findAlternativeCode(newCode);
-            if (altCode) setFrom(altCode);
+        setTo(newCurrency);
+
+        if (newCurrency.code === from?.code) {
+            const alt = findAlternativeCurrency(newCurrency.code);
+            if (alt) setFrom(alt);
         }
     };
 
@@ -140,15 +142,15 @@ export const useConverter = () => {
     };
 
     return {
-        from,
-        to,
+        from: from?.code ?? '',
+        to: to?.code ?? '',
         amount,
         result,
         exchangeRate,
         rateDate,
         period,
-        fromCurrency,
-        toCurrency,
+        fromCurrency: from,
+        toCurrency: to,
         currenciesCodes,
         currenciesError: currenciesState.error,
         currenciesLoading: currenciesState.isLoading,

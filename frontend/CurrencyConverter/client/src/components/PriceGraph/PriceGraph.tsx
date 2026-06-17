@@ -51,8 +51,8 @@ export const PriceGraph = ({ data, isLoading, error }: PriceGraphProps) => {
                 <XAxis dataKey="dateTime" tickFormatter={formatDateTime} />
                 <YAxis domain={['auto', 'auto']} />
                 <Tooltip
-                    labelFormatter={formatDateTime}
-                    formatter={(value: number) => [value.toFixed(4), 'Price']}
+                    labelFormatter={(label) => formatDateTime(String(label))}
+                    formatter={(value) => [Number(value).toFixed(4), 'Price']}
                 />
                 <Line type="monotone" dataKey="price" stroke="#2080e1" dot={false} strokeWidth={2} />
             </LineChart>

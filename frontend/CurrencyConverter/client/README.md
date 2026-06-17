@@ -1,6 +1,7 @@
 # Currency Converter
 
 ## Запуск
+
 ```bash
 npm i
 npm run dev      # dev-сервер
@@ -8,12 +9,14 @@ npm run test     # тесты
 npm run lint     # линтер
 ```
 
-## Мок-данные
+etchPriceChanges` → `SUCCESS` → `pricesState.data` → `PriceGraph` перерисовывается.
 
-Мок данные находятся в папке /mocks, и они используются в хуке `useConverter` и в тестах
+## Интервал
 
-## Reset по key
+10 секунд. `setInterval(fetchData, 10000)`.
 
-В `ConverterCard` у `MoreAboutGroup` стоит `key={${from}-${to}}`.  
-Так как у нас меняется key при смене пары валют, то react удаляет старыт и создает новый, то есть пересоздание компонента и в
-новом компоненте стоит по умолчанию isOpen false поэтому more about информация будет закрыта при смене валют
+## useEffect
+
+- **Currencies** — загрузка валют при монтировании.
+- **Prices** — загрузка цен при смене from/to/period.
+- **Result** — `useMemo` пересчёт при изменении amount/exchangeRate.
