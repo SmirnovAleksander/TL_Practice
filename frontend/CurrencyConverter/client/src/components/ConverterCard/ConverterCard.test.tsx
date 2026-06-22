@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ConverterCard } from '.';
 
@@ -10,11 +10,18 @@ const mockFetchCurrencies = vi.hoisted(() => vi.fn().mockResolvedValue([
     { code: 'ZAR', name: 'South African rand', description: 'desc', symbol: 'R' },
 ]));
 
-const mockFetchPriceChanges = vi.hoisted(() => vi.fn().mockResolvedValue([
-    { purchasedCurrencyCode: 'PLN', paymentCurrencyCode: 'CAD', price: 0.34, dateTime: '2026-04-27T09:20:00.000Z' },
-    { purchasedCurrencyCode: 'JPY', paymentCurrencyCode: 'CAD', price: 0.0094, dateTime: '2026-04-27T10:00:00.000Z' },
-    { purchasedCurrencyCode: 'AUD', paymentCurrencyCode: 'CAD', price: 0.9, dateTime: '2026-04-27T09:40:00.000Z' },
-]));
+const mockFetchPriceChanges = vi.hoisted(() => vi.fn().mockImplementation(
+    (_payment: string, purchased: string) => {
+        if (purchased === 'PLN') {
+            return Promise.resolve([
+                { purchasedCurrencyCode: 'PLN', paymentCurrencyCode: 'CAD', price: 0.34, dateTime: '2026-04-27T09:20:00.000Z' },
+            ]);
+        }
+        return Promise.resolve([
+            { purchasedCurrencyCode: purchased, paymentCurrencyCode: 'CAD', price: 0.0094, dateTime: '2026-04-27T10:00:00.000Z' },
+        ]);
+    }
+));
 
 vi.mock('../../api', () => ({
     fetchCurrencies: mockFetchCurrencies,
@@ -41,19 +48,14 @@ describe('ConverterCard', () => {
     it('показывает конвертер после успешной загрузки', async () => {
         render(<ConverterCard />);
 
-        await waitFor(() => {
-            expect(screen.getAllByTestId('currency-amount-input').length).toBe(2);
-        });
+        const inputs = await screen.findAllByRole('textbox');
+        expect(inputs).toHaveLength(2);
     });
 
     it('пересчитывает результат при изменении суммы', async () => {
         render(<ConverterCard />);
 
-        await waitFor(() => {
-            expect(screen.getAllByTestId('currency-amount-input').length).toBe(2);
-        });
-
-        const inputs = screen.getAllByTestId('currency-amount-input');
+        const inputs = await screen.findAllByRole('textbox');
         await userEvent.clear(inputs[0]);
         await userEvent.type(inputs[0], '10');
 
@@ -63,15 +65,13 @@ describe('ConverterCard', () => {
     it('пересчитывает результат при смене пары валют', async () => {
         render(<ConverterCard />);
 
-        await waitFor(() => {
-            expect(screen.getAllByTestId('currency-select').length).toBe(2);
-        });
+        const selects = await screen.findAllByRole('combobox');
+        const inputs = await screen.findAllByRole('textbox');
 
-        const resultInput = screen.getAllByTestId('currency-amount-input')[1] as HTMLInputElement;
+        const resultInput = inputs[1] as HTMLInputElement;
         const before = resultInput.value;
 
-        const toSelect = screen.getAllByTestId('currency-select')[1];
-        await userEvent.selectOptions(toSelect, 'JPY');
+        await userEvent.selectOptions(selects[1], 'JPY');
 
         expect(resultInput.value).not.toBe(before);
     });
@@ -79,18 +79,13 @@ describe('ConverterCard', () => {
     it('запрещает выбор одинаковой валюты в обеих селектах', async () => {
         render(<ConverterCard />);
 
-        await waitFor(() => {
-            expect(screen.getAllByTestId('currency-select').length).toBe(2);
-        });
+        const selects = await screen.findAllByRole('combobox');
 
-        const selects = screen.getAllByTestId('currency-select');
-        const fromSelect = selects[0];
-        const toSelect = selects[1];
-        const toValue = (toSelect as HTMLSelectElement).value;
+        const toValue = (selects[1] as HTMLSelectElement).value;
 
-        await userEvent.selectOptions(fromSelect, toValue);
+        await userEvent.selectOptions(selects[0], toValue);
 
-        expect(fromSelect).toHaveValue(toValue);
-        expect(toSelect).not.toHaveValue(toValue);
+        expect(selects[0]).toHaveValue(toValue);
+        expect(selects[1]).not.toHaveValue(toValue);
     });
 });

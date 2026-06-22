@@ -52,7 +52,10 @@ export const ConverterCard = () => {
                 handleToChange={handleToChange}
                 handleSwap={handleSwap}
             />
+            {/* так как у нас меняется key при смене пары валют, то react удаляет старыт и создает новый, то есть пересоздание компонента и в
+            новом компоненте стоит по умолчанию isOpen false поэтому more about информация будет закрыта при смене валют */}
             <MoreAboutGroup
+                key={`${from}-${to}`}
                 fromCurrency={fromCurrency}
                 toCurrency={toCurrency}
             />
