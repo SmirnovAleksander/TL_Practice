@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ConverterCard } from '.';
 
@@ -41,19 +41,14 @@ describe('ConverterCard', () => {
     it('показывает конвертер после успешной загрузки', async () => {
         render(<ConverterCard />);
 
-        await waitFor(() => {
-            expect(screen.getAllByTestId('currency-amount-input').length).toBe(2);
-        });
+        const inputs = await screen.findAllByRole('textbox');
+        expect(inputs).toHaveLength(2);
     });
 
     it('пересчитывает результат при изменении суммы', async () => {
         render(<ConverterCard />);
 
-        await waitFor(() => {
-            expect(screen.getAllByTestId('currency-amount-input').length).toBe(2);
-        });
-
-        const inputs = screen.getAllByTestId('currency-amount-input');
+        const inputs = await screen.findAllByRole('textbox');
         await userEvent.clear(inputs[0]);
         await userEvent.type(inputs[0], '10');
 
@@ -63,18 +58,13 @@ describe('ConverterCard', () => {
     it('запрещает выбор одинаковой валюты в обеих селектах', async () => {
         render(<ConverterCard />);
 
-        await waitFor(() => {
-            expect(screen.getAllByTestId('currency-select').length).toBe(2);
-        });
+        const selects = await screen.findAllByRole('combobox');
 
-        const selects = screen.getAllByTestId('currency-select');
-        const fromSelect = selects[0];
-        const toSelect = selects[1];
-        const toValue = (toSelect as HTMLSelectElement).value;
+        const toValue = (selects[1] as HTMLSelectElement).value;
 
-        await userEvent.selectOptions(fromSelect, toValue);
+        await userEvent.selectOptions(selects[0], toValue);
 
-        expect(fromSelect).toHaveValue(toValue);
-        expect(toSelect).not.toHaveValue(toValue);
+        expect(selects[0]).toHaveValue(toValue);
+        expect(selects[1]).not.toHaveValue(toValue);
     });
 });

@@ -2,8 +2,8 @@ import type { Currency } from '../../models';
 import styles from './ConverterHeader.module.scss';
 
 type ConverterHeaderProps = {
-    fromCurrency: Currency | null;
-    toCurrency: Currency | null;
+    fromCurrency: Currency | undefined;
+    toCurrency: Currency | undefined;
     exchangeRate: number;
     rateDate: string;
 }

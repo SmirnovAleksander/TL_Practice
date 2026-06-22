@@ -5,8 +5,8 @@ import type { Currency } from "../../models";
 import { useState } from "react";
 
 type MoreAboutGroupProps = {
-    fromCurrency: Currency | null;
-    toCurrency: Currency | null;
+    fromCurrency: Currency | undefined;
+    toCurrency: Currency | undefined;
 }
 
 export const MoreAboutGroup = ({

@@ -8,8 +8,8 @@ export const useConverter = () => {
     const { state: currenciesState, dispatch: currenciesDispatch } = useDataReducer<Currency[]>();
     const { state: pricesState, dispatch: pricesDispatch } = useDataReducer<PriceChange[]>();
 
-    const [from, setFrom] = useState<Currency | null>(null);
-    const [to, setTo] = useState<Currency | null>(null);
+    const [from, setFrom] = useState<Currency | undefined>(undefined);
+    const [to, setTo] = useState<Currency | undefined>(undefined);
     const [amount, setAmount] = useState('1');
     const [period, setPeriod] = useState(3);
 
