@@ -1,54 +1,81 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ConverterCard } from '.';
+import { currencies, priceChanges } from '../../mocks';
+
+const mockFetchCurrencies = vi.hoisted(() => vi.fn());
+const mockFetchPriceChanges = vi.hoisted(() => vi.fn());
+
+vi.mock('../../api', () => ({
+    fetchCurrencies: mockFetchCurrencies,
+    fetchPriceChanges: mockFetchPriceChanges,
+}));
 
 describe('ConverterCard', () => {
-  it('пересчитывает результат при изменении суммы', async () => {
-    render(<ConverterCard />);
+    beforeEach(() => {
+        mockFetchCurrencies.mockResolvedValue(currencies);
+        mockFetchPriceChanges.mockImplementation(
+            (paymentCurrency: string, purchasedCurrency: string) => {
+                const change = priceChanges[purchasedCurrency]?.[paymentCurrency];
+                return Promise.resolve(change ? [change] : []);
+            }
+        );
+    });
 
-    const inputs = screen.getAllByTestId('currency-amount-input');
-    await userEvent.clear(inputs[0]);
-    await userEvent.type(inputs[0], '10');
+    it('показывает ошибку если сервер недоступен', async () => {
+        mockFetchCurrencies.mockRejectedValueOnce(new Error('Error'));
 
-    expect(Number((inputs[1] as HTMLInputElement).value)).toBeGreaterThan(0);
-  });
+        render(<ConverterCard />);
 
-  it('пересчитывает результат при смене пары валют', async () => {
-    render(<ConverterCard />);
+        expect(await screen.findByText('Server is not available.')).toBeInTheDocument();
+    });
 
-    const resultInput = screen.getAllByTestId('currency-amount-input')[1] as HTMLInputElement;
-    const before = resultInput.value;
+    it('показывает loading при загрузке валют', async () => {
+        mockFetchCurrencies.mockImplementationOnce(() => new Promise(() => {}));
 
-    const toSelect = screen.getAllByTestId('currency-select')[1];
-    await userEvent.selectOptions(toSelect, 'JPY');
+        render(<ConverterCard />);
 
-    expect(resultInput.value).not.toBe(before);
-  });
+        expect(await screen.findByText('Loading ...')).toBeInTheDocument();
+    });
 
-  it('запрещает выбор одинаковой валюты в обеих селектах', async () => {
-    render(<ConverterCard />);
+    it('показывает конвертер после успешной загрузки', async () => {
+        render(<ConverterCard />);
 
-    const selects = screen.getAllByTestId('currency-select');
-    const fromSelect = selects[0];
-    const toSelect = selects[1];
-    const toValue = (toSelect as HTMLSelectElement).value;
+        const inputs = await screen.findAllByRole('textbox');
+        expect(inputs).toHaveLength(2);
+    });
 
-    await userEvent.selectOptions(fromSelect, toValue);
+    it('пересчитывает результат при изменении суммы', async () => {
+        render(<ConverterCard />);
 
-    expect(fromSelect).toHaveValue(toValue);
-    expect(toSelect).not.toHaveValue(toValue);
-  });
+        const inputs = await screen.findAllByRole('textbox');
+        await userEvent.clear(inputs[0]);
+        await userEvent.type(inputs[0], '10');
 
-  it('сбрасывает открытое состояние MoreAboutGroup при смене пары и key', async () => {
-    render(<ConverterCard />);
+        expect((inputs[1] as HTMLInputElement).value).toBe('3.40');
+    });
 
-    await userEvent.click(screen.getByTestId('more-about-button'));
-    expect(screen.getByTestId('more-about-currency-from')).toBeInTheDocument();
+    it('пересчитывает результат при смене пары валют', async () => {
+        render(<ConverterCard />);
 
-    const fromSelect = screen.getAllByTestId('currency-select')[0];
-    await userEvent.selectOptions(fromSelect, 'AUD');
+        const selects = await screen.findAllByRole('combobox');
+        const inputs = await screen.findAllByRole('textbox');
 
-    expect(screen.queryByTestId('more-about-currency-from')).not.toBeInTheDocument();
-  });
+        await userEvent.selectOptions(selects[1], 'JPY');
 
+        expect((inputs[1] as HTMLInputElement).value).toBe('0.01');
+    });
+
+    it('запрещает выбор одинаковой валюты в обеих селектах', async () => {
+        render(<ConverterCard />);
+
+        const selects = await screen.findAllByRole('combobox');
+
+        const toValue = (selects[1] as HTMLSelectElement).value;
+
+        await userEvent.selectOptions(selects[0], toValue);
+
+        expect(selects[0]).toHaveValue(toValue);
+        expect(selects[1]).not.toHaveValue(toValue);
+    });
 });

@@ -6,7 +6,7 @@ type CurrencyInputProps = {
     currenciesCodes: string[];
     handleAmountChange?: (newAmount: string) => void;
     handelCurrencyChange: (newCode: string) => void;
-    isEditable: boolean;
+    isEditable?: boolean;
 }
 
 export const CurrencyInput = ({
@@ -15,7 +15,7 @@ export const CurrencyInput = ({
     currenciesCodes,
     handleAmountChange,
     handelCurrencyChange,
-    isEditable
+    isEditable = true
 }: CurrencyInputProps) => {
     
     return (
@@ -25,7 +25,7 @@ export const CurrencyInput = ({
                 className={styles.amount}
                 type="text"
                 value={amount}
-                onChange={(e) => handleAmountChange(e.target.value)}
+                onChange={(e) => handleAmountChange?.(e.target.value)}
                 disabled={!isEditable}
             />
             <hr className={styles.divider} />

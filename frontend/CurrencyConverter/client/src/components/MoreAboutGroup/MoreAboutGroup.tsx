@@ -5,15 +5,15 @@ import type { Currency } from "../../models";
 import { useState } from "react";
 
 type MoreAboutGroupProps = {
-    fromCurrency: Currency;
-    toCurrency: Currency;
+    fromCurrency: Currency | undefined;
+    toCurrency: Currency | undefined;
 }
 
 export const MoreAboutGroup = ({
     fromCurrency,
     toCurrency
 }: MoreAboutGroupProps) => {
-    const [isOpen, setIsOpen] = useState<boolean>(true);
+    const [isOpen, setIsOpen] = useState<boolean>(false);
     const label = (fromCurrency && toCurrency) ? `${fromCurrency.code}/${toCurrency.code}: about` : ''
     
     return (

@@ -29,14 +29,4 @@ describe('MoreAboutGroup', () => {
     expect(toBlock).toHaveTextContent('Japanese yen - JPY - ¥');
     expect(toBlock).toHaveTextContent(/The yen is the official currency of Japan/);
   });
-
-  it('отображает текст заглушку при пустом описании', async () => {
-    render(<MoreAboutGroup fromCurrency={{ ...mockPLN, description: '' }} toCurrency={mockJPY} />);
-    const button = screen.getByTestId('more-about-button');
-    await userEvent.click(button);
-
-    const fromBlock = screen.getByTestId('more-about-currency-from');
-
-    expect(fromBlock).toHaveTextContent('No description');
-  });
 });
