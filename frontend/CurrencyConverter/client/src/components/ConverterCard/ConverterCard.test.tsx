@@ -1,20 +1,10 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ConverterCard } from '.';
+import { currencies, priceChanges } from '../../mocks';
 
-const mockFetchCurrencies = vi.hoisted(() => vi.fn().mockResolvedValue([
-    { code: 'CAD', name: 'Canadian dollar', description: 'desc', symbol: '$' },
-    { code: 'PLN', name: 'Polish zloty', description: 'desc', symbol: 'zł' },
-    { code: 'JPY', name: 'Japanese yen', description: 'desc', symbol: '¥' },
-    { code: 'AUD', name: 'Australian dollar', description: 'desc', symbol: '$' },
-    { code: 'ZAR', name: 'South African rand', description: 'desc', symbol: 'R' },
-]));
-
-const mockFetchPriceChanges = vi.hoisted(() => vi.fn().mockResolvedValue([
-    { purchasedCurrencyCode: 'PLN', paymentCurrencyCode: 'CAD', price: 0.34, dateTime: '2026-04-27T09:20:00.000Z' },
-    { purchasedCurrencyCode: 'JPY', paymentCurrencyCode: 'CAD', price: 0.0094, dateTime: '2026-04-27T10:00:00.000Z' },
-    { purchasedCurrencyCode: 'AUD', paymentCurrencyCode: 'CAD', price: 0.9, dateTime: '2026-04-27T09:40:00.000Z' },
-]));
+const mockFetchCurrencies = vi.hoisted(() => vi.fn());
+const mockFetchPriceChanges = vi.hoisted(() => vi.fn());
 
 vi.mock('../../api', () => ({
     fetchCurrencies: mockFetchCurrencies,
@@ -22,6 +12,16 @@ vi.mock('../../api', () => ({
 }));
 
 describe('ConverterCard', () => {
+    beforeEach(() => {
+        mockFetchCurrencies.mockResolvedValue(currencies);
+        mockFetchPriceChanges.mockImplementation(
+            (paymentCurrency: string, purchasedCurrency: string) => {
+                const change = priceChanges[purchasedCurrency]?.[paymentCurrency];
+                return Promise.resolve(change ? [change] : []);
+            }
+        );
+    });
+
     it('показывает ошибку если сервер недоступен', async () => {
         mockFetchCurrencies.mockRejectedValueOnce(new Error('Error'));
 
@@ -52,7 +52,18 @@ describe('ConverterCard', () => {
         await userEvent.clear(inputs[0]);
         await userEvent.type(inputs[0], '10');
 
-        expect(Number((inputs[1] as HTMLInputElement).value)).toBeGreaterThan(0);
+        expect((inputs[1] as HTMLInputElement).value).toBe('3.40');
+    });
+
+    it('пересчитывает результат при смене пары валют', async () => {
+        render(<ConverterCard />);
+
+        const selects = await screen.findAllByRole('combobox');
+        const inputs = await screen.findAllByRole('textbox');
+
+        await userEvent.selectOptions(selects[1], 'JPY');
+
+        expect((inputs[1] as HTMLInputElement).value).toBe('0.01');
     });
 
     it('запрещает выбор одинаковой валюты в обеих селектах', async () => {

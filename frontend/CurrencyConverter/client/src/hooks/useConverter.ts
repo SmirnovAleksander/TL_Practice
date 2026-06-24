@@ -4,6 +4,8 @@ import type { Currency, PriceChange } from "../models";
 import { fetchCurrencies, fetchPriceChanges } from "../api";
 import { mapCurrencyDtoToCurrency, mapPriceChangeDtoToPriceChange } from "../mappers";
 
+const ONE_MINUTE_MS = 60000;
+
 export const useConverter = () => {
     const { state: currenciesState, dispatch: currenciesDispatch } = useDataReducer<Currency[]>();
     const { state: pricesState, dispatch: pricesDispatch } = useDataReducer<PriceChange[]>();
