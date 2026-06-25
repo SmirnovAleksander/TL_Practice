@@ -19,7 +19,7 @@ describe('CurrencyInput', () => {
 
     expect(select).toBeInTheDocument();
     expect(select.children).toHaveLength(mockCodes.length);
-    mockCodes.forEach(code => {
+    mockCodes.forEach((code) => {
       expect(screen.getByText(code)).toBeInTheDocument();
     });
   });

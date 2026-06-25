@@ -1,16 +1,16 @@
 .toast {
-    position: fixed;
-    inset-block-start: 20px;
-    inset-inline-start: 50%;
-    z-index: 1000;
+  position: fixed;
+  inset-block-start: 20px;
+  inset-inline-start: 50%;
+  z-index: 1000;
 
-    padding: 12px 24px;
+  padding: 12px 24px;
 
-    background: #e74c3c;
-    border-radius: 8px;
+  background: #e74c3c;
+  border-radius: 8px;
 
-    color: #fff;
-    font-size: 14px;
+  color: #fff;
+  font-size: 14px;
 
-    transform: translateX(-50%);
+  transform: translateX(-50%);
 }
