@@ -13,6 +13,8 @@
     "lint-fix": "run-s lint-fix:*",
     "lint-fix:eslint": "npm run lint:eslint -- --fix",
     "lint-fix:stylelint": "npm run lint:stylelint -- --fix",
+    "format": "prettier --write \"src/**/*.{ts,tsx,scss,json}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx,scss,json}\"",
     "test": "vitest"
   },
   "dependencies": {
@@ -20,7 +22,8 @@
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-react": "^7.37.5",
     "react": "^19.2.6",
-    "react-dom": "^19.2.6"
+    "react-dom": "^19.2.6",
+    "recharts": "^3.8.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.4",
@@ -38,6 +41,7 @@
     "globals": "^17.6.0",
     "jsdom": "^29.1.1",
     "npm-run-all": "^4.1.5",
+    "prettier": "^3.8.4",
     "sass": "^1.100.0",
     "stylelint": "^17.12.0",
     "stylelint-config-css-modules": "^4.6.0",

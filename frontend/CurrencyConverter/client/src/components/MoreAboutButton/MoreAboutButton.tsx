@@ -2,18 +2,18 @@ import arrow from '../../assets/arrow.svg';
 import styles from './MoreAboutButton.module.scss';
 
 type MoreAboutButtonProps = {
-    label: string;
-    isOpen: boolean;
-    onClick: () => void;
-}
+  label: string;
+  isOpen: boolean;
+  onClick: () => void;
+};
 
-export const MoreAboutButton = ({label, isOpen, onClick}: MoreAboutButtonProps) => {
-    return (
-        <div className={styles.wrapper}>
-            <hr className={styles.line} />
-            <button onClick={onClick} type="button" data-testid="more-about-button" className={styles.button}>
-                {label} <img src={arrow} alt="" className={isOpen ? styles.arrowOpen : styles.arrow} />
-            </button>
-        </div>
-    );
+export const MoreAboutButton = ({ label, isOpen, onClick }: MoreAboutButtonProps) => {
+  return (
+    <div className={styles.wrapper}>
+      <hr className={styles.line} />
+      <button onClick={onClick} type="button" data-testid="more-about-button" className={styles.button}>
+        {label} <img src={arrow} alt="" className={isOpen ? styles.arrowOpen : styles.arrow} />
+      </button>
+    </div>
+  );
 };

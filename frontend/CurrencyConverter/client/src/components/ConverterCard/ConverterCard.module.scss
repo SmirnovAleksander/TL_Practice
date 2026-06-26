@@ -1,8 +1,19 @@
 .card {
   inline-size: 100%;
-  max-inline-size: 600px;
+  max-inline-size: 900px;
   padding: 24px;
 
   background: #fff;
   border-radius: 12px;
+}
+
+.layout {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.right {
+  flex: 1;
+  min-inline-size: 0;
 }

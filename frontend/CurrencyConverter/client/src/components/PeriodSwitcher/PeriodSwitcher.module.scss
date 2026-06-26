@@ -1,0 +1,32 @@
+.wrapper {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.button {
+  padding: 6px 16px;
+
+  background: #f3f5f8;
+  border: 1px solid #e2e6ee;
+  border-radius: 100px;
+
+  color: black;
+  font-size: 13px;
+
+  cursor: pointer;
+}
+
+.button:hover {
+  background: #e8ecf0;
+}
+
+.active {
+  background: #1976d2;
+  border-color: #1976d2;
+  color: #fff;
+}
+
+.active:hover {
+  background: #1565c0;
+}

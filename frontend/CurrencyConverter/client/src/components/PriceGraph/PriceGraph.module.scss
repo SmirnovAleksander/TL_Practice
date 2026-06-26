@@ -1,0 +1,12 @@
+.loading,
+.error,
+.empty {
+  padding: 40px;
+  color: #767676;
+  font-size: 14px;
+  text-align: center;
+}
+
+.error {
+  color: #d32f2f;
+}
